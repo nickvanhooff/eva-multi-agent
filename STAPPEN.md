@@ -29,3 +29,27 @@ Het bestaande `reclamebureau_eva` was een prototype/testfase met LangGraph + Lan
 
 **Zelf bedacht:**
 - De keuze om de openai SDK te gebruiken als provider-agnostische LLM wrapper (i.p.v. langchain) is zelf bedacht, gebaseerd op het feit dat Ollama, OpenRouter en Groq allemaal OpenAI-compatibele endpoints bieden.
+
+---
+
+## Stap 2: Architectuur diagrammen
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `docs/architecture.md` aangemaakt met 3 Mermaid diagrammen:
+  1. **Graph Flow** — toont alle 5 agent nodes, edges, en conditionele feedback loops
+  2. **State Schema** — toont de CampaignState TypedDict met alle velden en welke agent wat leest/schrijft
+  3. **LangGraph Concepts Map** — overzicht van welke LangGraph primitives worden gebruikt
+- Uitleg toegevoegd over conditional routing logica (cm_router)
+- Tabel met wat elke agent leest uit de state
+
+**Ontwerpkeuzes (zelf bedacht):**
+- De Campaign Manager als centraal beslispunt met `phase` veld om feedback naar de juiste agent te routeren
+- Twee feedback loops: copy loop en social loop (i.p.v. alles tegelijk terugsturen)
+- `copy_versions` en `social_versions` met `operator.add` reducer om iteratiegeschiedenis te bewaren (patroon overgenomen uit prototype)
+- Maximum 3 iteraties om oneindige loops te voorkomen
+
+**Bronnen:**
+- LangGraph StateGraph documentatie: https://langchain-ai.github.io/langgraph/concepts/low_level/#stategraph
+- LangGraph conditional edges: https://langchain-ai.github.io/langgraph/concepts/low_level/#conditional-edges
+- Agent rollen gebaseerd op DL2 onderzoek (marketingskills plugin analyse)

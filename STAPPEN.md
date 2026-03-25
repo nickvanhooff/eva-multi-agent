@@ -282,8 +282,8 @@ Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline
 
 **Performance verschil:**
 - qwen3.5:4b (Ollama, RTX 4050): 4-5 minuten per agent = 20+ minuten totaal
-- llama-3.3-70b (Groq API): ~20-30 seconden per agent = 2 minuten totaal
-→ **10x sneller**
+- llama-3.3-70b (Groq API): ~3-4 seconden per agent = ~20 seconden totaal
+→ **60x sneller** (van 20+ minuten naar 20 seconden)
 
 **Zelf bedacht:**
 - De keuze om docker-compose beiden services te behouden maar via `.env` flexibel switchen (i.p.v. permanent te verwijderen)
@@ -298,7 +298,7 @@ Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline
 
 ## Stap 15: Campaign report persistentie — JSON reports
 **Datum:** 2026-03-25
-**Commit:** `9439006`
+**Commit:** `9439006`, volume mount gefixt in `docker-compose.yml`
 
 **Wat is er gedaan:**
 - `src/main.py` uitgebreid met `save_campaign_report()` functie
@@ -306,10 +306,18 @@ Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline
 - Bestandsnaam bevat timestamp: `campaign_YYYYMMDD_HHMMSS.json`
 - Report bevat: product, doelgroep, strategie, positioning, tone of voice, copy, social content, versie-aantallen, iteratie-count, goedkeuring-status
 - `.gitignore` aangepast: `campaigns/` directory genegeerd (niet in git)
+- `docker-compose.yml` aangepast: volume mount `./campaigns:/app/campaigns` zodat reports persistent zijn op host machine
 - `main.py` print het pad naar het rapport na completion: `📄 Campaign report saved to: campaigns/campaign_20260325_142530.json`
 
 **Waarom nodig?**
-Vorige aanvraag: "Waar kan ik het final report lezen?" → Campaign output stond alleen in console logs, niet persistent opgeslagen. Nu kan je alle gegenereerde campagnes teruglezen en vergelijken.
+Vorige aanvraag: "Waar kan ik het final report lezen?" → Campaign output stond alleen in console logs, niet persistent opgeslagen. Nu kan je alle gegenereerde campagnes teruslezen en vergelijken.
+
+**Waarom volume mount?**
+Docker containers hebben hun eigen geïsoleerd filesystem. Zonder volume mount, de `campaigns/` directory (en alle reports erin) verdwijnt wanneer de container stopt. Met `volumes: ./campaigns:/app/campaigns` worden reports direct naar de host machine geschreven.
+
+**Access:**
+- Host machine: `campaigns/campaign_*.json`
+- Docker: `/app/campaigns/campaign_*.json`
 
 **Use case:**
 - Evaluatie: vergelijken van verschillende campagnes
@@ -320,5 +328,6 @@ Vorige aanvraag: "Waar kan ik het final report lezen?" → Campaign output stond
 - JSON format i.p.v. markdown/TXT voor machine-readability
 - Timestamp in bestandsnaam zodat elke run uniek is
 - Kompakte report (geen volledige versiegeschiedenis, wel counts) om file size klein te houden
+- Volume mount pattern voor persistent Docker output
 
 ---

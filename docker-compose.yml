@@ -21,11 +21,15 @@ services:
       - ollama
     env_file:
       - .env
-    environment:
-      - LLM_PROVIDER=ollama
-      - LLM_BASE_URL=http://ollama:11434/v1
-      - LLM_MODEL=llama3.2
-      - LLM_API_KEY=ollama
+    volumes:
+      - ./campaigns:/app/campaigns
+    # Environment vars come from .env file (env_file above)
+    # To override, uncomment and set here:
+    # environment:
+    #   - LLM_PROVIDER=ollama
+    #   - LLM_BASE_URL=http://ollama:11434/v1
+    #   - LLM_MODEL=qwen3.5:4b
+    #   - LLM_API_KEY=ollama
 
 volumes:
   ollama_data:

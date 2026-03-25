@@ -1,0 +1,30 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: eva-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # GPU support (uncomment if you have NVIDIA GPU)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [gpu]
+
+  eva:
+    build: .
+    container_name: eva-multi-agent
+    depends_on:
+      - ollama
+    env_file:
+      - .env
+    environment:
+      - LLM_PROVIDER=ollama
+      - LLM_BASE_URL=http://ollama:11434/v1
+      - LLM_MODEL=llama3.2
+      - LLM_API_KEY=ollama
+
+volumes:
+  ollama_data:

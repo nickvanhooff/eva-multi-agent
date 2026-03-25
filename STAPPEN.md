@@ -96,3 +96,35 @@ Het doel is om eerst puur met LangGraph te werken zonder LangChain. De openai Py
 - OpenAI Python SDK: https://github.com/openai/openai-python
 - Ollama OpenAI compatibility: https://ollama.com/blog/openai-compatibility
 - Groq OpenAI compatibility: https://console.groq.com/docs/openai
+
+---
+
+## Stap 5: Researcher agent node
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/agents/researcher.py` aangemaakt
+- Node functie `researcher_node(state) -> dict` die `product_description` leest en `market_research` + `target_audience` teruggeeft
+- Nederlandse system prompt voor consistente taaloutput
+- Section parsing met fallback als LLM het formaat niet volgt
+
+**Zelf bedacht:**
+- Section parsing logica met `## MARKTONDERZOEK` / `## DOELGROEP` markers
+- Fallback: als parsing faalt, wordt de volledige response gebruikt voor beide velden
+
+---
+
+## Stap 6: Strateeg agent node
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/agents/strategist.py` aangemaakt
+- Node functie `strateeg_node(state) -> dict` die research + doelgroep leest en strategie, positionering, en tone of voice teruggeeft
+- Robuustere section parsing met line-by-line approach (case-insensitive)
+
+**Waarom Nederlandse system prompts?**
+Uit het prototype (DL-002 bugfix) bleek dat kleine LLMs (llama3.2) Engels en Nederlands door elkaar halen als de prompt in het Engels is. Nederlandse system prompts voorkomen dit probleem.
+
+**Bronnen:**
+- DL-002 bugfix uit reclamebureau_eva prototype (les geleerd)
+- LangGraph node pattern: https://langchain-ai.github.io/langgraph/concepts/low_level/#nodes

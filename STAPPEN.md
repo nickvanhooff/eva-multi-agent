@@ -53,3 +53,23 @@ Het bestaande `reclamebureau_eva` was een prototype/testfase met LangGraph + Lan
 - LangGraph StateGraph documentatie: https://langchain-ai.github.io/langgraph/concepts/low_level/#stategraph
 - LangGraph conditional edges: https://langchain-ai.github.io/langgraph/concepts/low_level/#conditional-edges
 - Agent rollen gebaseerd op DL2 onderzoek (marketingskills plugin analyse)
+
+---
+
+## Stap 3: CampaignState TypedDict
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/state.py` aangemaakt met de `CampaignState` TypedDict
+- Alle state velden gedefinieerd voor de 5 agents
+- `operator.add` reducer toegevoegd op `copy_versions` en `social_versions` om iteratiegeschiedenis te bewaren
+
+**Waarom TypedDict?**
+LangGraph gebruikt TypedDict als state schema voor de StateGraph. Dit geeft type safety en maakt duidelijk welke velden beschikbaar zijn. Het is het standaard patroon uit de LangGraph documentatie.
+
+**Waarom Annotated met operator.add?**
+Standaard overschrijft LangGraph velden (last-write-wins). Met `Annotated[list[str], operator.add]` worden nieuwe items aan de lijst toegevoegd i.p.v. overschreven. Zo blijft de volledige versiegeschiedenis bewaard — handig voor debugging en evaluatie.
+
+**Bronnen:**
+- LangGraph state reducers: https://langchain-ai.github.io/langgraph/concepts/low_level/#reducers
+- Python TypedDict: https://docs.python.org/3/library/typing.html#typing.TypedDict

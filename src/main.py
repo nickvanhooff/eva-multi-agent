@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 
 from src.graph import build_graph
+from src.tracing import setup_tracing
 
 
 def run_campaign(product_description: str) -> dict:
@@ -77,6 +78,9 @@ def save_campaign_report(result: dict, product_description: str) -> str:
 def main():
     # Fix UTF-8 output on Windows
     sys.stdout.reconfigure(encoding="utf-8")
+
+    # Setup LangSmith tracing (if enabled)
+    setup_tracing()
 
     # Demo product
     product = """Eco-Cup Go: Een herbruikbare, opvouwbare koffiebeker gemaakt van

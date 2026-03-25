@@ -298,7 +298,7 @@ Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline
 
 ## Stap 15: Campaign report persistentie — JSON reports
 **Datum:** 2026-03-25
-**Commit:** `9439006`, volume mount gefixt in `docker-compose.yml`
+**Commit:** `9439006`, volume mount gefixt in `docker-compose.yml`, later `835ff09`
 
 **Wat is er gedaan:**
 - `src/main.py` uitgebreid met `save_campaign_report()` functie
@@ -329,5 +329,63 @@ Docker containers hebben hun eigen geïsoleerd filesystem. Zonder volume mount, 
 - Timestamp in bestandsnaam zodat elke run uniek is
 - Kompakte report (geen volledige versiegeschiedenis, wel counts) om file size klein te houden
 - Volume mount pattern voor persistent Docker output
+
+---
+
+## Stap 16: LangSmith integratie — debugging en monitoring
+**Datum:** 2026-03-25
+**Commit:** `31dcbe7`
+
+**Wat is er gedaan:**
+- `src/tracing.py` aangemaakt met `setup_tracing()` functie
+- `langsmith>=0.1.0` toegevoegd aan requirements.txt
+- `.env.example` aangemaakt met LangSmith configuratietemplate
+- `src/main.py` uitgebreid: `setup_tracing()` aangeroepen bij startup
+- `LANGSMITH_SETUP.md` aangemaakt: volledige Dutch gids voor setup en gebruik
+
+**LangSmith features:**
+- Real-time tracing: zie elke agent-stap, LLM call, en state transition
+- Performance monitoring: latency per agent, token usage, kosten
+- Debugging interface: inspecteer state velden en LLM responses
+- Run comparison: vergelijk iteraties en feedback-loops
+
+**Configuratie:**
+```env
+LANGSMITH_ENABLED=true          # Aan/uit
+LANGSMITH_API_KEY=ls_...        # API key van smith.langchain.com
+LANGSMITH_PROJECT=eva-multi-agent
+LANGSMITH_ENDPOINT=https://api.smith.langchain.com
+```
+
+**Setup stappen:**
+1. Account aanmaken: https://smith.langchain.com
+2. API Key ophalen uit Settings
+3. In `.env` instellen: `LANGSMITH_ENABLED=true` + API key
+4. Campaign runnen: tracing automatisch actief
+5. Dashboard bezoeken: zie real-time traces en metrics
+
+**Waarom LangSmith?**
+Debugging multi-agent systemen is complex: je wilt zien:
+- Wat zei Researcher precies? Waarom gaf Campaign Manager feedback?
+- Hoe lang duurt elke agent? Waar is de bottleneck?
+- Hoeveel tokens gebruiken we? (kostenbewustzijn)
+- Werkt de feedback-loop echt?
+
+LangSmith geeft antwoorden op al deze vragen zonder extra code te schrijven.
+
+**Portfolio waarde:**
+- Screenshots van traces kunnen als bewijs in decision logs gelinkt
+- Verdeelt eigen werk (keuzes, config) en AI-werk (LLM responses, agent logica)
+- Toont iteratieproces: feedback loop in actie
+
+**Zelf bedacht:**
+- Environment-variable based configuration (LANGSMITH_ENABLED) zodat je kan switchen zonder code
+- Automatic initialization in main.py (setup_tracing() called at startup)
+- Nederlandse documentatie LANGSMITH_SETUP.md met stap-voor-stap + troubleshooting
+
+**Bronnen:**
+- LangSmith officieel: https://smith.langchain.com
+- LangSmith docs: https://docs.smith.langchain.com/
+- LangGraph + LangSmith integratie: https://langchain-ai.github.io/langgraph/how-tos/debugging/
 
 ---

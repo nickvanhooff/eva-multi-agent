@@ -34,18 +34,26 @@ PROVIDER_DEFAULTS = {
 }
 
 
-def _get_llm(provider: str = None) -> ChatOpenAI:
+def _get_llm(provider: str = None, model: str = None) -> ChatOpenAI:
     """Create a ChatOpenAI client for the given provider.
 
     Args:
         provider: Provider name (groq, openrouter, ollama).
                   Defaults to LLM_PROVIDER env var.
+        model: Model name override. Defaults to provider default.
     """
     provider = provider or os.getenv("LLM_PROVIDER", "ollama")
     defaults = PROVIDER_DEFAULTS.get(provider, PROVIDER_DEFAULTS["ollama"])
 
     base_url = defaults["base_url"]
-    model = os.getenv("LLM_MODEL", defaults["model"]) if provider == os.getenv("LLM_PROVIDER") else defaults["model"]
+
+    # Model: explicit > env var (only for default provider) > provider default
+    if model:
+        resolved_model = model
+    elif provider == os.getenv("LLM_PROVIDER"):
+        resolved_model = os.getenv("LLM_MODEL", defaults["model"])
+    else:
+        resolved_model = defaults["model"]
 
     # Resolve API key
     if provider == "ollama":
@@ -56,7 +64,7 @@ def _get_llm(provider: str = None) -> ChatOpenAI:
         api_key = os.getenv("LLM_API_KEY", "no-key")
 
     return ChatOpenAI(
-        model=model,
+        model=resolved_model,
         api_key=api_key,
         base_url=base_url,
         temperature=0.7,
@@ -68,6 +76,7 @@ def call_llm(
     user_prompt: str,
     temperature: float = 0.7,
     provider: str = None,
+    model: str = None,
 ) -> str:
     """Call an LLM via LangChain's ChatOpenAI.
 
@@ -80,7 +89,7 @@ def call_llm(
     Returns:
         The LLM's response as a plain string.
     """
-    llm = _get_llm(provider)
+    llm = _get_llm(provider, model)
     llm = llm.with_config({"temperature": temperature})
 
     messages = [

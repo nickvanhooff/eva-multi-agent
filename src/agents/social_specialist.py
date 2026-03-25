@@ -48,7 +48,7 @@ Lever content op voor:
 2. LinkedIn (professionele post)
 3. X/Twitter (kort en krachtig, max 280 tekens)"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.8)
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.8, provider="openrouter")
 
     print("\n[SOCIAL SPECIALIST] Response received:")
     print("-" * 40)

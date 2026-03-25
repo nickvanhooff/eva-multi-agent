@@ -43,7 +43,7 @@ Geef je antwoord in dit formaat:
 ## TONE OF VOICE
 [jouw tone of voice hier]"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.5)
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.5, provider="groq", model="llama-3.1-8b-instant")
 
     print("\n[STRATEEG] Response received:")
     print("-" * 40)

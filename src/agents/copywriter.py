@@ -50,7 +50,7 @@ Lever de volgende teksten op:
 3. Een bodytekst (2-3 alinea's)
 4. Een call-to-action"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.9)
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.9, provider="openrouter")
 
     print("\n[COPYWRITER] Response received:")
     print("-" * 40)

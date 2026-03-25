@@ -36,7 +36,7 @@ Geef je antwoord in dit formaat:
 ## DOELGROEP
 [jouw doelgroepbeschrijving hier]"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.4)
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.4, provider="groq", model="llama-3.1-8b-instant")
 
     print("\n[RESEARCHER] Response received:")
     print("-" * 40)

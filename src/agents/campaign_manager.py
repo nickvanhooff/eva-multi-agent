@@ -59,7 +59,7 @@ ITERATIE: {iteration} van {MAX_ITERATIONS}
 
 Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.3)
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.3, provider="groq", model="llama-3.3-70b-versatile")
 
     print("\n[CAMPAIGN MANAGER] Response received:")
     print("-" * 40)

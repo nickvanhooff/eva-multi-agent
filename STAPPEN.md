@@ -128,3 +128,21 @@ Uit het prototype (DL-002 bugfix) bleek dat kleine LLMs (llama3.2) Engels en Ned
 **Bronnen:**
 - DL-002 bugfix uit reclamebureau_eva prototype (les geleerd)
 - LangGraph node pattern: https://langchain-ai.github.io/langgraph/concepts/low_level/#nodes
+
+---
+
+## Stap 7: Minimale graph met researcher en strateeg
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/graph.py` aangemaakt met een minimale 2-node StateGraph
+- Flow: START -> Researcher -> Strateeg -> END
+- MemorySaver checkpointer toegevoegd voor state persistence
+- `build_graph()` functie die de gecompileerde graph teruggeeft
+
+**Waarom eerst een minimale graph?**
+Door klein te beginnen (2 nodes) kunnen we verifiereren dat de LangGraph setup correct werkt voordat we de complexere agents en conditional routing toevoegen. Dit volgt de incrementele aanpak uit de freeCodeCamp tutorial.
+
+**Bronnen:**
+- LangGraph StateGraph: https://langchain-ai.github.io/langgraph/concepts/low_level/#stategraph
+- LangGraph MemorySaver: https://langchain-ai.github.io/langgraph/concepts/persistence/

@@ -19,6 +19,12 @@ def social_specialist_node(state: CampaignState) -> dict:
     """
     feedback = state.get("cm_feedback", "")
 
+    print("\n" + "=" * 60)
+    print("[SOCIAL SPECIALIST] Creating social media content...")
+    if feedback and state.get("phase") == "social_review":
+        print(f"[SOCIAL SPECIALIST] Feedback received: {feedback[:200]}...")
+    print("=" * 60)
+
     feedback_section = ""
     if feedback and state.get("phase") == "social_review":
         feedback_section = f"""
@@ -43,6 +49,11 @@ Lever content op voor:
 3. X/Twitter (kort en krachtig, max 280 tekens)"""
 
     response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.8)
+
+    print("\n[SOCIAL SPECIALIST] Response received:")
+    print("-" * 40)
+    print(response[:500] + ("..." if len(response) > 500 else ""))
+    print("-" * 40)
 
     return {
         "social_content": response,

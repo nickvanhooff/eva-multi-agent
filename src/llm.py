@@ -1,13 +1,12 @@
-"""Provider-agnostic LLM wrapper using the OpenAI SDK.
+"""Provider-agnostic LLM wrapper using LangChain's ChatOpenAI.
 
 Supports Ollama, OpenRouter, and Groq via base_url switching.
-No LangChain dependency — pure openai SDK.
+Uses LangChain for automatic LangSmith tracing integration.
 """
 
 import os
-
 from dotenv import load_dotenv
-from openai import OpenAI
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
@@ -15,7 +14,7 @@ load_dotenv()
 PROVIDER_DEFAULTS = {
     "ollama": {
         "base_url": "http://localhost:11434/v1",
-        "api_key": "ollama",  # Ollama doesn't need a real key
+        "api_key": "ollama",
         "model": "llama3.2",
     },
     "openrouter": {
@@ -29,11 +28,13 @@ PROVIDER_DEFAULTS = {
 }
 
 
-def _get_client() -> tuple[OpenAI, str]:
-    """Create an OpenAI client based on environment configuration.
+def _get_llm() -> ChatOpenAI:
+    """Create a ChatOpenAI client based on environment configuration.
+
+    Automatically integrates with LangSmith for tracing when configured.
 
     Returns:
-        Tuple of (client, model_name)
+        ChatOpenAI instance configured for the current provider.
     """
     provider = os.getenv("LLM_PROVIDER", "ollama")
     defaults = PROVIDER_DEFAULTS.get(provider, PROVIDER_DEFAULTS["ollama"])
@@ -42,12 +43,16 @@ def _get_client() -> tuple[OpenAI, str]:
     api_key = os.getenv("LLM_API_KEY", defaults.get("api_key", "no-key"))
     model = os.getenv("LLM_MODEL", defaults["model"])
 
-    client = OpenAI(base_url=base_url, api_key=api_key)
-    return client, model
+    return ChatOpenAI(
+        model=model,
+        api_key=api_key,
+        base_url=base_url,
+        temperature=0.7,
+    )
 
 
 def call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.7) -> str:
-    """Call an LLM via the OpenAI-compatible API.
+    """Call an LLM via LangChain's ChatOpenAI.
 
     Args:
         system_prompt: The system instructions for the LLM.
@@ -57,15 +62,15 @@ def call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.7) -> 
     Returns:
         The LLM's response as a plain string.
     """
-    client, model = _get_client()
+    llm = _get_llm()
+    llm = llm.with_config({"temperature": temperature})
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        temperature=temperature,
-    )
+    from langchain.messages import HumanMessage, SystemMessage
 
-    return response.choices[0].message.content or ""
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt),
+    ]
+
+    response = llm.invoke(messages)
+    return response.content or ""

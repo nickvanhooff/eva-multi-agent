@@ -18,6 +18,10 @@ def researcher_node(state: CampaignState) -> dict:
     Reads: product_description
     Writes: market_research, target_audience
     """
+    print("\n" + "=" * 60)
+    print("[RESEARCHER] Starting product & market analysis...")
+    print("=" * 60)
+
     product = state["product_description"]
 
     user_prompt = f"""Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.
@@ -33,6 +37,11 @@ Geef je antwoord in dit formaat:
 [jouw doelgroepbeschrijving hier]"""
 
     response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.4)
+
+    print("\n[RESEARCHER] Response received:")
+    print("-" * 40)
+    print(response[:500] + ("..." if len(response) > 500 else ""))
+    print("-" * 40)
 
     # Parse sections from response
     market_research = ""

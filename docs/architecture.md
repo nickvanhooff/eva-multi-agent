@@ -75,13 +75,13 @@ All other fields use the default last-write-wins strategy.
 
 ### What each agent reads
 
-| Agent | Reads from State |
-|-------|-----------------|
-| Researcher | `product_description` |
-| Strateeg | `product_description`, `market_research`, `target_audience` |
-| Copywriter | `product_description`, `target_audience`, `strategy`, `tone_of_voice`, `cm_feedback` |
-| Social Specialist | `product_description`, `target_audience`, `strategy`, `copy_draft`, `cm_feedback` |
-| Campaign Manager | ALL fields |
+| Agent             | Reads from State                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------ |
+| Researcher        | `product_description`                                                                |
+| Strateeg          | `product_description`, `market_research`, `target_audience`                          |
+| Copywriter        | `product_description`, `target_audience`, `strategy`, `tone_of_voice`, `cm_feedback` |
+| Social Specialist | `product_description`, `target_audience`, `strategy`, `copy_draft`, `cm_feedback`    |
+| Campaign Manager  | ALL fields                                                                           |
 
 ## 3. LangGraph Concepts Map
 

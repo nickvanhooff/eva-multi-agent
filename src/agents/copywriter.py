@@ -20,6 +20,12 @@ def copywriter_node(state: CampaignState) -> dict:
     feedback = state.get("cm_feedback", "")
     iteration = state.get("iteration_count", 0)
 
+    print("\n" + "=" * 60)
+    print(f"[COPYWRITER] Writing marketing copy (iteration {iteration + 1})...")
+    if feedback and iteration > 0:
+        print(f"[COPYWRITER] Feedback received: {feedback[:200]}...")
+    print("=" * 60)
+
     feedback_section = ""
     if feedback and iteration > 0:
         feedback_section = f"""
@@ -45,6 +51,11 @@ Lever de volgende teksten op:
 4. Een call-to-action"""
 
     response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.9)
+
+    print("\n[COPYWRITER] Response received:")
+    print("-" * 40)
+    print(response[:500] + ("..." if len(response) > 500 else ""))
+    print("-" * 40)
 
     return {
         "copy_draft": response,

@@ -20,6 +20,10 @@ def strateeg_node(state: CampaignState) -> dict:
     Reads: product_description, market_research, target_audience
     Writes: strategy, positioning, tone_of_voice
     """
+    print("\n" + "=" * 60)
+    print("[STRATEEG] Developing marketing strategy...")
+    print("=" * 60)
+
     user_prompt = f"""Ontwikkel een marketingstrategie op basis van de volgende informatie:
 
 PRODUCT: {state["product_description"]}
@@ -40,6 +44,11 @@ Geef je antwoord in dit formaat:
 [jouw tone of voice hier]"""
 
     response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.5)
+
+    print("\n[STRATEEG] Response received:")
+    print("-" * 40)
+    print(response[:500] + ("..." if len(response) > 500 else ""))
+    print("-" * 40)
 
     # Parse sections from response
     strategy = ""

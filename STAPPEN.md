@@ -389,3 +389,44 @@ LangSmith geeft antwoorden op al deze vragen zonder extra code te schrijven.
 - LangGraph + LangSmith integratie: https://langchain-ai.github.io/langgraph/how-tos/debugging/
 
 ---
+
+## Stap 17: LangSmith debuggen — traces werkend krijgen
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- Bug gevonden en opgelost: traces verschenen niet in LangSmith dashboard ondanks correcte API key
+- Drie oorzaken gevonden en gefixed:
+
+**Bug 1 — Verkeerde environment variabele naam:**
+`.env` had `LANGSMITH_TRACING=true`, maar `src/tracing.py` checkte op `LANGSMITH_ENABLED=true`.
+→ `.env` aangepast: `LANGSMITH_TRACING=true` → `LANGSMITH_ENABLED=true`
+
+**Bug 2 — LangSmith SDK werd nooit geactiveerd:**
+`setup_tracing()` zette wel `LANGSMITH_API_KEY` maar nooit `LANGSMITH_TRACING=true` — de variabele die de LangSmith SDK zelf checkt om tracing in te schakelen.
+→ `src/tracing.py` aangepast: `os.environ["LANGSMITH_TRACING"] = "true"` toegevoegd in `setup_tracing()`
+
+**Bug 3 — Raw OpenAI SDK wordt niet getraceerd door LangSmith:**
+`src/llm.py` gebruikte de raw `openai.OpenAI` client. LangSmith trapt alleen automatisch LangChain calls af, niet de raw OpenAI SDK.
+→ `src/llm.py` omgebouwd: van `openai.OpenAI` naar `langchain_openai.ChatOpenAI`
+→ `requirements.txt` uitgebreid: `langchain>=0.1.0` en `langchain_openai>=0.1.0` toegevoegd
+
+**Resultaat:**
+Na rebuild (`docker compose build && docker compose up`) verschijnen traces in LangSmith:
+- Volledige graph run zichtbaar (11.77s, ~8.500 tokens)
+- Alle 5 agent stappen traceerbaar
+- Token gebruik en latency per agent inzichtelijk
+
+**Waarom is dit belangrijk voor portfolio?**
+- LangSmith traces zijn nu bruikbaar als bewijs in decision logs (screenshot + link)
+- Token usage zichtbaar: ~8.500 tokens per campaign run = gratis binnen Groq free tier
+- Feedback loop werking aantoonbaar via trace tree
+
+**Zelf bedacht:**
+- Diagnose van alle drie de oorzaken systematisch doorlopen (env var naam → SDK activatie → SDK compatibiliteit)
+- Keuze om llm.py te migreren naar LangChain i.p.v. raw SDK (meer integratiemogelijkheden voor tracing)
+
+**Bronnen:**
+- LangSmith quickstart: https://docs.smith.langchain.com/
+- LangChain ChatOpenAI: https://python.langchain.com/docs/integrations/chat/openai/
+
+---

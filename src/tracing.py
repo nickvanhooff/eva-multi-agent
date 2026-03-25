@@ -35,7 +35,8 @@ def setup_tracing() -> bool:
         )
         return False
 
-    # Set environment variables for LangSmith
+    # Set environment variables for LangSmith SDK
+    os.environ["LANGSMITH_TRACING"] = "true"
     os.environ["LANGSMITH_API_KEY"] = api_key
     os.environ["LANGSMITH_PROJECT"] = os.getenv(
         "LANGSMITH_PROJECT", "eva-multi-agent"

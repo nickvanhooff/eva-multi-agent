@@ -33,6 +33,10 @@ def campaign_manager_node(state: CampaignState) -> dict:
     """
     iteration = state.get("iteration_count", 0)
 
+    print("\n" + "=" * 60)
+    print(f"[CAMPAIGN MANAGER] Evaluating campaign (iteration {iteration})...")
+    print("=" * 60)
+
     user_prompt = f"""Beoordeel de volgende marketingcampagne:
 
 PRODUCT: {state["product_description"]}
@@ -57,6 +61,11 @@ Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
 
     response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.3)
 
+    print("\n[CAMPAIGN MANAGER] Response received:")
+    print("-" * 40)
+    print(response[:500] + ("..." if len(response) > 500 else ""))
+    print("-" * 40)
+
     # Parse decision from response
     approved = False
     phase = "final"
@@ -76,6 +85,10 @@ Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
     feedback_match = re.search(r"FEEDBACK:\s*(.+)", response, re.DOTALL | re.IGNORECASE)
     if feedback_match:
         feedback = feedback_match.group(1).strip()
+
+    print(f"\n[CAMPAIGN MANAGER] Decision: {'GOEDGEKEURD' if approved else 'AFGEWEZEN'}")
+    print(f"[CAMPAIGN MANAGER] Phase: {phase}")
+    print(f"[CAMPAIGN MANAGER] Feedback: {feedback[:200]}...")
 
     result = {
         "cm_feedback": feedback,
@@ -110,14 +123,19 @@ def cm_router(state: CampaignState) -> str:
         "finalize" — approve and end
     """
     if state.get("approved", False):
+        print("[ROUTER] -> END (approved)")
         return "finalize"
     if state.get("iteration_count", 0) >= MAX_ITERATIONS:
+        print("[ROUTER] -> END (max iterations reached)")
         return "finalize"
 
     phase = state.get("phase", "copy_review")
     if phase == "copy_review":
+        print("[ROUTER] -> COPYWRITER (feedback loop)")
         return "copywriter"
     elif phase == "social_review":
+        print("[ROUTER] -> SOCIAL SPECIALIST (feedback loop)")
         return "social_specialist"
 
+    print("[ROUTER] -> END (finalize)")
     return "finalize"

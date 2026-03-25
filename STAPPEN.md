@@ -73,3 +73,26 @@ Standaard overschrijft LangGraph velden (last-write-wins). Met `Annotated[list[s
 **Bronnen:**
 - LangGraph state reducers: https://langchain-ai.github.io/langgraph/concepts/low_level/#reducers
 - Python TypedDict: https://docs.python.org/3/library/typing.html#typing.TypedDict
+
+---
+
+## Stap 4: LLM wrapper met openai SDK
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/llm.py` aangemaakt met een `call_llm()` functie
+- Provider-agnostisch: werkt met Ollama, OpenRouter en Groq via `base_url` switching
+- Configuratie via `.env` bestand (LLM_PROVIDER, LLM_MODEL, LLM_BASE_URL, LLM_API_KEY)
+- Standaard provider defaults per provider opgenomen
+
+**Waarom openai SDK i.p.v. LangChain?**
+Het doel is om eerst puur met LangGraph te werken zonder LangChain. De openai Python SDK werkt met alle drie de providers omdat ze allemaal OpenAI-compatibele endpoints bieden. Dit vervangt de `langchain_core.messages` en `BaseChatModel` uit het prototype.
+
+**Zelf bedacht:**
+- Het `PROVIDER_DEFAULTS` dictionary patroon met fallback naar .env variabelen
+- De `_get_client()` helper die een tuple (client, model) teruggeeft
+
+**Bronnen:**
+- OpenAI Python SDK: https://github.com/openai/openai-python
+- Ollama OpenAI compatibility: https://ollama.com/blog/openai-compatibility
+- Groq OpenAI compatibility: https://console.groq.com/docs/openai

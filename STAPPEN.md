@@ -213,6 +213,7 @@ Uit het prototype (DL-002) bleek dat eenvoudige string matching niet betrouwbaar
 
 ## Stap 12: Main entry point en Docker setup
 **Datum:** 2026-03-25
+**Commit:** `2a8ae7f`
 
 **Wat is er gedaan:**
 - `src/main.py` aangemaakt als entry point
@@ -234,3 +235,90 @@ Docker maakt het project reproduceerbaar en makkelijk te deployen. De docker-com
 **Bronnen:**
 - Docker Compose services: https://docs.docker.com/compose/
 - Ollama Docker image: https://hub.docker.com/r/ollama/ollama
+
+---
+
+## Stap 13: Logging enhancement — zichtbaarheid van agent activiteit
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- Alle 5 agent nodes (`researcher`, `strategist`, `copywriter`, `social_specialist`, `campaign_manager`) voorzien van print statements
+- Elke agent print:
+  - Startsignaal met duidelijke headers (`===` scheidingslijn)
+  - Response snippet (eerste 500 tekens) zodat voortgang zichtbaar is
+  - Campaign Manager print ook: BESLISSING (GOEDGEKEURD/AFGEWEZEN), FASE, FEEDBACK preview
+- `Dockerfile` aangepast: `ENV PYTHONUNBUFFERED=1` toegevoegd zodat logs direct in Docker container zichtbaar zijn (niet gebufferd)
+
+**Waarom nodig?**
+Vorige test met lokale Ollama (qwen3.5:4b) duurde 20+ minuten met zero zichtbare voortgang. Gebruikers kunnen niet zien wat er gebeurt. Met logging kunnen ze monitor wanneer welke agent actief is.
+
+**Zelf bedacht:**
+- De `PYTHONUNBUFFERED=1` env var in Dockerfile voor real-time Docker logging
+- Logging format met duidelijke headers (`[RESEARCHER]`, `[CAMPAIGN MANAGER]`, etc.) voor scannability
+
+---
+
+## Stap 14: Cloud LLM provider integratie — Groq
+**Datum:** 2026-03-25
+**Commit:** `cad09de` (GPU support), `9439006` (report saving)
+
+**Wat is er gedaan:**
+- `.env` aangepast: `LLM_PROVIDER=groq`, model `llama-3.3-70b-versatile`, API key ingevuld
+- `docker-compose.yml` geoptimaliseerd:
+  - GPU support enabled: `driver: nvidia`, `count: all`, `capabilities: [gpu]`
+  - Hardcoded environment overrides verwijderd (lijn 24-28 geco}mmentarieerd) zodat `.env` bestand wordt gebruikt
+- Lokale Ollama service blijft in docker-compose (voor toekomstig gebruik), maar is nu optioneel
+
+**Waarom Groq cloud i.p.v. lokale Ollama?**
+Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline. Groq biedt:
+- Snellere inference (llama-3.3-70b-versatile): ~2 minuten totaal
+- Veel groter model (70B parameters) → betere kwaliteit
+- Gratis API tier (8000 requests/dag, ruim voldoende voor testen)
+
+**Kosten analyse:**
+- Ollama (lokaal): Gratis, maar langzaam + GPU nodig
+- Groq: Gratis tier, snel, geen GPU nodig
+- OpenRouter/andere clouds: Betaald
+
+**Performance verschil:**
+- qwen3.5:4b (Ollama, RTX 4050): 4-5 minuten per agent = 20+ minuten totaal
+- llama-3.3-70b (Groq API): ~20-30 seconden per agent = 2 minuten totaal
+→ **10x sneller**
+
+**Zelf bedacht:**
+- De keuze om docker-compose beiden services te behouden maar via `.env` flexibel switchen (i.p.v. permanent te verwijderen)
+- GPU support in docker-compose als future-proofing
+
+**Bronnen:**
+- Groq console: https://console.groq.com
+- Groq OpenAI compatibility: https://console.groq.com/docs/openai
+- Docker GPU support: https://docs.docker.com/compose/gpu-support/
+
+---
+
+## Stap 15: Campaign report persistentie — JSON reports
+**Datum:** 2026-03-25
+**Commit:** `9439006`
+
+**Wat is er gedaan:**
+- `src/main.py` uitgebreid met `save_campaign_report()` functie
+- Elke campaign wordt opgeslagen als JSON file in `campaigns/` directory
+- Bestandsnaam bevat timestamp: `campaign_YYYYMMDD_HHMMSS.json`
+- Report bevat: product, doelgroep, strategie, positioning, tone of voice, copy, social content, versie-aantallen, iteratie-count, goedkeuring-status
+- `.gitignore` aangepast: `campaigns/` directory genegeerd (niet in git)
+- `main.py` print het pad naar het rapport na completion: `📄 Campaign report saved to: campaigns/campaign_20260325_142530.json`
+
+**Waarom nodig?**
+Vorige aanvraag: "Waar kan ik het final report lezen?" → Campaign output stond alleen in console logs, niet persistent opgeslagen. Nu kan je alle gegenereerde campagnes teruglezen en vergelijken.
+
+**Use case:**
+- Evaluatie: vergelijken van verschillende campagnes
+- Portfolio: bewijs van werking voor learning outcomes
+- Debugging: nagaan wat een agent heeft gegenereerd
+
+**Zelf bedacht:**
+- JSON format i.p.v. markdown/TXT voor machine-readability
+- Timestamp in bestandsnaam zodat elke run uniek is
+- Kompakte report (geen volledige versiegeschiedenis, wel counts) om file size klein te houden
+
+---

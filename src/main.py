@@ -1,7 +1,10 @@
 """Entry point for the Eva multi-agent marketing campaign generator."""
 
+import json
 import sys
 import uuid
+from datetime import datetime
+from pathlib import Path
 
 from src.graph import build_graph
 
@@ -31,6 +34,44 @@ def run_campaign(product_description: str) -> dict:
     # Run the graph
     result = graph.invoke(initial_state, config)
     return result
+
+
+def save_campaign_report(result: dict, product_description: str) -> str:
+    """Save campaign result to a JSON file.
+
+    Args:
+        result: The campaign result from run_campaign()
+        product_description: The original product description
+
+    Returns:
+        Path to the saved report file
+    """
+    output_dir = Path("campaigns")
+    output_dir.mkdir(exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"campaign_{timestamp}.json"
+    filepath = output_dir / filename
+
+    report = {
+        "timestamp": datetime.now().isoformat(),
+        "product_description": product_description,
+        "target_audience": result.get("target_audience", ""),
+        "strategy": result.get("strategy", ""),
+        "positioning": result.get("positioning", ""),
+        "tone_of_voice": result.get("tone_of_voice", ""),
+        "copy_draft": result.get("copy_draft", ""),
+        "copy_versions_count": len(result.get("copy_versions", [])),
+        "social_content": result.get("social_content", ""),
+        "social_versions_count": len(result.get("social_versions", [])),
+        "iterations": result.get("iteration_count", 0),
+        "approved_by_cm": result.get("approved", False),
+    }
+
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+
+    return str(filepath)
 
 
 def main():
@@ -68,6 +109,12 @@ def main():
     print(f"\n--- VERSIES ---")
     print(f"Copy versies: {len(result.get('copy_versions', []))}")
     print(f"Social versies: {len(result.get('social_versions', []))}")
+
+    # Save campaign report
+    report_path = save_campaign_report(result, product)
+    print(f"\n" + "=" * 60)
+    print(f"📄 Campaign report saved to: {report_path}")
+    print("=" * 60)
 
 
 if __name__ == "__main__":

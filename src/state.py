@@ -37,3 +37,6 @@ class CampaignState(TypedDict):
     approved: bool
     iteration_count: int
     final_campaign: Optional[dict]
+
+    # --- Image Generator output ---
+    image_path: Optional[str]

@@ -2,15 +2,19 @@
 
 Supports Ollama, OpenRouter, and Groq via base_url switching.
 Uses LangChain for automatic LangSmith tracing integration.
+
+Per-agent provider override via env vars:
+  RESEARCHER_LLM_PROVIDER, STRATEEG_LLM_PROVIDER, COPYWRITER_LLM_PROVIDER,
+  SOCIAL_LLM_PROVIDER, CM_LLM_PROVIDER
 """
 
 import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
+from langchain.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
-# Provider configurations
 PROVIDER_DEFAULTS = {
     "ollama": {
         "base_url": "http://localhost:11434/v1",
@@ -19,29 +23,37 @@ PROVIDER_DEFAULTS = {
     },
     "openrouter": {
         "base_url": "https://openrouter.ai/api/v1",
+        "api_key_env": "OPENROUTER_API_KEY",
         "model": "meta-llama/llama-3.3-70b-instruct:free",
     },
     "groq": {
         "base_url": "https://api.groq.com/openai/v1",
+        "api_key_env": "LLM_API_KEY",
         "model": "llama-3.3-70b-versatile",
     },
 }
 
 
-def _get_llm() -> ChatOpenAI:
-    """Create a ChatOpenAI client based on environment configuration.
+def _get_llm(provider: str = None) -> ChatOpenAI:
+    """Create a ChatOpenAI client for the given provider.
 
-    Automatically integrates with LangSmith for tracing when configured.
-
-    Returns:
-        ChatOpenAI instance configured for the current provider.
+    Args:
+        provider: Provider name (groq, openrouter, ollama).
+                  Defaults to LLM_PROVIDER env var.
     """
-    provider = os.getenv("LLM_PROVIDER", "ollama")
+    provider = provider or os.getenv("LLM_PROVIDER", "ollama")
     defaults = PROVIDER_DEFAULTS.get(provider, PROVIDER_DEFAULTS["ollama"])
 
-    base_url = os.getenv("LLM_BASE_URL", defaults["base_url"])
-    api_key = os.getenv("LLM_API_KEY", defaults.get("api_key", "no-key"))
-    model = os.getenv("LLM_MODEL", defaults["model"])
+    base_url = defaults["base_url"]
+    model = os.getenv("LLM_MODEL", defaults["model"]) if provider == os.getenv("LLM_PROVIDER") else defaults["model"]
+
+    # Resolve API key
+    if provider == "ollama":
+        api_key = "ollama"
+    elif "api_key_env" in defaults:
+        api_key = os.getenv(defaults["api_key_env"], "no-key")
+    else:
+        api_key = os.getenv("LLM_API_KEY", "no-key")
 
     return ChatOpenAI(
         model=model,
@@ -51,21 +63,25 @@ def _get_llm() -> ChatOpenAI:
     )
 
 
-def call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.7) -> str:
+def call_llm(
+    system_prompt: str,
+    user_prompt: str,
+    temperature: float = 0.7,
+    provider: str = None,
+) -> str:
     """Call an LLM via LangChain's ChatOpenAI.
 
     Args:
         system_prompt: The system instructions for the LLM.
         user_prompt: The user message / task for the LLM.
         temperature: Creativity control (0.0 = deterministic, 1.0 = creative).
+        provider: Optional provider override (groq, openrouter, ollama).
 
     Returns:
         The LLM's response as a plain string.
     """
-    llm = _get_llm()
+    llm = _get_llm(provider)
     llm = llm.with_config({"temperature": temperature})
-
-    from langchain.messages import HumanMessage, SystemMessage
 
     messages = [
         SystemMessage(content=system_prompt),

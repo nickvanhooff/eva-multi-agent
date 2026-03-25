@@ -430,3 +430,137 @@ Na rebuild (`docker compose build && docker compose up`) verschijnen traces in L
 - LangChain ChatOpenAI: https://python.langchain.com/docs/integrations/chat/openai/
 
 ---
+
+## Stap 18: SDXL image generatie — lokaal via Docker met CUDA
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `Dockerfile` base image gewijzigd: `python:3.11-slim` → `pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime`
+- `requirements.txt` uitgebreid: `diffusers>=0.24.0`, `transformers>=4.36.0`, `accelerate>=0.25.0`, `safetensors>=0.4.0`
+- `docker-compose.yml` aangepast: GPU support toegevoegd aan `eva` service (was alleen bij `ollama`)
+- `sdxl_cache` Docker volume toegevoegd: HuggingFace model cache persistent opgeslagen (voorkomt re-download bij elke rebuild)
+
+**Beslissing: lokaal draaien i.p.v. HuggingFace Inference API**
+
+Overwogen opties:
+1. HuggingFace Inference API (cloud) — gratis tier, geen GPU nodig, maar rate limits en afhankelijk van internet
+2. Lokaal met `diffusers` op RTX 4050 — volledig gratis, consistent, geen externe afhankelijkheid
+
+Gekozen voor **lokaal** omdat:
+- RTX 4050 (6GB VRAM) past SDXL met fp16 optimalisaties (~30–60s per image)
+- Geen API key of rate limits
+- Sneller dan HF gratis tier (geen wachtrij)
+- GPU support was al geconfigureerd in docker-compose voor `ollama` service
+
+**Overwegingen hardwarelimiet:**
+- 6GB VRAM is krap voor SDXL (normaal 8GB+)
+- Oplossing: `torch.float16` + `enable_attention_slicing()` + `enable_vae_slicing()`
+- Alternatief als OOM: SDXL-turbo (4-stap model, sneller, iets minder kwaliteit)
+
+**Waarom pytorch base image?**
+`pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime` bevat al PyTorch + CUDA + cuDNN. Dit voorkomt handmatige CUDA installatie in de Dockerfile en geeft een stabiele, geteste combinatie.
+
+**Zelf bedacht:**
+- `sdxl_cache` volume voor model persistentie (SDXL is ~6GB download — niet elke keer opnieuw downloaden)
+- GPU support op `eva` container naast `ollama` container
+
+**Bronnen:**
+- HuggingFace diffusers SDXL: https://huggingface.co/docs/diffusers/using-diffusers/sdxl
+- PyTorch Docker images: https://hub.docker.com/r/pytorch/pytorch
+- Docker GPU support: https://docs.docker.com/compose/gpu-support/
+
+---
+
+## Stap 19: Bugfix — PyTorch versie te oud voor transformers
+**Datum:** 2026-03-25
+
+**Fout:**
+```
+Disabling PyTorch because PyTorch >= 2.4 is required but found 2.1.0
+PyTorch was not found. Models won't be available...
+[IMAGE GENERATOR] ERROR: module 'torch' has no attribute 'xpu'
+```
+
+**Oorzaak:**
+`Dockerfile` gebruikte `pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime` (PyTorch 2.1.0). De `transformers` library vereist PyTorch >= 2.4. Door de versie mismatch kon `torch` niet worden geïnitialiseerd en ontbrak het `xpu` attribuut.
+
+**Fix:**
+`Dockerfile` base image bijgewerkt:
+```dockerfile
+# Was:
+FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+# Nu:
+FROM pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
+```
+
+**Zelf bedacht:**
+- Foutmelding herkend als versie mismatch (niet een code bug)
+- Gekozen voor minimale versie die voldoet (2.4.0) i.p.v. de nieuwste (2.5+) voor stabiliteit
+
+---
+
+## Stap 20: Bugfix — diffusers/transformers versie incompatibiliteit met PyTorch 2.4
+**Datum:** 2026-03-25
+
+**Fout:**
+```
+Failed to import diffusers.models.autoencoders.autoencoder_kl
+infer_schema(func): Parameter q has unsupported type torch.Tensor
+```
+
+**Oorzaak:**
+`pip install` haalde de nieuwste versies op: `diffusers 0.37.1` + `transformers 5.3.0`. Deze versies gebruiken attention mechanismen die `torch.compile`/`infer_schema` vereisen met features die niet beschikbaar zijn in PyTorch 2.4.0. De `>=` versieconstraints in `requirements.txt` lieten pip vrij om te recente versies te installeren.
+
+**Fix:**
+Versies vastgepind op bewezen stabiele combinatie met PyTorch 2.4:
+```
+# Was:
+diffusers>=0.24.0
+transformers>=4.36.0
+
+# Nu:
+diffusers==0.30.0
+transformers==4.44.0
+```
+
+**Zelf bedacht:**
+- Root cause herkend: `>=` constraints zijn gevaarlijk bij snel evoluerende ML libraries
+- Stabiele combinatie bepaald: diffusers 0.30.0 + transformers 4.44.0 zijn getest met PyTorch 2.4
+
+---
+
+## Stap 21: Groq rate limit bereikt — multi-LLM oplossing
+**Datum:** 2026-03-25
+
+**Fout:**
+```
+openai.RateLimitError: Error code: 429
+Rate limit reached for model `llama-3.3-70b-versatile`
+Limit 100000, Used 100000, Requested 1533.
+Please try again in 22m4.512s.
+```
+
+**Oorzaak:**
+Groq gratis tier heeft een limiet van **100.000 tokens per dag**. Na meerdere test-runs (debugging van LangSmith, SDXL, en campaign runs) was de dagelijkse limiet bereikt.
+
+**Oplossing: multi-LLM per agent**
+- `src/llm.py` uitgebreid: `call_llm()` accepteert nu een optionele `provider` parameter
+- `OPENROUTER_API_KEY` toegevoegd als tweede provider in `.env`
+- `docs/multi_llm_config.md` aangemaakt met configuratie-overzicht
+
+**Aanbevolen verdeling:** zie @[docs/model_selection.md](docs/model_selection.md)
+
+**Besparing:** ~60% minder Groq 70B tokens (copywriter + social draaien op OpenRouter)
+
+**Zelf bedacht:**
+- Keuze om per agent een provider te configureren i.p.v. één globale provider
+- Groq 70B bewaren voor Campaign Manager (kritiekste agent)
+- Groq 8B voor Researcher + Strateeg (500k tokens/dag limiet)
+- OpenRouter voor creatieve agents (copywriter, social)
+
+**Bronnen:**
+- Volledige model motivatie per agent: @[docs/model_selection.md](docs/model_selection.md)
+- OpenRouter free models: https://openrouter.ai/models?q=free
+- Groq rate limits: https://console.groq.com/settings/limits
+
+---

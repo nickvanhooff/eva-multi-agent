@@ -67,6 +67,7 @@ def save_campaign_report(result: dict, product_description: str) -> str:
         "social_versions_count": len(result.get("social_versions", [])),
         "iterations": result.get("iteration_count", 0),
         "approved_by_cm": result.get("approved", False),
+        "image_path": result.get("image_path"),
     }
 
     with open(filepath, "w", encoding="utf-8") as f:
@@ -83,10 +84,7 @@ def main():
     setup_tracing()
 
     # Demo product
-    product = """Eco-Cup Go: Een herbruikbare, opvouwbare koffiebeker gemaakt van
-    gerecycled oceaanplastic. De beker houdt dranken 4 uur warm, past in je jaszak
-    als hij is opgevouwen, en is verkrijgbaar in 5 kleuren. Prijs: EUR 24,95.
-    Doelmarkt: milieubewuste professionals (25-45 jaar) in Nederland."""
+    product = """Burning Barrel"""
 
     print("=" * 60)
     print("EVA MULTI-AGENT MARKETING CAMPAIGN GENERATOR")
@@ -118,6 +116,8 @@ def main():
     report_path = save_campaign_report(result, product)
     print(f"\n" + "=" * 60)
     print(f"📄 Campaign report saved to: {report_path}")
+    if result.get("image_path"):
+        print(f"🖼️  Campaign image saved to: {result['image_path']}")
     print("=" * 60)
 
 

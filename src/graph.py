@@ -9,6 +9,7 @@ from src.agents.strategist import strateeg_node
 from src.agents.copywriter import copywriter_node
 from src.agents.social_specialist import social_specialist_node
 from src.agents.campaign_manager import campaign_manager_node, cm_router
+from src.agents.image_generator import image_generator_node
 
 
 def build_graph():
@@ -25,6 +26,7 @@ def build_graph():
     graph.add_node("copywriter", copywriter_node)
     graph.add_node("social_specialist", social_specialist_node)
     graph.add_node("campaign_manager", campaign_manager_node)
+    graph.add_node("image_generator", image_generator_node)
 
     # Linear edges: the main pipeline
     graph.add_edge(START, "researcher")
@@ -40,9 +42,10 @@ def build_graph():
         {
             "copywriter": "copywriter",
             "social_specialist": "social_specialist",
-            "finalize": END,
+            "finalize": "image_generator",
         },
     )
+    graph.add_edge("image_generator", END)
 
     # Compile with checkpointer for state persistence
     checkpointer = MemorySaver()

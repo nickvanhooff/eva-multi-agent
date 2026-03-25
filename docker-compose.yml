@@ -23,6 +23,14 @@ services:
       - .env
     volumes:
       - ./campaigns:/app/campaigns
+      - sdxl_cache:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     # Environment vars come from .env file (env_file above)
     # To override, uncomment and set here:
     # environment:
@@ -33,3 +41,4 @@ services:
 
 volumes:
   ollama_data:
+  sdxl_cache:

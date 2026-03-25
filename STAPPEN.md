@@ -146,3 +146,91 @@ Door klein te beginnen (2 nodes) kunnen we verifiereren dat de LangGraph setup c
 **Bronnen:**
 - LangGraph StateGraph: https://langchain-ai.github.io/langgraph/concepts/low_level/#stategraph
 - LangGraph MemorySaver: https://langchain-ai.github.io/langgraph/concepts/persistence/
+
+---
+
+## Stap 8: Copywriter agent node
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/agents/copywriter.py` aangemaakt
+- Schrijft headline, subheadline, bodytekst en call-to-action
+- Verwerkt feedback van Campaign Manager bij revisies
+- Gebruikt `copy_versions: [response]` zodat de reducer elke iteratie toevoegt
+- Hoogste temperature (0.9) voor maximale creativiteit
+
+**Zelf bedacht:**
+- De feedback_section wordt alleen getoond als er daadwerkelijk feedback is EN iteratie > 0
+
+---
+
+## Stap 9: Social Specialist agent node
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/agents/social_specialist.py` aangemaakt
+- Maakt content voor Instagram (caption + hashtags), LinkedIn, en X/Twitter
+- Gebruikt `copy_draft` als basis voor social content
+- Verwerkt feedback alleen als `phase == "social_review"`
+
+---
+
+## Stap 10: Campaign Manager met conditionele routing
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/agents/campaign_manager.py` aangemaakt
+- Beoordeelt de campagne op strategie-aansluiting, consistentie, creativiteit en volledigheid
+- Parsed BESLISSING, FASE en FEEDBACK uit LLM response met regex
+- `cm_router()` functie voor conditionele routing in de graph
+- Bij goedkeuring of max iteraties: `final_campaign` dict wordt aangemaakt met alle resultaten
+
+**Waarom regex parsing?**
+Uit het prototype (DL-002) bleek dat eenvoudige string matching niet betrouwbaar is bij kleine LLMs. Regex op specifieke patronen (bijv. `BESLISSING: GOEDGEKEURD`) is robuuster.
+
+**Bronnen:**
+- LangGraph conditional edges: https://langchain-ai.github.io/langgraph/concepts/low_level/#conditional-edges
+- Regex parsing patroon overgenomen uit prototype `reclamebureau_eva/src/agents/reviewer.py`
+
+---
+
+## Stap 11: Volledige graph met feedback loops
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/graph.py` uitgebreid van 2-node naar volledige 5-node graph
+- Alle 5 agents geregistreerd als nodes
+- Lineaire edges: START -> Researcher -> Strateeg -> Copywriter -> Social Specialist -> Campaign Manager
+- Conditionele edges vanuit Campaign Manager:
+  - `"copywriter"` — feedback loop voor copy revisie
+  - `"social_specialist"` — feedback loop voor social revisie
+  - `"finalize"` -> END — goedkeuring of max iteraties bereikt
+
+**Bronnen:**
+- LangGraph add_conditional_edges: https://langchain-ai.github.io/langgraph/concepts/low_level/#conditional-edges
+
+---
+
+## Stap 12: Main entry point en Docker setup
+**Datum:** 2026-03-25
+
+**Wat is er gedaan:**
+- `src/main.py` aangemaakt als entry point
+- `run_campaign()` functie die de graph bouwt, een uniek thread_id genereert, en de pipeline runt
+- Demo product (Eco-Cup Go) als test input — hetzelfde product als in DL1 benchmarking
+- UTF-8 fix voor Windows console output
+- `Dockerfile` aangemaakt (Python 3.11-slim, pip install, run main)
+- `docker-compose.yml` met twee services:
+  - `ollama` — lokale LLM server met volume voor model data
+  - `eva` — het multi-agent systeem, verbonden met ollama via Docker netwerk
+
+**Waarom Docker?**
+Docker maakt het project reproduceerbaar en makkelijk te deployen. De docker-compose setup zorgt ervoor dat Ollama en Eva in dezelfde Docker network draaien, zodat Eva via `http://ollama:11434/v1` de LLM kan aanroepen.
+
+**Zelf bedacht:**
+- De `run_campaign()` wrapper die een uniek `thread_id` genereert per run (nodig voor de MemorySaver checkpointer)
+- Docker networking: Eva verwijst naar `ollama` hostname i.p.v. `localhost`
+
+**Bronnen:**
+- Docker Compose services: https://docs.docker.com/compose/
+- Ollama Docker image: https://hub.docker.com/r/ollama/ollama

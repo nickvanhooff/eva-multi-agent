@@ -18,16 +18,37 @@ See [docs/architecture.md](docs/architecture.md) for detailed diagrams.
 
 ## Setup
 
+### Docker (primary)
+
+```bash
+cp .env.example .env        # Configure your LLM provider (Groq/OpenRouter/Ollama)
+docker compose build
+docker compose up
+```
+
+Campaign reports are saved to `./campaigns/` on the host machine via volume mount.
+
+To run once without keeping the container:
+
+```bash
+docker compose run --rm eva
+```
+
+### Local (development only)
+
 ```bash
 python -m venv .venv
 .venv\Scripts\activate      # Windows
 pip install -r requirements.txt
-cp .env.example .env         # Configure your LLM provider
+cp .env.example .env
 python src/main.py
 ```
 
 ## Tech Stack
 
-- **LangGraph** — Graph orchestration (StateGraph, conditional edges, checkpointing)
-- **OpenAI SDK** — LLM calls (compatible with Ollama, OpenRouter, Groq)
-- **No LangChain** — Pure LangGraph approach, LangChain integration planned for later
+- **LangGraph** — graph orchestration (StateGraph, conditional edges, checkpointing)
+- **LangChain** — LLM wrapper (`ChatOpenAI`), required for LangSmith tracing
+- **LangSmith** — observability: traces, token usage, latency per agent
+- **OpenAI-compatible API** — works with Groq, OpenRouter, Ollama via `base_url`
+- **DuckDuckGo + Wikipedia** — live tool data for Researcher agent (no API key)
+- **Docker** — primary runtime, includes Ollama service for local LLM fallback

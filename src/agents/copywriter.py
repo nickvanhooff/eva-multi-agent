@@ -1,9 +1,14 @@
 """Copywriter agent node — marketing copy creation and revision."""
 
 from src.llm import call_llm
+from src.skills import load_skill
 from src.state import CampaignState
 
-SYSTEM_PROMPT = """Je bent een creatieve copywriter voor een reclamebureau.
+SYSTEM_PROMPT = load_skill("copywriting", "copy-editing") + """
+
+---
+
+Je bent een creatieve copywriter voor een reclamebureau.
 Je taak is om pakkende marketingteksten te schrijven op basis van de strategie en doelgroep.
 
 Als je feedback hebt ontvangen van de Campaign Manager, verwerk die feedback in een verbeterde versie.

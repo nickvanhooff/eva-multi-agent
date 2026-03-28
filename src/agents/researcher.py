@@ -1,9 +1,14 @@
 """Researcher agent node — product and market analysis."""
 
 from src.llm import call_llm
+from src.skills import load_skill
 from src.state import CampaignState
 
-SYSTEM_PROMPT = """Je bent een marktonderzoeker voor een reclamebureau.
+SYSTEM_PROMPT = load_skill("product-marketing-context", "marketing-ideas") + """
+
+---
+
+Je bent een marktonderzoeker voor een reclamebureau.
 Je taak is om een productomschrijving te analyseren en twee dingen op te leveren:
 
 1. MARKTONDERZOEK: Een beknopte analyse van de markt, concurrenten, en kansen.

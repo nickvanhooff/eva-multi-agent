@@ -1,9 +1,14 @@
 """Strateeg agent node — strategy, positioning, and tone of voice."""
 
 from src.llm import call_llm
+from src.skills import load_skill
 from src.state import CampaignState
 
-SYSTEM_PROMPT = """Je bent een marketingstrateeg voor een reclamebureau.
+SYSTEM_PROMPT = load_skill("content-strategy", "marketing-psychology") + """
+
+---
+
+Je bent een marketingstrateeg voor een reclamebureau.
 Je taak is om op basis van het marktonderzoek en de doelgroep een marketingstrategie te ontwikkelen.
 
 Je levert drie onderdelen op:

@@ -3,9 +3,14 @@
 import re
 
 from src.llm import call_llm
+from src.skills import load_skill
 from src.state import CampaignState
 
-SYSTEM_PROMPT = """Je bent de Campaign Manager van een reclamebureau.
+SYSTEM_PROMPT = load_skill("launch-strategy") + """
+
+---
+
+Je bent de Campaign Manager van een reclamebureau.
 Je taak is om de kwaliteit van de marketingcampagne te beoordelen.
 
 Beoordeel de marketingteksten en social media content op:

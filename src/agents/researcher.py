@@ -3,6 +3,7 @@
 from src.llm import call_llm
 from src.skills import load_skill
 from src.state import CampaignState
+from src.tools import duckduckgo_search, wikipedia_summary
 
 SYSTEM_PROMPT = load_skill("product-marketing-context", "marketing-ideas") + """
 
@@ -29,11 +30,22 @@ def researcher_node(state: CampaignState) -> dict:
 
     product = state["product_description"]
 
+    print("[RESEARCHER] Fetching live data via tools...")
+    search_results = duckduckgo_search(f"{product} markt concurrenten doelgroep")
+    wiki_results = wikipedia_summary(product)
+    print(f"[RESEARCHER] DuckDuckGo: {len(search_results)} chars | Wikipedia: {len(wiki_results)} chars")
+
     user_prompt = f"""Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.
 
 Product: {product}
 
-Geef je antwoord in dit formaat:
+Actuele zoekresultaten (DuckDuckGo):
+{search_results}
+
+Achtergrondkennis (Wikipedia):
+{wiki_results}
+
+Gebruik bovenstaande brondata als basis voor je analyse. Geef je antwoord in dit formaat:
 
 ## MARKTONDERZOEK
 [jouw analyse hier]

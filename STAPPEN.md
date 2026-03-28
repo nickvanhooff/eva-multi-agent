@@ -595,6 +595,30 @@ Groq gratis tier heeft een limiet van **100.000 tokens per dag**. Na meerdere te
 
 ---
 
+## Stap 23: Graph visualisatie vanuit code — Jupyter notebook
+**Datum:** 2026-03-28
+
+**Aanleiding:**
+In de freeCodeCamp LangGraph tutorial zag ik dat je de graph automatisch kunt visualiseren vanuit de code via `graph.get_graph().draw_mermaid_png()`. Dit triggerde de wens om hetzelfde te doen voor Eva, zodat het diagram altijd up-to-date is met de werkelijke code.
+
+**Wat is er gedaan:**
+- `graph_visualize.ipynb` aangemaakt in `eva-multi-agent/`
+- Notebook laadt de graph via `build_graph()` en toont het diagram als PNG via `IPython.display`
+- Fallback naar Mermaid-tekst als PNG rendering mislukt
+- Pip install cel toegevoegd bovenaan notebook zodat de juiste dependencies in het Jupyter kernel geladen worden
+
+**Relatie met architecture.md:**
+De gegenereerde visualisatie is hetzelfde diagram als het handmatig getekende Graph Flow diagram in `docs/architecture.md` (Stap 2). Het verschil: `architecture.md` is handmatig geschreven Mermaid, dit notebook genereert het diagram automatisch vanuit de werkelijke graph-code. Dit bevestigt dat het handmatige diagram correct was.
+
+**Waarom een notebook i.p.v. een los script?**
+Een notebook geeft direct visuele output naast de code — handig voor portfolio en presentaties. Het diagram wordt gegenereerd vanuit de werkelijke graph, niet handmatig getekend, dus het klopt altijd met de code.
+
+**Bronnen:**
+- freeCodeCamp LangGraph tutorial: https://www.youtube.com/watch?v=jGg_1h0qzaM
+- LangGraph draw_mermaid_png: https://langchain-ai.github.io/langgraph/how-tos/visualization/
+
+---
+
 ## Stap 22: Eerste volledige testrun — "Burning Barrel" campagne
 **Datum:** 2026-03-25
 **Output bestand:** `campaigns/campaign_20260325_144508.json`

@@ -595,6 +595,47 @@ Groq gratis tier heeft een limiet van **100.000 tokens per dag**. Na meerdere te
 
 ---
 
+## Stap 25: Tool oriëntatie — welke tools passen bij welke agent?
+**Datum:** 2026-03-28
+
+**Aanleiding — eigen prompt in deze sessie:**
+> "look which tools can be used in the first version, it can be small. also document this in stappen that the skills are added and that i am now searching for easy tools to use. look for which agent can use which tool"
+
+Skills zijn toegevoegd (Stap 24). Nu de volgende laag: tools. Skills geven domeinkennis, tools geven de mogelijkheid om iets te *doen* — echte data ophalen, zoeken op internet, trends ophalen.
+
+**Onderzoek gedaan:**
+LangChain tool integrations pagina doorgelopen (https://docs.langchain.com/oss/python/integrations/tools/index). Gefilterd op: gratis/geen API key, eenvoudig te installeren, zinvol voor een marketingpipeline.
+
+**Geselecteerde tools voor versie 1 (geen API key vereist):**
+
+| Tool | Package | API key | Voor welke agent | Waarvoor |
+|---|---|---|---|---|
+| DuckDuckGo Search | `duckduckgo-search` | Nee | Researcher | Actuele markt- en concurrentieinfo ophalen |
+| Google Trends | `pytrends` | Nee | Researcher + Strateeg | Trending zoektermen per product/categorie |
+| Wikipedia | `wikipedia` | Nee | Researcher | Achtergrondkennis product/markt |
+
+**Optioneel (vereist gratis API key):**
+
+| Tool | Package | Gratis tier | Voor welke agent | Waarvoor |
+|---|---|---|---|---|
+| Tavily Search | `tavily-python` | 1.000 req/maand | Researcher | Rijkere zoekresultaten met volledige pagina-inhoud |
+| Reddit Search | `praw` | Ja | Strateeg | Zien wat de doelgroep zegt over het product/categorie |
+
+**Koppeling tools aan agents:**
+
+- **Researcher** — profiteert het meest: kan nu echte actuele data ophalen i.p.v. te vertrouwen op LLM-trainingskennis. DuckDuckGo + Wikipedia als startpunt.
+- **Strateeg** — Google Trends geeft onderbouwing voor kanaalstrategie op basis van echte zoekvolumes.
+- **Copywriter** — geen tool nodig, skill is voldoende voor tekstgeneratie.
+- **Social Specialist** — geen tool nodig in versie 1.
+- **Campaign Manager** — geen tool nodig, beoordeling is intern.
+
+**Verwacht effect op tokens (te meten in LangSmith als V5):**
+Tool output wordt als extra context toegevoegd aan de state. Researcher-input tokens stijgen door zoekresultaten. Verwacht: +500–1.500 tokens per run afhankelijk van resultaatlengte.
+
+**Volgende stap:** tools implementeren in Researcher (en optioneel Strateeg), meten in LangSmith.
+
+---
+
 ## Stap 24: Skills map — domeinkennis per agent via systeemprompt
 **Datum:** 2026-03-28
 **Commit:** `ca8d757`

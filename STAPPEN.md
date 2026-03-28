@@ -749,3 +749,35 @@ De input `"Burning Barrel"` is zelfgekozen als testproduct — een vuurkorf, con
 - Beslissing om de output te bewaren als bewijs voor portfolio (learning outcome: werking aantonen)
 
 ---
+
+## Stap 23: Analyse campagne-kwaliteit — ontbrekende creatieve laag
+**Datum:** 2026-03-28
+
+**Wat is er gedaan:**
+Twee gegenereerde campagnes vergeleken om te beoordelen wat het systeem mist voor een écht overtuigende output:
+- `campaign_20260328_223632.json` — zonder tool use (persona-gedreven, aspirationeel)
+- `campaign_20260328_230629.json` — met tool use/marktonderzoek (data-gedreven, cijfermatig)
+
+**Observatie:**
+De data-gedreven versie is concreter en beter onderbouwd (marktcijfers, concurrentieanalyse, reviewdata). De persona-gedreven versie is emotioneel toegankelijker. Beide missen echter een tussenstap: de vertaling van data-inzichten naar een **centrale creatieve gedachte** die mensen raakt. De copy in beide versies somt features op in plaats van een spanning of verhaal te activeren.
+
+Een overtuigende campagne heeft beide lagen nodig:
+1. **Data** — wat wil de doelgroep, waar zit de frustratie, wat doet de concurrent?
+2. **Creatief concept** — welke menselijke spanning of emotie maakt dit product relevant?
+
+Het systeem springt nu direct van data/persona naar copy, zonder die tweede laag.
+
+**Zelf bedacht:**
+- een creative concept agent toevoegen tussen strateeg en copywriter, data alleen is niet genoeg voor een overtuigende campagne
+- campaign manager ook laten beoordelen of het overtuigend is, niet alleen of de strategie klopt
+
+**Wat toegevoegd wordt:**
+- `creative_concept_agent` — genereert één campagneconcept met centrale menselijke spanning + 2–3 creatieve richtingen, ná de Strateeg en vóór de Copywriter
+- Campaign Manager prompt uitbreiden met kwalitatieve beoordeling op emotionele overtuigingskracht naast strategische correctheid
+
+**Aangepaste flow:**
+```
+Researcher → Strateeg → [Creative Concept] → Copywriter → Social Specialist → Campaign Manager → Image Generator
+```
+
+---

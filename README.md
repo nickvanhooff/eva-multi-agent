@@ -6,13 +6,13 @@ Autonomous multi-agent marketing campaign generator built with **pure LangGraph*
 
 5 specialized agents collaborate to generate complete marketing campaigns:
 
-| Agent | Role | Temperature |
-|-------|------|-------------|
-| Researcher | Product/market analysis | 0.4 |
-| Strateeg | Strategy & positioning | 0.5 |
-| Copywriter | Marketing copy | 0.9 |
-| Social Specialist | Platform-specific content | 0.8 |
-| Campaign Manager | Coordination & QA | 0.3 |
+| Agent | Role | Skills | Tools | Temperature |
+|-------|------|--------|-------|-------------|
+| Researcher | Product/market analysis | `product-marketing-context`, `marketing-ideas` | DuckDuckGo search, Wikipedia | 0.4 |
+| Strateeg | Strategy & positioning | `content-strategy`, `marketing-psychology` | — | 0.5 |
+| Copywriter | Marketing copy | `copywriting`, `copy-editing` | — | 0.9 |
+| Social Specialist | Platform-specific content | `social-content` | — | 0.8 |
+| Campaign Manager | Coordination & QA | `launch-strategy` | — | 0.3 |
 
 See [docs/architecture.md](docs/architecture.md) for detailed diagrams.
 

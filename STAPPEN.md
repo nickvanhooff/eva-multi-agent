@@ -6,6 +6,7 @@ Dit document beschrijft alle stappen die zijn genomen bij het opzetten van het m
 
 ## Stap 1: Project skeleton initialisatie
 **Datum:** 2026-03-25
+**Commit:** [`1f59280`](https://github.com/nickvanhooff/eva-multi-agent/commit/1f59280)
 
 **Wat is er gedaan:**
 - Nieuw project aangemaakt in `C:\fontys\semester_4\eva-multi-agent\`
@@ -34,6 +35,7 @@ Het bestaande `reclamebureau_eva` was een prototype/testfase met LangGraph + Lan
 
 ## Stap 2: Architectuur diagrammen
 **Datum:** 2026-03-25
+**Commit:** [`2467667`](https://github.com/nickvanhooff/eva-multi-agent/commit/2467667)
 
 **Wat is er gedaan:**
 - `docs/architecture.md` aangemaakt met 3 Mermaid diagrammen:
@@ -58,6 +60,7 @@ Het bestaande `reclamebureau_eva` was een prototype/testfase met LangGraph + Lan
 
 ## Stap 3: CampaignState TypedDict
 **Datum:** 2026-03-25
+**Commit:** [`5ed9fdb`](https://github.com/nickvanhooff/eva-multi-agent/commit/5ed9fdb)
 
 **Wat is er gedaan:**
 - `src/state.py` aangemaakt met de `CampaignState` TypedDict
@@ -78,6 +81,7 @@ Standaard overschrijft LangGraph velden (last-write-wins). Met `Annotated[list[s
 
 ## Stap 4: LLM wrapper met openai SDK
 **Datum:** 2026-03-25
+**Commit:** [`1874adc`](https://github.com/nickvanhooff/eva-multi-agent/commit/1874adc)
 
 **Wat is er gedaan:**
 - `src/llm.py` aangemaakt met een `call_llm()` functie
@@ -101,6 +105,7 @@ Het doel is om eerst puur met LangGraph te werken zonder LangChain. De openai Py
 
 ## Stap 5: Researcher agent node
 **Datum:** 2026-03-25
+**Commit:** [`4d5ef26`](https://github.com/nickvanhooff/eva-multi-agent/commit/4d5ef26)
 
 **Wat is er gedaan:**
 - `src/agents/researcher.py` aangemaakt
@@ -116,6 +121,7 @@ Het doel is om eerst puur met LangGraph te werken zonder LangChain. De openai Py
 
 ## Stap 6: Strateeg agent node
 **Datum:** 2026-03-25
+**Commit:** [`7eabaa8`](https://github.com/nickvanhooff/eva-multi-agent/commit/7eabaa8)
 
 **Wat is er gedaan:**
 - `src/agents/strategist.py` aangemaakt
@@ -133,6 +139,7 @@ Uit het prototype (DL-002 bugfix) bleek dat kleine LLMs (llama3.2) Engels en Ned
 
 ## Stap 7: Minimale graph met researcher en strateeg
 **Datum:** 2026-03-25
+**Commit:** [`959fd33`](https://github.com/nickvanhooff/eva-multi-agent/commit/959fd33)
 
 **Wat is er gedaan:**
 - `src/graph.py` aangemaakt met een minimale 2-node StateGraph
@@ -151,6 +158,7 @@ Door klein te beginnen (2 nodes) kunnen we verifiereren dat de LangGraph setup c
 
 ## Stap 8: Copywriter agent node
 **Datum:** 2026-03-25
+**Commit:** [`e8458b1`](https://github.com/nickvanhooff/eva-multi-agent/commit/e8458b1)
 
 **Wat is er gedaan:**
 - `src/agents/copywriter.py` aangemaakt
@@ -166,6 +174,7 @@ Door klein te beginnen (2 nodes) kunnen we verifiereren dat de LangGraph setup c
 
 ## Stap 9: Social Specialist agent node
 **Datum:** 2026-03-25
+**Commit:** [`48569de`](https://github.com/nickvanhooff/eva-multi-agent/commit/48569de)
 
 **Wat is er gedaan:**
 - `src/agents/social_specialist.py` aangemaakt
@@ -177,6 +186,7 @@ Door klein te beginnen (2 nodes) kunnen we verifiereren dat de LangGraph setup c
 
 ## Stap 10: Campaign Manager met conditionele routing
 **Datum:** 2026-03-25
+**Commit:** [`3428ab7`](https://github.com/nickvanhooff/eva-multi-agent/commit/3428ab7)
 
 **Wat is er gedaan:**
 - `src/agents/campaign_manager.py` aangemaakt
@@ -196,6 +206,7 @@ Uit het prototype (DL-002) bleek dat eenvoudige string matching niet betrouwbaar
 
 ## Stap 11: Volledige graph met feedback loops
 **Datum:** 2026-03-25
+**Commit:** [`4d44aed`](https://github.com/nickvanhooff/eva-multi-agent/commit/4d44aed)
 
 **Wat is er gedaan:**
 - `src/graph.py` uitgebreid van 2-node naar volledige 5-node graph
@@ -213,7 +224,7 @@ Uit het prototype (DL-002) bleek dat eenvoudige string matching niet betrouwbaar
 
 ## Stap 12: Main entry point en Docker setup
 **Datum:** 2026-03-25
-**Commit:** `2a8ae7f`
+**Commit:** [`2a8ae7f`](https://github.com/nickvanhooff/eva-multi-agent/commit/2a8ae7f)
 
 **Wat is er gedaan:**
 - `src/main.py` aangemaakt als entry point
@@ -240,6 +251,7 @@ Docker maakt het project reproduceerbaar en makkelijk te deployen. De docker-com
 
 ## Stap 13: Logging enhancement — zichtbaarheid van agent activiteit
 **Datum:** 2026-03-25
+**Commit:** [`a0ae122`](https://github.com/nickvanhooff/eva-multi-agent/commit/a0ae122)
 
 **Wat is er gedaan:**
 - Alle 5 agent nodes (`researcher`, `strategist`, `copywriter`, `social_specialist`, `campaign_manager`) voorzien van print statements
@@ -260,7 +272,7 @@ Vorige test met lokale Ollama (qwen3.5:4b) duurde 20+ minuten met zero zichtbare
 
 ## Stap 14: Cloud LLM provider integratie — Groq
 **Datum:** 2026-03-25
-**Commit:** `cad09de` (GPU support), `9439006` (report saving)
+**Commit:** [`cad09de`](https://github.com/nickvanhooff/eva-multi-agent/commit/cad09de) (GPU support), [`9439006`](https://github.com/nickvanhooff/eva-multi-agent/commit/9439006) (report saving)
 
 **Wat is er gedaan:**
 - `.env` aangepast: `LLM_PROVIDER=groq`, model `llama-3.3-70b-versatile`, API key ingevuld
@@ -298,7 +310,7 @@ Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline
 
 ## Stap 15: Campaign report persistentie — JSON reports
 **Datum:** 2026-03-25
-**Commit:** `9439006`, volume mount gefixt in `docker-compose.yml`, later `835ff09`
+**Commit:** [`9439006`](https://github.com/nickvanhooff/eva-multi-agent/commit/9439006), volume mount gefixt in `docker-compose.yml`, later [`835ff09`](https://github.com/nickvanhooff/eva-multi-agent/commit/835ff09)
 
 **Wat is er gedaan:**
 - `src/main.py` uitgebreid met `save_campaign_report()` functie
@@ -334,7 +346,7 @@ Docker containers hebben hun eigen geïsoleerd filesystem. Zonder volume mount, 
 
 ## Stap 16: LangSmith integratie — debugging en monitoring
 **Datum:** 2026-03-25
-**Commit:** `31dcbe7`
+**Commit:** [`31dcbe7`](https://github.com/nickvanhooff/eva-multi-agent/commit/31dcbe7)
 
 **Wat is er gedaan:**
 - `src/tracing.py` aangemaakt met `setup_tracing()` functie
@@ -392,6 +404,7 @@ LangSmith geeft antwoorden op al deze vragen zonder extra code te schrijven.
 
 ## Stap 17: LangSmith debuggen — traces werkend krijgen
 **Datum:** 2026-03-25
+**Commit:** [`6b83624`](https://github.com/nickvanhooff/eva-multi-agent/commit/6b83624)
 
 **Wat is er gedaan:**
 - Bug gevonden en opgelost: traces verschenen niet in LangSmith dashboard ondanks correcte API key
@@ -433,6 +446,7 @@ Na rebuild (`docker compose build && docker compose up`) verschijnen traces in L
 
 ## Stap 18: SDXL image generatie — lokaal via Docker met CUDA
 **Datum:** 2026-03-25
+**Commit:** [`b855e75`](https://github.com/nickvanhooff/eva-multi-agent/commit/b855e75)
 
 **Aanleiding — eigen prompts in deze sessie:**
 > "which agent has web search"
@@ -552,6 +566,7 @@ transformers==4.44.0
 
 ## Stap 21: Groq rate limit bereikt — multi-LLM oplossing
 **Datum:** 2026-03-25
+**Commit:** [`f7a61a9`](https://github.com/nickvanhooff/eva-multi-agent/commit/f7a61a9)
 
 **Aanleiding — eigen prompts in deze sessie:**
 > "groq has now limit at me, can i use multiple LLMs per agent?"
@@ -595,50 +610,80 @@ Groq gratis tier heeft een limiet van **100.000 tokens per dag**. Na meerdere te
 
 ---
 
+## Stap 26: Tools geïmplementeerd — DuckDuckGo + Wikipedia in Researcher
+**Datum:** 2026-03-29
+**Commit:** [`16864a6`](https://github.com/nickvanhooff/eva-multi-agent/commit/16864a6)
+
+**Aanleiding — eigen prompt:**
+> "ja" (na stap 25 oriëntatie: wil je dat ik DuckDuckGo en Wikipedia implementeer?)
+
+**Wat is er gedaan:**
+- `src/tools.py` aangemaakt met twee functies:
+  - `duckduckgo_search(query, max_results=5)` — zoekt via ddgs package
+  - `wikipedia_summary(query, sentences=4)` — haalt Wikipedia-samenvatting op (NL, fallback EN)
+- Researcher aangepast: roept tools aan vóór de LLM-call, injecteert resultaten in de user_prompt
+- `requirements.txt` bijgewerkt: `ddgs` en `wikipedia` toegevoegd
+- Note: package heette eerst `duckduckgo-search`, hernoemd naar `ddgs` — aangepast
+
+**Hoe het werkt:**
+```
+Researcher node:
+  1. duckduckgo_search("{product} markt concurrenten doelgroep")
+  2. wikipedia_summary("{product}")
+  3. resultaten → user_prompt als extra context
+  4. LLM analyseert op basis van echte data
+```
+
+Graph-structuur ongewijzigd. Tools zijn synchrone pre-processing, geen LangGraph tool-calling.
+
+**Zelf bedacht:**
+- tools als pre-processing vóór llm-call, niet als langgraph tool nodes
+- wikipedia eerst nl, daarna en als fallback
+- ddgs package naam fix zelf ontdekt tijdens testen
+
+**Bronnen:**
+- ddgs: https://github.com/deedy5/ddgs
+- wikipedia package: https://pypi.org/project/wikipedia/
+
+---
+
 ## Stap 25: Tool oriëntatie — welke tools passen bij welke agent?
 **Datum:** 2026-03-28
 
-**Aanleiding — eigen prompt in deze sessie:**
+**Aanleiding — eigen prompt:**
 > "look which tools can be used in the first version, it can be small. also document this in stappen that the skills are added and that i am now searching for easy tools to use. look for which agent can use which tool"
 
-Skills zijn toegevoegd (Stap 24). Nu de volgende laag: tools. Skills geven domeinkennis, tools geven de mogelijkheid om iets te *doen* — echte data ophalen, zoeken op internet, trends ophalen.
+**Wat is er gedaan:**
+LangChain tool integrations pagina doorgelopen (https://docs.langchain.com/oss/python/integrations/tools/index). Gefilterd op: gratis, geen API key, zinvol voor een marketingpipeline.
 
-**Onderzoek gedaan:**
-LangChain tool integrations pagina doorgelopen (https://docs.langchain.com/oss/python/integrations/tools/index). Gefilterd op: gratis/geen API key, eenvoudig te installeren, zinvol voor een marketingpipeline.
+**Versie 1 — geen API key:**
 
-**Geselecteerde tools voor versie 1 (geen API key vereist):**
+| Tool | Package | Agent | Waarvoor |
+|---|---|---|---|
+| DuckDuckGo Search | `ddgs` | Researcher | actuele markt- en concurrentieinfo |
+| Wikipedia | `wikipedia` | Researcher | achtergrondkennis product/markt |
+| Google Trends | `pytrends` | Researcher + Strateeg | trending zoektermen |
 
-| Tool | Package | API key | Voor welke agent | Waarvoor |
-|---|---|---|---|---|
-| DuckDuckGo Search | `duckduckgo-search` | Nee | Researcher | Actuele markt- en concurrentieinfo ophalen |
-| Google Trends | `pytrends` | Nee | Researcher + Strateeg | Trending zoektermen per product/categorie |
-| Wikipedia | `wikipedia` | Nee | Researcher | Achtergrondkennis product/markt |
+**Optioneel (gratis API key):**
 
-**Optioneel (vereist gratis API key):**
+| Tool | Gratis tier | Agent | Waarvoor |
+|---|---|---|---|
+| Tavily Search | 1.000 req/maand | Researcher | rijkere zoekresultaten |
+| Reddit Search | ja | Strateeg | wat zegt de doelgroep |
 
-| Tool | Package | Gratis tier | Voor welke agent | Waarvoor |
-|---|---|---|---|---|
-| Tavily Search | `tavily-python` | 1.000 req/maand | Researcher | Rijkere zoekresultaten met volledige pagina-inhoud |
-| Reddit Search | `praw` | Ja | Strateeg | Zien wat de doelgroep zegt over het product/categorie |
+Copywriter, Social Specialist en Campaign Manager krijgen geen tools — die werken op output van vorige agents.
 
-**Koppeling tools aan agents:**
+**Verwacht effect op tokens:** tool output vergroot de Researcher user_prompt. Te meten in LangSmith als V5.
 
-- **Researcher** — profiteert het meest: kan nu echte actuele data ophalen i.p.v. te vertrouwen op LLM-trainingskennis. DuckDuckGo + Wikipedia als startpunt.
-- **Strateeg** — Google Trends geeft onderbouwing voor kanaalstrategie op basis van echte zoekvolumes.
-- **Copywriter** — geen tool nodig, skill is voldoende voor tekstgeneratie.
-- **Social Specialist** — geen tool nodig in versie 1.
-- **Campaign Manager** — geen tool nodig, beoordeling is intern.
-
-**Verwacht effect op tokens (te meten in LangSmith als V5):**
-Tool output wordt als extra context toegevoegd aan de state. Researcher-input tokens stijgen door zoekresultaten. Verwacht: +500–1.500 tokens per run afhankelijk van resultaatlengte.
-
-**Volgende stap:** tools implementeren in Researcher (en optioneel Strateeg), meten in LangSmith.
+**Zelf bedacht:**
+- alleen Researcher en Strateeg krijgen tools, de rest niet
+- eerst zonder API key beginnen om het simpel te houden
 
 ---
 
 ## Stap 24: Skills map — domeinkennis per agent via systeemprompt
 **Datum:** 2026-03-28
-**Commit:** `ca8d757`
+**Commit:** [`ca8d757`](https://github.com/nickvanhooff/eva-multi-agent/commit/ca8d757)
 
 **Aanleiding — eigen prompt in deze sessie:**
 > "look at DL2, here i did talk about skills, now i will add a sample of skills, to test what happens with the tokens, do i need first tools if i add skills in my project [...] i will clean up each agent now and add skills folder and use the system prompt that it reads the skills folder and the specific skill for each agent."
@@ -678,9 +723,9 @@ Vervolgvraag: "gaat dit een verschil maken met de huidige setup, zo ja wat?" →
 Skills geven aantoonbaar betere output. De Campaign Manager keurde de campagne met skills direct goed in 1 iteratie, tegen 3 iteraties zonder. De LLM past concrete frameworks toe (PAS, AIDA, jobs-to-be-done) die zonder skill impliciet of afwezig waren. Hogere input tokens per agent, maar minder iteraties = netto vergelijkbaar of lager totaal tokenverbruik. Te meten in LangSmith als V4.
 
 **Zelf bedacht:**
-- Skills als puur markdown zonder tools — geen code-wijziging in de graph nodig
-- `load_skill(*names)` met meerdere skills per agent via `---` separator
-- MAX_ITERATIONS op 1 gezet om kosten te beperken tijdens testen
+- skills als pure markdown, geen graph wijzigingen nodig
+- load_skill() met meerdere namen per agent, gescheiden door ---
+- max_iterations op 1 gezet voor kosten tijdens testen
 
 **Bronnen:**
 - DL2: marketingskills plugin analyse (aanleiding en skill-indeling per agent)
@@ -690,6 +735,7 @@ Skills geven aantoonbaar betere output. De Campaign Manager keurde de campagne m
 
 ## Stap 23: Graph visualisatie vanuit code — Jupyter notebook
 **Datum:** 2026-03-28
+**Commit:** [`60682d8`](https://github.com/nickvanhooff/eva-multi-agent/commit/60682d8)
 
 **Aanleiding:**
 In de freeCodeCamp LangGraph tutorial zag ik dat je de graph automatisch kunt visualiseren vanuit de code via `graph.get_graph().draw_mermaid_png()`. Dit triggerde de wens om hetzelfde te doen voor Eva, zodat het diagram altijd up-to-date is met de werkelijke code.
@@ -714,6 +760,7 @@ Een notebook geeft direct visuele output naast de code — handig voor portfolio
 
 ## Stap 22: Eerste volledige testrun — "Burning Barrel" campagne
 **Datum:** 2026-03-25
+**Commit:** [`6d3afa9`](https://github.com/nickvanhooff/eva-multi-agent/commit/6d3afa9)
 **Output bestand:** `campaigns/campaign_20260325_144508.json`
 
 **Wat is er gedaan:**
@@ -779,5 +826,18 @@ Het systeem springt nu direct van data/persona naar copy, zonder die tweede laag
 ```
 Researcher → Strateeg → [Creative Concept] → Copywriter → Social Specialist → Campaign Manager → Image Generator
 ```
+
+---
+
+## Stap 24: README bijgewerkt — skills en tools per agent gedocumenteerd
+**Datum:** 2026-03-28
+**Commit:** [`d652248`](https://github.com/nickvanhooff/eva-multi-agent/commit/d652248)
+
+**Wat is er gedaan:**
+- agententabel in `README.md` uitgebreid met twee kolommen: skills en tools
+- per agent zichtbaar welke skills geladen worden via `load_skill()` en welke tools gebruikt worden
+
+**Zelf bedacht:**
+- skills en tools in de readme zetten zodat het in één oogopslag duidelijk is wat elke agent kan
 
 ---

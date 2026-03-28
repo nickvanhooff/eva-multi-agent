@@ -595,6 +595,58 @@ Groq gratis tier heeft een limiet van **100.000 tokens per dag**. Na meerdere te
 
 ---
 
+## Stap 24: Skills map — domeinkennis per agent via systeemprompt
+**Datum:** 2026-03-28
+**Commit:** `ca8d757`
+
+**Aanleiding — eigen prompt in deze sessie:**
+> "look at DL2, here i did talk about skills, now i will add a sample of skills, to test what happens with the tokens, do i need first tools if i add skills in my project [...] i will clean up each agent now and add skills folder and use the system prompt that it reads the skills folder and the specific skill for each agent."
+
+Vervolgvraag: "gaat dit een verschil maken met de huidige setup, zo ja wat?" → antwoord: ja, skills verhogen input tokens per agent en geven de LLM concrete frameworks i.p.v. generieke taakomschrijving. Geen tools nodig — skills zijn puur tekst.
+
+**Wat is er gedaan:**
+- `src/skills/` map aangemaakt met 7 skill-bestanden (markdown):
+  - `product-marketing-context.md` — gedeelde kennisbasis (Researcher)
+  - `marketing-ideas.md` — jobs-to-be-done, pijnpunten (Researcher)
+  - `content-strategy.md` — positionering, 60/30/10 mix (Strateeg)
+  - `marketing-psychology.md` — AIDA, social proof, anchoring (Strateeg)
+  - `copywriting.md` — PAS, FAB, headline-formules (Copywriter)
+  - `copy-editing.md` — redactie-checklist (Copywriter)
+  - `social-content.md` — platform-specifieke formats (Social Specialist)
+  - `launch-strategy.md` — beoordelingscriteria (Campaign Manager)
+- `src/skills/__init__.py`: `load_skill()` utility die skills inlaadt
+- Alle 5 agents aangepast: skill als prefix van systeemprompt
+
+**Systeemprompt grootte voor en na:**
+- Voor: ~50 tokens per agent (generieke taakomschrijving)
+- Na: ~260–417 tokens per agent (skill + taakomschrijving)
+
+**Test — zelfde product (Philips dubbele airfryer), MAX_ITERATIONS=1 (kosten besparen):**
+
+| | Zonder skills (`campaign_20260326`) | Met skills (`campaign_20260328`) |
+|---|---|---|
+| Iteraties | 3 | 1 (direct goedgekeurd) |
+| Goedgekeurd | ja | ja |
+| Persona | generiek (Sanne) | concreet met koopredenering in 3 stappen |
+| Pijnpunten | globaal | specifiek (smaakgeurtransfer, temperatuurbeheer) |
+| Kernboodschap | niet aanwezig | 1 scherpe UVP-zin |
+| Contentmix | niet benoemd | 60/30/10 expliciet uitgewerkt |
+| Headline | features ("2 bakken, 15 min") | benefit ("Twee gerechten, moeiteloos") |
+
+**Conclusie:**
+Skills geven aantoonbaar betere output. De Campaign Manager keurde de campagne met skills direct goed in 1 iteratie, tegen 3 iteraties zonder. De LLM past concrete frameworks toe (PAS, AIDA, jobs-to-be-done) die zonder skill impliciet of afwezig waren. Hogere input tokens per agent, maar minder iteraties = netto vergelijkbaar of lager totaal tokenverbruik. Te meten in LangSmith als V4.
+
+**Zelf bedacht:**
+- Skills als puur markdown zonder tools — geen code-wijziging in de graph nodig
+- `load_skill(*names)` met meerdere skills per agent via `---` separator
+- MAX_ITERATIONS op 1 gezet om kosten te beperken tijdens testen
+
+**Bronnen:**
+- DL2: marketingskills plugin analyse (aanleiding en skill-indeling per agent)
+- marketingskills plugin: https://github.com/coreyhaines31/marketingskills
+
+---
+
 ## Stap 23: Graph visualisatie vanuit code — Jupyter notebook
 **Datum:** 2026-03-28
 

@@ -84,7 +84,7 @@ def main():
     setup_tracing()
 
     # Demo product
-    product = """Burning Barrel"""
+    product = """dubbele airfryer met 2 bakken van Philips"""
 
     print("=" * 60)
     print("EVA MULTI-AGENT MARKETING CAMPAIGN GENERATOR")

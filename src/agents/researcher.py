@@ -36,7 +36,7 @@ Geef je antwoord in dit formaat:
 ## DOELGROEP
 [jouw doelgroepbeschrijving hier]"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.4, provider="groq", model="llama-3.1-8b-instant")
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.4, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
 
     print("\n[RESEARCHER] Response received:")
     print("-" * 40)

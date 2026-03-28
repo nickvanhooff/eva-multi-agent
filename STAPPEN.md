@@ -434,6 +434,14 @@ Na rebuild (`docker compose build && docker compose up`) verschijnen traces in L
 ## Stap 18: SDXL image generatie — lokaal via Docker met CUDA
 **Datum:** 2026-03-25
 
+**Aanleiding — eigen prompts in deze sessie:**
+> "which agent has web search"
+> "can groq generate images?"
+> "is RTX 4050 capable of running a HuggingFace model and how long?"
+> "SDXL can also work, add torch + packages for Docker"
+
+Doordat ik vroeg welke agent web search heeft, ontdekte ik dat dit niet geïmplementeerd was. Daarna vroeg ik of Groq images kon genereren (antwoord: nee). Op basis van mijn vraag over de RTX 4050 is besloten om lokaal te draaien i.p.v. de HuggingFace cloud API. Tot slot heb ik zelf de richting gegeven: SDXL lokaal via Docker met GPU support.
+
 **Wat is er gedaan:**
 - `Dockerfile` base image gewijzigd: `python:3.11-slim` → `pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime`
 - `requirements.txt` uitgebreid: `diffusers>=0.24.0`, `transformers>=4.36.0`, `accelerate>=0.25.0`, `safetensors>=0.4.0`
@@ -474,6 +482,12 @@ Gekozen voor **lokaal** omdat:
 ## Stap 19: Bugfix — PyTorch versie te oud voor transformers
 **Datum:** 2026-03-25
 
+**Aanleiding — eigen prompt in deze sessie:**
+> "can i set the inference steps to 1 for testing?"
+> [na het zien van de Docker error] "add this error to STAPPEN.md"
+
+Ik vroeg om inference steps op 1 te zetten om snel te testen of de pipeline werkte zonder lang te wachten. Daarna zag ik de foutmelding in de Docker output en gaf ik de instructie om dit te documenteren en op te lossen.
+
 **Fout:**
 ```
 Disabling PyTorch because PyTorch >= 2.4 is required but found 2.1.0
@@ -501,6 +515,13 @@ FROM pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime
 
 ## Stap 20: Bugfix — diffusers/transformers versie incompatibiliteit met PyTorch 2.4
 **Datum:** 2026-03-25
+
+**Aanleiding — eigen prompts in deze sessie:**
+> "weet je dit zeker?" [over het vastpinnen van versies]
+> "the 4-step result was just noise/texture, not a real image"
+> [na het zien van SDXL-Turbo output] "this looks good now"
+
+Ik twijfelde aan de aanpak van versie pinning en stelde een kritische vraag. Daarnaast observeerde ik dat 4 stappen met standaard SDXL alleen noise gaf — zelf gezien en gerapporteerd — wat leidde tot de overstap naar SDXL-Turbo.
 
 **Fout:**
 ```
@@ -532,6 +553,15 @@ transformers==4.44.0
 ## Stap 21: Groq rate limit bereikt — multi-LLM oplossing
 **Datum:** 2026-03-25
 
+**Aanleiding — eigen prompts in deze sessie:**
+> "groq has now limit at me, can i use multiple LLMs per agent?"
+> "voer het niet uit maar stel op in 1 md" [over de model-verdeling]
+> "gebruik nu OPENROUTER_API_KEY als env waarde"
+> "look which models are there for use"
+> "pak een middel maat model"
+
+Ik zag de 429 rate limit fout en stelde zelf voor om meerdere LLMs per agent te gebruiken. Ik gaf bewust de instructie om eerst te documenteren (in één MD-bestand) voordat er code geschreven werd. Daarna heb ik zelf de OpenRouter API key aangewezen en de modelkeuze gestuurd door te vragen om een "middel maat model" uit de beschikbare gratis modellen.
+
 **Fout:**
 ```
 openai.RateLimitError: Error code: 429
@@ -562,5 +592,43 @@ Groq gratis tier heeft een limiet van **100.000 tokens per dag**. Na meerdere te
 - Volledige model motivatie per agent: @[docs/model_selection.md](docs/model_selection.md)
 - OpenRouter free models: https://openrouter.ai/models?q=free
 - Groq rate limits: https://console.groq.com/settings/limits
+
+---
+
+## Stap 22: Eerste volledige testrun — "Burning Barrel" campagne
+**Datum:** 2026-03-25
+**Output bestand:** `campaigns/campaign_20260325_144508.json`
+
+**Wat is er gedaan:**
+Het systeem is voor het eerst volledig end-to-end getest met een eigen product-input. De volgende prompt is handmatig ingevoerd als `product_description`:
+
+```
+Burning Barrel
+```
+
+Het systeem heeft op basis van die enkele input automatisch een volledige marketingcampagne gegenereerd via alle 5 agents.
+
+**Gegenereerde output (samenvatting):**
+- **Doelgroep** (Researcher): 25–45 jaar, €45.000+ inkomen, Noord-Europa, urban/suburban, duurzaamheid & design-gericht
+- **Strategie** (Strateeg): eco-design + experience niche, 3 product-edities (Core €199, Premium €279, Accessory kits), UGC + micro-influencer campagne, "Plant a Tree" partnership
+- **Positionering**: "De premium, eco-designed fire pit die stijl, veiligheid en Instagram-waardige ervaringen combineert"
+- **Tone of Voice**: Vriendelijk, story-driven, visueel & sensorisch, inclusief & community-gericht
+- **Copy** (Copywriter): Headline "Ontsteek de avond met Burning Barrel", 3 bodytekst-alinea's, CTA met 15% early-bird korting
+- **Social content** (Social Specialist): Instagram caption + hashtags, LinkedIn B2B post, X/Twitter tweet (280 tekens)
+- **Campaign Manager**: na 1 iteratie beoordeeld (niet goedgekeurd wegens Groq rate limit — max iteraties bereikt)
+- **Afbeelding** (Image Generator): SDXL-Turbo afbeelding gegenereerd op basis van de campagne-content
+
+**Bewijs van eigen werk:**
+De input `"Burning Barrel"` is zelfgekozen als testproduct — een vuurkorf, concreet genoeg om realistische output te genereren, maar ook een product waarbij je duidelijk kunt beoordelen of de strategie klopt. Het systeem heeft alle content zelf gegenereerd op basis van die input.
+
+**Wat dit aantoont:**
+- De volledige agent pipeline werkt (Researcher → Strateeg → Copywriter → Social Specialist → Campaign Manager → Image Generator)
+- State wordt correct doorgegeven tussen agents
+- JSON report wordt persistent opgeslagen buiten de Docker container
+- SDXL-Turbo genereert een bijpassende productafbeelding
+
+**Zelf bedacht:**
+- "Burning Barrel" als testproduct gekozen omdat het een niche, premium outdoor-product is met duidelijke doelgroep en positionering-mogelijkheden — goede indicator voor de kwaliteit van de agents
+- Beslissing om de output te bewaren als bewijs voor portfolio (learning outcome: werking aantonen)
 
 ---

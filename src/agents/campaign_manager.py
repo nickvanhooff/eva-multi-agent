@@ -59,7 +59,7 @@ ITERATIE: {iteration} van {MAX_ITERATIONS}
 
 Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.3, provider="groq", model="llama-3.3-70b-versatile")
+    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.3, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
 
     print("\n[CAMPAIGN MANAGER] Response received:")
     print("-" * 40)
@@ -130,12 +130,10 @@ def cm_router(state: CampaignState) -> str:
         return "finalize"
 
     phase = state.get("phase", "copy_review")
-    if phase == "copy_review":
-        print("[ROUTER] -> COPYWRITER (feedback loop)")
-        return "copywriter"
-    elif phase == "social_review":
+    if phase == "social_review":
         print("[ROUTER] -> SOCIAL SPECIALIST (feedback loop)")
         return "social_specialist"
 
-    print("[ROUTER] -> END (finalize)")
-    return "finalize"
+    # Default: send back to copywriter (covers copy_review + unexpected phase values)
+    print("[ROUTER] -> COPYWRITER (feedback loop)")
+    return "copywriter"

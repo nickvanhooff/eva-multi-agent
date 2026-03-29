@@ -10,11 +10,13 @@ from src.graph import build_graph
 from src.tracing import setup_tracing
 
 
-def run_campaign(product_description: str) -> dict:
+def run_campaign(product_description: str, pdf_path: str = None) -> dict:
     """Run the full multi-agent campaign pipeline.
 
     Args:
         product_description: Description of the product to create a campaign for.
+        pdf_path: Optional path to a product PDF. When provided, the RAG node
+                  ingests it and injects retrieved context into the Researcher.
 
     Returns:
         The final state containing all campaign artifacts.
@@ -26,6 +28,8 @@ def run_campaign(product_description: str) -> dict:
 
     initial_state = {
         "product_description": product_description,
+        "pdf_path": pdf_path,
+        "pdf_context": "",
         "copy_versions": [],
         "social_versions": [],
         "iteration_count": 0,
@@ -57,6 +61,7 @@ def save_campaign_report(result: dict, product_description: str) -> str:
     report = {
         "timestamp": datetime.now().isoformat(),
         "product_description": product_description,
+        "pdf_used": result.get("pdf_path") or None,
         "target_audience": result.get("target_audience", ""),
         "strategy": result.get("strategy", ""),
         "positioning": result.get("positioning", ""),
@@ -83,16 +88,19 @@ def main():
     # Setup LangSmith tracing (if enabled)
     setup_tracing()
 
-    # Demo product
+    # Demo product — optionally point to a PDF for RAG context
     product = """dubbele airfryer met 2 bakken van Philips"""
+    pdf = None  # e.g. "data/philips_airfryer.pdf"
 
     print("=" * 60)
     print("EVA MULTI-AGENT MARKETING CAMPAIGN GENERATOR")
     print("=" * 60)
-    print(f"\nProduct: {product.strip()}\n")
-    print("Starting campaign generation...\n")
+    print(f"\nProduct: {product.strip()}")
+    if pdf:
+        print(f"PDF:     {pdf}")
+    print("\nStarting campaign generation...\n")
 
-    result = run_campaign(product)
+    result = run_campaign(product, pdf_path=pdf)
 
     # Print results
     print("\n" + "=" * 60)

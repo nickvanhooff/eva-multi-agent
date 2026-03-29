@@ -15,3 +15,8 @@ Boekmotieven zijn anders dan productmotieven. Lezers kopen een boek voor:
 - **Educatie** — lesmateriaal, academisch gebruik, professionele ontwikkeling
 
 Gebruik deze context als fundament voor elke taak. Genereer geen aannames over prijs of features zonder basis in de beschrijving.
+
+**Strikte bronregel voor analyse:**
+- Baseer ALLE claims (aantallen, archiefmateriaal, extra media, auteursinformatie) uitsluitend op wat aantoonbaar in de PDF-context of product_description staat
+- Verzin GEEN specifieke aantallen ("150 beschrijvingen"), geen niet-genoemde producten ("digitale kaarten", "audio-fragmenten"), en geen autogeursgegevens die niet in de bron staan
+- Als informatie ontbreekt, beschrijf dan het genre en de thematiek — niet de veronderstelde inhoud

@@ -927,3 +927,57 @@ run_campaign("dubbele airfryer van Philips", pdf_path="data/philips.pdf")
 - 5 vaste queries gericht op campagne-relevante info (doelgroep, usps, tone of voice, markt, positionering)
 
 ---
+
+## Stap 27: Fix — RecursiveCharacterTextSplitter import fout
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+**Commit:** `9db9eef`
+
+**Wat is er gedaan:**
+Bij het draaien van Docker crashte de container direct met:
+
+```
+ModuleNotFoundError: No module named 'langchain.text_splitter'
+```
+
+**Oorzaak:**
+LangChain >= 0.2 heeft de text splitters verplaatst uit `langchain` naar een apart pakket `langchain-text-splitters`. De import in `src/rag.py` was nog de oude locatie.
+
+**Fix:**
+
+| Bestand | Oud | Nieuw |
+|---|---|---|
+| `src/rag.py` | `from langchain.text_splitter import ...` | `from langchain_text_splitters import ...` |
+| `requirements.txt` | — | `langchain-text-splitters>=0.2.0` toegevoegd |
+
+**Zelf bedacht:**
+- foutmelding direct herkend als langchain versie-issue, niet als code-fout
+
+---
+
+## Stap 28: data/ map aangemaakt — PDF input voor RAG
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+**Commit:** `b3cd3d4`
+
+**Wat is er gedaan:**
+Een `data/` map aangemaakt als vaste locatie voor PDF-bestanden die als input meegegeven worden aan het systeem. Docker kon de map niet zien zonder een volume mount.
+
+**Wijzigingen:**
+
+| Bestand | Wijziging |
+|---|---|
+| `data/.gitkeep` | Map aanwezig houden in git zonder inhoud |
+| `data/.gitignore` | `*.pdf` uitgesloten van git — PDFs worden niet gecommit |
+| `docker-compose.yml` | `./data:/app/data` volume mount toegevoegd aan eva service |
+
+**Gebruik:**
+1. PDF neerzetten in `eva-multi-agent/data/`
+2. In `src/main.py` instellen: `pdf = "data/naam.pdf"`
+3. `docker compose build && docker compose up`
+
+**Zelf bedacht:**
+- `.gitignore` in de data map zodat pdfs niet per ongeluk gecommit worden — kunnen grote bestanden zijn
+- `.gitkeep` zodat de lege map wel in git staat en iedereen direct weet waar de pdf naartoe moet
+
+---

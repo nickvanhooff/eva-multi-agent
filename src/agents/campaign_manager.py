@@ -2,7 +2,7 @@
 
 import re
 
-from src.llm import call_llm
+from src.llm import call_llm, get_agent_config
 from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
@@ -64,7 +64,7 @@ ITERATIE: {iteration} van {MAX_ITERATIONS}
 
 Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
 
-    response = call_llm(system_prompt, user_prompt, temperature=0.3, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, **get_agent_config("campaign_manager"))
 
     print("\n[CAMPAIGN MANAGER] Response received:")
     print("-" * 40)

@@ -1,6 +1,6 @@
 """Copywriter agent node — marketing copy creation and revision."""
 
-from src.llm import call_llm
+from src.llm import call_llm, get_agent_config
 from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
@@ -55,7 +55,7 @@ Lever de volgende teksten op:
 3. Een bodytekst (2-3 alinea's)
 4. Een call-to-action"""
 
-    response = call_llm(system_prompt, user_prompt, temperature=0.9, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, **get_agent_config("copywriter"))
 
     print("\n[COPYWRITER] Response received:")
     print("-" * 40)

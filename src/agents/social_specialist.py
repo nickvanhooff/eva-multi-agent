@@ -1,6 +1,6 @@
 """Social Specialist agent node — platform-specific social content."""
 
-from src.llm import call_llm
+from src.llm import call_llm, get_agent_config
 from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
@@ -53,7 +53,7 @@ Lever content op voor:
 2. LinkedIn (professionele post)
 3. X/Twitter (kort en krachtig, max 280 tekens)"""
 
-    response = call_llm(system_prompt, user_prompt, temperature=0.8, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, **get_agent_config("social_specialist"))
 
     print("\n[SOCIAL SPECIALIST] Response received:")
     print("-" * 40)

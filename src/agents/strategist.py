@@ -1,6 +1,6 @@
 """Strateeg agent node — strategy, positioning, and tone of voice."""
 
-from src.llm import call_llm
+from src.llm import call_llm, get_agent_config
 from src.skills import load_skill
 from src.state import CampaignState
 
@@ -48,7 +48,7 @@ Geef je antwoord in dit formaat:
 ## TONE OF VOICE
 [jouw tone of voice hier]"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.5, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(SYSTEM_PROMPT, user_prompt, **get_agent_config("strateeg"))
 
     print("\n[STRATEEG] Response received:")
     print("-" * 40)

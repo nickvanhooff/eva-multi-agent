@@ -15,6 +15,27 @@ from langchain.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
+# Per-agent LLM config — change model/provider/temperature here, not in agent files
+AGENT_LLM_CONFIG: dict[str, dict] = {
+    "researcher":        {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.4},
+    "strateeg":          {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.5},
+    "copywriter":        {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.9},
+    "social_specialist": {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.8},
+    "campaign_manager":  {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.3},
+}
+
+
+def get_agent_config(agent_name: str) -> dict:
+    """Return LLM config (provider, model, temperature) for the given agent.
+
+    Falls back to openrouter defaults if agent_name is not found.
+    """
+    return AGENT_LLM_CONFIG.get(
+        agent_name,
+        {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.7},
+    )
+
+
 PROVIDER_DEFAULTS = {
     "ollama": {
         "base_url": "http://localhost:11434/v1",

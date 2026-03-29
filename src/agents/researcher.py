@@ -1,6 +1,6 @@
 """Researcher agent node — product and market analysis."""
 
-from src.llm import call_llm
+from src.llm import call_llm, get_agent_config
 from src.skills.skills_config import get_skills
 from src.state import CampaignState
 from src.tools import duckduckgo_search, wikipedia_summary
@@ -65,7 +65,7 @@ Gebruik bovenstaande brondata als basis voor je analyse. Geef je antwoord in dit
 ## DOELGROEP
 [jouw doelgroepbeschrijving hier]"""
 
-    response = call_llm(system_prompt, user_prompt, temperature=0.4, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, **get_agent_config("researcher"))
 
     print("\n[RESEARCHER] Response received:")
     print("-" * 40)

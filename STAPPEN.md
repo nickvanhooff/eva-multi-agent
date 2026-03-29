@@ -1209,3 +1209,42 @@ Instellingen in `rag.py` aangepast na analyse van wat chunk_size en overlap doen
 - comment gecorrigeerd van "words" naar "characters"
 
 ---
+
+## Stap 35: Agent config registry — LLM-instellingen op één plek
+**Datum:** 2026-03-30
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> "wat is een professionele aanpak om per agent de llm te kunnen regelen op 1 plek?"
+
+**Probleem:**
+Elke agent hardcodede provider, model en temperature direct in de `call_llm()` aanroep. Om één model te wisselen moest je 5 bestanden aanpassen.
+
+```python
+# Oud — in elke agent apart
+call_llm(system_prompt, user_prompt, temperature=0.4, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+```
+
+**Wat is er gedaan:**
+`AGENT_LLM_CONFIG` dict toegevoegd in `src/llm.py` — één plek met alle LLM-instellingen per agent. `get_agent_config(agent_name)` geeft de juiste config terug. Alle 5 agents (+ strateeg) bijgewerkt om dit te gebruiken.
+
+```python
+# Nieuw — agents lezen config op uit llm.py
+call_llm(system_prompt, user_prompt, **get_agent_config("researcher"))
+```
+
+**AGENT_LLM_CONFIG:**
+
+| Agent | Provider | Model | Temperature |
+|---|---|---|---|
+| researcher | openrouter | nvidia/nemotron-3-nano-30b-a3b:free | 0.4 |
+| strateeg | openrouter | nvidia/nemotron-3-nano-30b-a3b:free | 0.5 |
+| copywriter | openrouter | nvidia/nemotron-3-nano-30b-a3b:free | 0.9 |
+| social_specialist | openrouter | nvidia/nemotron-3-nano-30b-a3b:free | 0.8 |
+| campaign_manager | openrouter | nvidia/nemotron-3-nano-30b-a3b:free | 0.3 |
+
+**Zelf bedacht:**
+- zelfde patroon als SKILL_MAP — centrale config, agents lezen zichzelf op
+- fallback in get_agent_config zodat onbekende agents niet crashen
+
+---

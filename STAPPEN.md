@@ -841,3 +841,89 @@ Researcher → Strateeg → [Creative Concept] → Copywriter → Social Special
 - skills en tools in de readme zetten zodat het in één oogopslag duidelijk is wat elke agent kan
 
 ---
+
+## Stap 25: RAG — onderzoek en stack keuze
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Wat is er gedaan:**
+Onderzocht hoe een grote PDF (bijv. productbeschrijving, boek, merkbriefing) als input gebruikt kan worden voor de Researcher agent. Het doel is dat het systeem campagnes kan genereren op basis van een extern document, niet alleen op basis van een korte productstring.
+
+Conclusie: RAG (Retrieval-Augmented Generation) is de juiste aanpak. Een 200-pagina PDF past niet in één prompt, en zelfs als het paste verliest een LLM focus bij zeer lange context ("Lost in the Middle", Liu et al. 2023).
+
+**Gekozen stack:**
+
+| Laag | Keuze | Reden |
+|---|---|---|
+| PDF parser | PyMuPDF | Gratis, lokaal, geen extra deps, werkt in Docker |
+| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` | Lokaal op CPU, ~80MB, gratis, snel genoeg voor 200p |
+| Vector store | ChromaDB | In-process, persistent by default, clean API, swapbaar naar cloud |
+| Glue | LangChain | Zit al in de stack |
+
+PostgreSQL (+ pgvector) is overwogen maar afgevallen: voegt alleen infrastructuurcomplexiteit toe zonder meerwaarde zolang Eva geen relationele data heeft. Zie `docs/rag.md` voor volledige onderbouwing.
+
+**Bronnen:**
+- Lewis et al. (2020) RAG paper: `arxiv.org/abs/2005.11401`
+- "Lost in the Middle": `arxiv.org/abs/2307.03172`
+- ChromaDB docs: `docs.trychroma.com`
+- Sentence Transformers: `sbert.net`
+
+**Zelf bedacht:**
+- postgresql afgevallen omdat er geen relationele data is in eva — rag-only use case
+- vaste queries per run in plaats van dynamische tool calls, eenvoudiger en voorspelbaarder
+- alleen de researcher krijgt toegang tot de pdf, de rest werkt via state
+
+---
+
+## Stap 26: RAG implementatie — pdf_ingestion node toegevoegd aan graph
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+**Commits:** `d794265` → `da39408` (7 commits)
+
+**Wat is er gedaan:**
+RAG geïmplementeerd als nieuwe node (`pdf_ingestion`) in de bestaande LangGraph pipeline. De node draait vóór de Researcher en is volledig optioneel — zonder PDF slaat hij stilletjes over.
+
+**Bestanden gewijzigd:**
+
+| Bestand | Wijziging |
+|---|---|
+| `requirements.txt` | pymupdf, sentence-transformers, chromadb, langchain-community toegevoegd |
+| `src/rag.py` | nieuw — volledige RAG module (laden, chunken, embedden, retrieven) |
+| `src/state.py` | `pdf_path: Optional[str]` en `pdf_context: str` toegevoegd |
+| `src/agents/researcher.py` | `pdf_context` injecteren als extra sectie in de prompt |
+| `src/graph.py` | `pdf_ingestion_node` toegevoegd als eerste node, `START → pdf_ingestion → researcher` |
+| `src/main.py` | `run_campaign()` accepteert nu optionele `pdf_path` parameter |
+
+**Hoe het werkt:**
+
+```
+PDF → PyMuPDF laden → RecursiveCharacterTextSplitter (500/50) → HuggingFaceEmbeddings → ChromaDB
+                                                                                              ↑
+5 vaste campaign queries → vector similarity search → TOP_K=3 chunks per query → deduplicatie → pdf_context string
+```
+
+De `pdf_context` string wordt als extra sectie in de Researcher-prompt geïnjecteerd:
+```
+Productdocumentatie (uit PDF via RAG):
+[retrieved passages]
+
+Actuele zoekresultaten (DuckDuckGo):
+...
+```
+
+**Gebruik:**
+```python
+# Zonder PDF — werkt exact zoals voor (backwards-compatible)
+run_campaign("dubbele airfryer van Philips")
+
+# Met PDF — RAG draait automatisch vóór de Researcher
+run_campaign("dubbele airfryer van Philips", pdf_path="data/philips.pdf")
+```
+
+**Zelf bedacht:**
+- pdf_ingestion als aparte node zodat het los te testen is van de researcher
+- backwards-compatible — geen pdf_path betekent gewoon overslaan, bestaande flows breken niet
+- deduplicatie op chunk-content zodat dezelfde passage niet meerdere keren in de prompt eindigt
+- 5 vaste queries gericht op campagne-relevante info (doelgroep, usps, tone of voice, markt, positionering)
+
+---

@@ -21,29 +21,30 @@ EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 50
 
-# Fixed queries the Researcher runs against every PDF
-# Goal: extract campaign-relevant information
-CAMPAIGN_QUERIES = [
-    "Wat is het product en wat zijn de belangrijkste kenmerken en voordelen?",
-    "Wie is de doelgroep van dit product?",
-    "Wat zijn de unieke verkooppunten (USPs) van dit product?",
-    "Wat is de merkidentiteit, tone of voice en positionering?",
-    "Wat zijn de markt, concurrentie en kansen voor dit product?",
-]
-
 # Number of chunks to retrieve per query
 TOP_K = 3
 
+# Queries per campaign type — controls what the Researcher extracts from the PDF
+_QUERIES: dict[str, list[str]] = {
+    "product": [
+        "Wat is het product en wat zijn de belangrijkste kenmerken en voordelen?",
+        "Wie is de doelgroep van dit product?",
+        "Wat zijn de unieke verkooppunten (USPs) van dit product?",
+        "Wat is de merkidentiteit, tone of voice en positionering?",
+        "Wat zijn de markt, concurrentie en kansen voor dit product?",
+    ],
+    "book": [
+        "Wie is de auteur en wat is zijn of haar achtergrond, expertise of persoonlijke connectie met het onderwerp?",
+        "Wat is het centrale thema, genre en de belofte van het boek aan de lezer?",
+        "Welke historische, culturele of geografische context wordt beschreven in het boek?",
+        "Wat maakt dit boek uniek ten opzichte van andere werken over hetzelfde onderwerp?",
+        "Voor welke lezer is dit boek bedoeld en welke leeservaring biedt het (kennis, emotie, escapisme, verbinding)?",
+    ],
+}
 
-def build_vector_store(pdf_path: str) -> Chroma:
-    """Load a PDF, chunk it, and store embeddings in ChromaDB.
 
-    Args:
-        pdf_path: Absolute or relative path to the PDF file.
-
-    Returns:
-        A Chroma vector store loaded with the PDF's chunks.
-    """
+def _build_vector_store(pdf_path: str) -> Chroma:
+    """Load a PDF, chunk it, and store embeddings in ChromaDB."""
     path = Path(pdf_path)
     if not path.exists():
         raise FileNotFoundError(f"PDF not found: {pdf_path}")
@@ -70,38 +71,41 @@ def build_vector_store(pdf_path: str) -> Chroma:
     return vector_store
 
 
-def retrieve_pdf_context(pdf_path: str) -> str:
-    """Run fixed campaign queries against the PDF and return combined context.
+def retrieve_pdf_context(pdf_path: str, campaign_type: str = "product") -> str:
+    """Run campaign-type-specific queries against the PDF and return combined context.
 
     This is the main entry point for the RAG node. It:
     1. Builds a vector store from the PDF
-    2. Runs all CAMPAIGN_QUERIES against it
+    2. Runs queries matching the campaign_type against the vector store
     3. Deduplicates retrieved chunks
     4. Returns a single formatted context string for the Researcher
 
     Args:
         pdf_path: Path to the PDF file.
+        campaign_type: Controls which query set is used ("product" or "book").
+                       Falls back to "product" for unknown types.
 
     Returns:
         A formatted string with all retrieved context passages.
     """
-    vector_store = build_vector_store(pdf_path)
+    queries = _QUERIES.get(campaign_type, _QUERIES["product"])
+    print(f"[RAG] Using '{campaign_type}' queries ({len(queries)} total)")
+
+    vector_store = _build_vector_store(pdf_path)
     retriever = vector_store.as_retriever(search_kwargs={"k": TOP_K})
 
     seen = set()
     passages = []
 
-    for query in CAMPAIGN_QUERIES:
+    for query in queries:
         docs = retriever.invoke(query)
         for doc in docs:
-            # Deduplicate by content
             if doc.page_content not in seen:
                 seen.add(doc.page_content)
                 passages.append((query, doc.page_content))
 
-    print(f"[RAG] Retrieved {len(passages)} unique passages across {len(CAMPAIGN_QUERIES)} queries")
+    print(f"[RAG] Retrieved {len(passages)} unique passages across {len(queries)} queries")
 
-    # Format into a readable context block for the LLM
     lines = ["=== PDF CONTEXT (via RAG) ===\n"]
     for query, passage in passages:
         lines.append(f"[Vraag: {query}]")

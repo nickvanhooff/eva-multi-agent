@@ -30,7 +30,8 @@ def pdf_ingestion_node(state: CampaignState) -> dict:
     print("[PDF INGESTION] Starting PDF ingestion via RAG...")
     print("=" * 60)
 
-    pdf_context = retrieve_pdf_context(pdf_path)
+    campaign_type = state.get("campaign_type", "product")
+    pdf_context = retrieve_pdf_context(pdf_path, campaign_type=campaign_type)
     return {"pdf_context": pdf_context}
 
 

@@ -1024,3 +1024,51 @@ Twee gegenereerde campagnes vergeleken voor hetzelfde product ("dubbele airfryer
 - volgende stap: testen of de researcher de twee bronnen beter in balans brengt bij een minder uitgebreide pdf
 
 ---
+
+## Stap 30: Skills analyse — van product naar boek
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> "kijk wat er nu in mijn skills zit wat niet relevant is voor boek campagnes, of kijk wat er mist bij skills of wat anders wat voor boeken een goede skill zou zijn, hiervoor is het vooral om een product gegaan, nu wil ik de focus verleggen naar een boek. geef me advies wat ik het beste kan aanpassen hiervoor."
+
+**Wat is er gedaan:**
+Twee boek-campagnes geanalyseerd (`campaign_20260329_204823.json` en `campaign_20260329_205551.json`) voor het boek *Een-jaar-in-de-Molukken*. Alle 8 huidige skills vergeleken met wat een boek-campagne werkelijk nodig heeft.
+
+**Bevindingen per skill:**
+
+| Skill | Status | Probleem |
+|---|---|---|
+| `content-strategy.md` | ✅ Werkt | 60/30/10 is universeel toepasbaar |
+| `copy-editing.md` | ✅ Werkt | Platform-agnostisch |
+| `marketing-psychology.md` | ✅ Werkt | Social proof, autoriteit, schaarste werken ook voor boeken |
+| `launch-strategy.md` | ✅ Werkt | Criteria zijn breed genoeg |
+| `social-content.md` | ⚠️ Aanpassen | Mist Bookstagram/BookTok formats en literaire community-content |
+| `product-marketing-context.md` | ⚠️ Aanpassen | Volledig product-gericht — boek heeft andere dimensies: thema, auteur, genre, leeservaring |
+| `copywriting.md` | ⚠️ Aanpassen | PAS/FAB zijn product-frameworks — boekcopy vereist blurb-format, premise-hook, thematische belofte |
+| `marketing-ideas.md` | ⚠️ Aanpassen | "Jobs-to-be-done" mist het boek-specifieke motief: identiteit, escapisme, verbinding, kennis |
+
+**Wat volledig ontbreekt:**
+- Boek-discovery funnel: Goodreads, NetGalley, bibliotheken, literaire boekhandels
+- Literaire community formats: Bookstagram, BookTok, leesclubs, literaire nieuwsbrieven
+- Auteur-platform: geloofwaardigheid via auteur, bronvermelding, academische endorsement
+- Boekomschrijvings-formats: achterflapstekst, Bol.com/Amazon-beschrijving, reading group guide
+
+**Concreet actieplan:**
+
+| Actie | Bestand | Wat verandert |
+|---|---|---|
+| Aanpassen | `product-marketing-context.md` | Boek-modus toevoegen: genre, auteur, thema, leeservaring als analysedimensies |
+| Aanpassen | `copywriting.md` | Blurb-format toevoegen: premise → belofte → haak |
+| Aanpassen | `social-content.md` | Bookstagram/BookTok, quote-kaart format, leesclub-content |
+| Nieuw | `book-marketing.md` | Boek-discovery funnel, literaire kanalen, auteur-platform, leescommunity |
+
+**Waarom dit relevant is:**
+De huidige campagnes voor het boek gebruiken product-taal ("USPs", "prijs-kwaliteit", "early-bird korting") die geforceerd aanvoelen voor een historisch-literair werk. De agents missen de context om het verschil te maken tussen een fysiek product en een cultureel werk.
+
+**Zelf bedacht:**
+- book-marketing.md als nieuwe skill in plaats van product-marketing aanpassen — dan blijft het systeem bruikbaar voor beide
+- auteur-platform als apart concept toevoegen, dat bestaat niet bij producten
+- discovery funnel voor boeken is fundamenteel anders dan een product-funnel: goodreads/reviews/leesclubs zijn de motor, niet google shopping
+
+---

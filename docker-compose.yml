@@ -23,6 +23,7 @@ services:
       - .env
     volumes:
       - ./campaigns:/app/campaigns
+      - ./data:/app/data
       - sdxl_cache:/root/.cache/huggingface
     deploy:
       resources:

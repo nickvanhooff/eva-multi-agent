@@ -16,12 +16,15 @@ from langchain.messages import HumanMessage, SystemMessage
 load_dotenv()
 
 # Per-agent LLM config — change model/provider/temperature here, not in agent files
+#
+# Strategy: Groq for analysis/evaluation (fast, generous limits: 500k/100k tokens/day)
+#           OpenRouter for creative writing (70B quality, saves Groq quota)
 AGENT_LLM_CONFIG: dict[str, dict] = {
-    "researcher":        {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.4},
-    "strateeg":          {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.5},
-    "copywriter":        {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.9},
-    "social_specialist": {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.8},
-    "campaign_manager":  {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.3},
+    "researcher":        {"provider": "groq",        "model": "llama-3.1-8b-instant",               "temperature": 0.4},
+    "strateeg":          {"provider": "groq",        "model": "llama-3.1-8b-instant",               "temperature": 0.5},
+    "copywriter":        {"provider": "openrouter",  "model": "meta-llama/llama-3.3-70b-instruct:free", "temperature": 0.9},
+    "social_specialist": {"provider": "openrouter",  "model": "meta-llama/llama-3.3-70b-instruct:free", "temperature": 0.8},
+    "campaign_manager":  {"provider": "groq",        "model": "llama-3.3-70b-versatile",            "temperature": 0.3},
 }
 
 

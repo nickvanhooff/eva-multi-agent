@@ -981,3 +981,46 @@ Een `data/` map aangemaakt als vaste locatie voor PDF-bestanden die als input me
 - `.gitkeep` zodat de lege map wel in git staat en iedereen direct weet waar de pdf naartoe moet
 
 ---
+
+## Stap 29: Campagne-vergelijking — zonder RAG vs. met RAG
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+**Bestanden:** `campaigns/campaign_20260328_230629.json` (oud) vs. `campaigns/campaign_20260329_174603.json` (nieuw)
+
+**Wat is er gedaan:**
+Twee gegenereerde campagnes vergeleken voor hetzelfde product ("dubbele airfryer met 2 bakken van Philips") — één zonder RAG (alleen DuckDuckGo + Wikipedia) en één met RAG (Philips handleiding PDF).
+
+---
+
+### Vergelijking
+
+| | Zonder RAG | Met RAG |
+|---|---|---|
+| **Input** | product string + DDGS + Wikipedia | product string + PDF handleiding |
+| **Iteraties** | 1 — direct goedgekeurd | 3 — meer verfijning nodig |
+| **Productfeatures** | Verzonnen: "Twin-Cook Pro", "Cerami-Tech + Quick-Wipe" | Echt: HomeID-app, stoom+air frying, 3,5L + 1,5L bakken, descaling-cyclus, 5 jaar garantie |
+| **Prijs** | €329 (van marktonderzoek) | €299 / €250–€350 (uit handleiding) |
+| **Kernpositionering** | Synchronisatie (Twin-Cook Pro) | Stoom + dual-cooking combinatie |
+| **Concurrenten** | Ninja, Tefal, Cosori, huismerk | Ninja (géén stoom), Cosori (lagere capaciteit), Cuisinart 2-in-1 |
+| **Marktcijfers** | Sterk: 12% CAGR, 1,8M units, 31% sync-frustratie | Geen marktcijfers — productdocumentatie heeft dit niet |
+| **Duurzaamheid** | Niet vermeld | 100% recyclebaar — letterlijk uit de handleiding |
+| **Doelgroep** | Persona "Sanne, 38" — model-gegenereerd | 28–55 jaar, €3.500+ netto, HomeID-app gebruikers — uit PDF |
+
+---
+
+### Conclusie
+
+**RAG levert:** feitelijke productinfo die het model zelf niet kon verzinnen — echte features, juiste prijsrange, correcte USPs, relevante concurrentievergelijking op basis van wat het product werkelijk kan.
+
+**DDGS levert:** marktintelligentie die de PDF niet heeft — CAGR, marktgrootte, consumentenfrustaties, concurrentieprijzen.
+
+**Probleem:** zonder RAG verzon het model features die klinken als Philips maar het niet zijn ("Twin-Cook Pro"). Met RAG verdwijnen de marktcijfers.
+
+**Ideale situatie:** beide combineren. De Researcher gebruikt RAG voor productfeitenen en DDGS/Wikipedia voor marktcontext. Dit is al het geval in de huidige implementatie — beide inputs zitten in de Researcher-prompt. De campagne met RAG bewijst dat productfeatures nu correct zijn; de marktcijfers kwamen in dit geval minder sterk terug omdat de PDF-context dominant was.
+
+**Zelf bedacht:**
+- verzonnen features zijn een groter risico dan ontbrekende marktcijfers — een klant kan een campagne met foute productinfo niet gebruiken
+- rag lost het belangrijkste probleem op: hallucinatie over het product zelf
+- volgende stap: testen of de researcher de twee bronnen beter in balans brengt bij een minder uitgebreide pdf
+
+---

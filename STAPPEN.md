@@ -1127,3 +1127,85 @@ De Campaign Manager beoordeelde boekcampagnes eerder met productcriteria (`launc
 - strategist buiten de SKILL_MAP gelaten — strategie-aanpak is voor boek en product vergelijkbaar genoeg
 
 ---
+
+## Stap 32: Campagne beoordeling + no-fabrication regels toegevoegd
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> "kijk naar nieuwe output, beoordeel deze en vergelijk — is het campagne waardig?"
+
+**Wat is er gedaan:**
+Campaign output (`campaign_20260329_212825.json`) beoordeeld na de skill-update. De campagne liet duidelijk zien dat de book-skills werkten (literaire toon, juiste kanalen, emotionele copy), maar ook dat het model ging hallucineren zodra het iets niet in de PDF kon vinden.
+
+**Gevonden problemen:**
+- `Auteur [Naam]` placeholder aanwezig, maar model verzond er wél een verzonnen backstory bij ("historicus en zoon van Molukse immigranten")
+- `Dr. Marielle Sari, cultuurhistoricus bij het Rijksmuseum van Ethnologie` — volledig gefabriceerd persoon en quote
+- Digitale producten verzonden: "Interactieve online kaarten (Leaflet/ArcGIS)", "Audio-fragmenten" — staan niet in het boek
+
+**Fix:**
+- `book-context.md` — bronregel toegevoegd: geen verzonnen aantallen, media of auteursinformatie zonder bewijs in de PDF
+- `book-copywriting.md` — no-fabrication regel toegevoegd: geen verzonnen quotes, endorsements, auteursverhaal of digitale producten; element weglaten als het ontbreekt
+
+**Zelf bedacht:**
+- fix in zowel context (researcher) als copywriting skill — het probleem begint bij de researcher die specs verzint, de copywriter gebruikt die dan
+- niet alleen copywriter fixen, dan lost het probleem zich niet op
+
+---
+
+## Stap 33: RAG queries aangepast per campaign_type
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> (voortkomend uit de campagne-analyse) — product-queries draaiden tegen een boek-PDF, wat hallucinaties veroorzaakte
+
+**Wat is er gedaan:**
+De vaste `CAMPAIGN_QUERIES` list in `rag.py` was volledig product-gericht. Bij een boek-campagne vroeg de RAG dus naar "USPs" en "markt en concurrenten" — begrippen die een boek-PDF niet bevat. Het model vulde dat gat dan zelf in.
+
+Oplossing: queries gesplitst per campaign_type in een `_QUERIES` dict.
+
+**Boek-queries (nieuw):**
+1. Wie is de auteur en wat is zijn/haar achtergrond?
+2. Wat is het centrale thema, genre en de belofte van het boek?
+3. Welke historische/culturele context wordt beschreven?
+4. Wat maakt dit boek uniek?
+5. Voor welke lezer en welke leeservaring?
+
+`retrieve_pdf_context()` accepteert nu `campaign_type` als parameter. `graph.py` geeft dit door vanuit de state. `build_vector_store` hernoemd naar `_build_vector_store` (intern gebruik).
+
+**Zelf bedacht:**
+- queries zijn de input van het RAG-systeem — verkeerde vragen = verkeerde passages = hallucinaties stroomafwaarts
+- product-queries behouden zodat bestaande campagnes ongewijzigd blijven
+
+---
+
+## Stap 34: Chunk size en overlap aangepast
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> "wat voor invloed heeft de chunk size en overlap? is 500 en 50 te groot?"
+
+**Wat is er gedaan:**
+Instellingen in `rag.py` aangepast na analyse van wat chunk_size en overlap doen voor dit gebruik.
+
+**Bevinding:** de comment zei "500 words" maar `RecursiveCharacterTextSplitter` telt karakters. 500 karakters ≈ 80-100 woorden ≈ 3-4 zinnen — te klein voor narratieve boektekst.
+
+**Probleem met de oude instelling:**
+- 500 chars fragmenteert zinnen halverwege — een passage zonder omringende context zegt weinig
+- TOP_K=3 × 5 queries = tot 7.500 karakters in de researcher-prompt — te veel ruis voor een klein model
+
+**Nieuwe instelling:**
+
+| Parameter | Oud | Nieuw | Reden |
+|---|---|---|---|
+| `CHUNK_SIZE` | 500 chars | 800 chars | Meer context per passage voor narratieve tekst |
+| `CHUNK_OVERLAP` | 50 chars | 80 chars | ~10% verhouding behouden |
+| `TOP_K` | 3 | 2 | Minder ruis in de researcher-prompt |
+
+**Zelf bedacht:**
+- TOP_K verlagen is effectiever dan chunk_size verkleinen bij een klein model
+- comment gecorrigeerd van "words" naar "characters"
+
+---

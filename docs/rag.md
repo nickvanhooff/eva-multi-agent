@@ -38,10 +38,12 @@ Query → Embedding → Search → Relevant chunks → LLM → Answer
 
 ### Step 1: Chunking
 
-The PDF is split into small text segments — for example 500 words with 50-word overlap. The overlap ensures that information spanning a chunk boundary is not lost.
+The PDF is split into small text segments. The overlap ensures that information spanning a chunk boundary is not lost.
 
-- **Chunk size:** ~500 words is a common starting point; small enough to be specific, large enough to preserve context.
-- **Overlap:** 10% overlap (e.g. 50 words on 500) is standard practice.
+- **Chunk size:** measured in **characters**, not words. 800 characters ≈ 130 words ≈ 5–6 sentences. For narrative text (books, articles) this is large enough to preserve context per passage.
+- **Overlap:** 10% of chunk_size — 80 characters. Standard practice to prevent information loss at boundaries.
+
+Eva uses `chunk_size=800, chunk_overlap=80`. An earlier setting of 500/50 was found to fragment narrative book text too aggressively, and the high `TOP_K` injected too much noise into the researcher prompt.
 
 **Source:** Pinecone chunking strategies guide: `pinecone.io/learn/chunking-strategies`
 
@@ -201,29 +203,39 @@ LangChain                            → Glue layer (already in Eva's stack)
 
 ---
 
-## What changes in Eva
+## What changed in Eva
 
-Concretely, these are the changes required to add RAG to the existing system:
+These changes were made to add RAG to the existing system:
 
-1. **New input:** alongside `product_description`, also accept a `pdf_path`
-2. **New step before the Researcher:** PDF parsing → chunking → indexing into ChromaDB
-3. **Researcher gets a retriever:** instead of only the product string, it poses 4–5 fixed queries to the vector store and receives relevant chunks
-4. **State extension:** add a `pdf_context: str` field to `CampaignState` (see `src/state.py`)
-5. **Other agents remain unchanged** — they work with the Researcher's output as before
+1. **New input fields:** `pdf_path` (optional PDF) and `campaign_type` (`"product"` or `"book"`) added to `CampaignState`
+2. **New node before the Researcher:** `pdf_ingestion_node` in `graph.py` — runs RAG, writes `pdf_context` to state
+3. **Campaign-type-specific queries:** `rag.py` uses different query sets per `campaign_type` — book queries ask about author, theme, cultural context; product queries ask about USPs, market, features
+4. **Researcher reads `pdf_context`:** injected into the researcher prompt when available
+5. **Other agents unchanged** — they work with the Researcher's output as before
 
-### Updated `CampaignState` (planned)
+### `CampaignState` (current)
 
 ```python
 class CampaignState(TypedDict):
     # --- Input ---
     product_description: str
-    pdf_path: Optional[str]          # NEW: path to product PDF
+    campaign_type: str               # "product" | "book"
+    pdf_path: Optional[str]          # optional path to PDF
 
     # --- RAG context ---
-    pdf_context: str                 # NEW: retrieved chunks from ChromaDB
+    pdf_context: str                 # retrieved chunks from ChromaDB
 
     # ... rest of fields unchanged
 ```
+
+### Query sets per campaign type
+
+| campaign_type | Queries focus on |
+|---|---|
+| `product` | Features/benefits, target audience, USPs, brand identity, market/competition |
+| `book` | Author background, theme/genre, historical/cultural context, uniqueness, reading experience |
+
+Using the wrong query set against a PDF causes the LLM to hallucinate — if you ask "what are the USPs?" against a book PDF, the model finds nothing and invents an answer.
 
 ---
 

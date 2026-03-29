@@ -15,6 +15,7 @@ Autonomous multi-agent marketing campaign generator built with **pure LangGraph*
 | Campaign Manager | Coordination & QA | `launch-strategy` | — | 0.3 |
 
 See [docs/architecture.md](docs/architecture.md) for detailed diagrams.
+See [docs/rag.md](docs/rag.md) for the RAG implementation design (PDF ingestion, embeddings, vector store choices).
 
 ## Setup
 

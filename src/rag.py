@@ -12,7 +12,7 @@ from pathlib import Path
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Embedding model — ~80 MB, runs on CPU, no API key required
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"

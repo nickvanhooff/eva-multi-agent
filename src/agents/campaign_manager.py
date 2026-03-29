@@ -3,14 +3,10 @@
 import re
 
 from src.llm import call_llm
-from src.skills import load_skill
+from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
-SYSTEM_PROMPT = load_skill("launch-strategy") + """
-
----
-
-Je bent de Campaign Manager van een reclamebureau.
+_BASE_PROMPT = """Je bent de Campaign Manager van een reclamebureau.
 Je taak is om de kwaliteit van de marketingcampagne te beoordelen.
 
 Beoordeel de marketingteksten en social media content op:
@@ -38,6 +34,10 @@ def campaign_manager_node(state: CampaignState) -> dict:
     """
     iteration = state.get("iteration_count", 0)
 
+    campaign_type = state.get("campaign_type", "product")
+    skill_content = get_skills(campaign_type, "campaign_manager")
+    system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
+
     print("\n" + "=" * 60)
     print(f"[CAMPAIGN MANAGER] Evaluating campaign (iteration {iteration})...")
     print("=" * 60)
@@ -64,7 +64,7 @@ ITERATIE: {iteration} van {MAX_ITERATIONS}
 
 Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.3, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, temperature=0.3, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
 
     print("\n[CAMPAIGN MANAGER] Response received:")
     print("-" * 40)

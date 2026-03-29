@@ -13,6 +13,7 @@ class CampaignState(TypedDict):
 
     # --- Input ---
     product_description: str
+    campaign_type: str  # "product" | "book" — controls which skills are loaded
     pdf_path: Optional[str]  # optional: path to product PDF for RAG ingestion
 
     # --- RAG context ---

@@ -1,14 +1,11 @@
 """Researcher agent node — product and market analysis."""
 
 from src.llm import call_llm
-from src.skills import load_skill
+from src.skills.skills_config import get_skills
 from src.state import CampaignState
 from src.tools import duckduckgo_search, wikipedia_summary
 
-SYSTEM_PROMPT = load_skill("product-marketing-context", "marketing-ideas") + """
-
----
-
+_BASE_PROMPT = """
 Je bent een marktonderzoeker voor een reclamebureau.
 Je taak is om een productomschrijving te analyseren en twee dingen op te leveren:
 
@@ -27,6 +24,10 @@ def researcher_node(state: CampaignState) -> dict:
     print("\n" + "=" * 60)
     print("[RESEARCHER] Starting product & market analysis...")
     print("=" * 60)
+
+    campaign_type = state.get("campaign_type", "product")
+    skill_content = get_skills(campaign_type, "researcher")
+    system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
 
     product = state["product_description"]
     pdf_context = state.get("pdf_context", "")
@@ -64,7 +65,7 @@ Gebruik bovenstaande brondata als basis voor je analyse. Geef je antwoord in dit
 ## DOELGROEP
 [jouw doelgroepbeschrijving hier]"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.4, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, temperature=0.4, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
 
     print("\n[RESEARCHER] Response received:")
     print("-" * 40)

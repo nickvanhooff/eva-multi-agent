@@ -1,14 +1,10 @@
 """Social Specialist agent node — platform-specific social content."""
 
 from src.llm import call_llm
-from src.skills import load_skill
+from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
-SYSTEM_PROMPT = load_skill("social-content") + """
-
----
-
-Je bent een social media specialist voor een reclamebureau.
+_BASE_PROMPT = """Je bent een social media specialist voor een reclamebureau.
 Je taak is om platformspecifieke social media content te maken op basis van de strategie en marketingteksten.
 
 Als je feedback hebt ontvangen van de Campaign Manager, verwerk die feedback in een verbeterde versie.
@@ -23,6 +19,10 @@ def social_specialist_node(state: CampaignState) -> dict:
     Writes: social_content, social_versions
     """
     feedback = state.get("cm_feedback", "")
+
+    campaign_type = state.get("campaign_type", "product")
+    skill_content = get_skills(campaign_type, "social_media")
+    system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
 
     print("\n" + "=" * 60)
     print("[SOCIAL SPECIALIST] Creating social media content...")
@@ -53,7 +53,7 @@ Lever content op voor:
 2. LinkedIn (professionele post)
 3. X/Twitter (kort en krachtig, max 280 tekens)"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.8, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, temperature=0.8, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
 
     print("\n[SOCIAL SPECIALIST] Response received:")
     print("-" * 40)

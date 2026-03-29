@@ -1,14 +1,10 @@
 """Copywriter agent node — marketing copy creation and revision."""
 
 from src.llm import call_llm
-from src.skills import load_skill
+from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
-SYSTEM_PROMPT = load_skill("copywriting", "copy-editing") + """
-
----
-
-Je bent een creatieve copywriter voor een reclamebureau.
+_BASE_PROMPT = """Je bent een creatieve copywriter voor een reclamebureau.
 Je taak is om pakkende marketingteksten te schrijven op basis van de strategie en doelgroep.
 
 Als je feedback hebt ontvangen van de Campaign Manager, verwerk die feedback in een verbeterde versie.
@@ -24,6 +20,10 @@ def copywriter_node(state: CampaignState) -> dict:
     """
     feedback = state.get("cm_feedback", "")
     iteration = state.get("iteration_count", 0)
+
+    campaign_type = state.get("campaign_type", "product")
+    skill_content = get_skills(campaign_type, "copywriter")
+    system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
 
     print("\n" + "=" * 60)
     print(f"[COPYWRITER] Writing marketing copy (iteration {iteration + 1})...")
@@ -55,7 +55,7 @@ Lever de volgende teksten op:
 3. Een bodytekst (2-3 alinea's)
 4. Een call-to-action"""
 
-    response = call_llm(SYSTEM_PROMPT, user_prompt, temperature=0.9, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
+    response = call_llm(system_prompt, user_prompt, temperature=0.9, provider="openrouter", model="nvidia/nemotron-3-nano-30b-a3b:free")
 
     print("\n[COPYWRITER] Response received:")
     print("-" * 40)

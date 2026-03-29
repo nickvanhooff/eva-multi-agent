@@ -1072,3 +1072,58 @@ De huidige campagnes voor het boek gebruiken product-taal ("USPs", "prijs-kwalit
 - discovery funnel voor boeken is fundamenteel anders dan een product-funnel: goodreads/reviews/leesclubs zijn de motor, niet google shopping
 
 ---
+
+## Stap 31: Dynamische skill selectie per campaign_type
+**Datum:** 2026-03-29
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> "houd rekening dat de uiteindelijke klant vanalles wil promoten met een campagne, dus zorg ervoor dat het de juiste skill pakt en niet onnodig skills mee stuurt. voor nu ligt de focus op een campagne voor een boek"
+
+**Wat is er gedaan:**
+Nieuw skill-systeem gebouwd waarbij elke agent de juiste skills laadt op basis van `campaign_type`. Vóór deze stap had elke agent een vaste module-level `SYSTEM_PROMPT` die altijd dezelfde skills inlaadde, ongeacht of het een product- of boekcampagne was.
+
+**Nieuwe bestanden:**
+- `src/skills/book-context.md` — boek-researcher context: genre, auteur, lezermotieven (identiteit, kennis, escapisme, verbinding, educatie)
+- `src/skills/book-copywriting.md` — blurb-format (hook → premise → thematische belofte → CTA), geen FAB, geen productkenmerken
+- `src/skills/book-social.md` — Bookstagram, BookTok/Reels, LinkedIn voor non-fiction, Goodreads, literaire community's
+- `src/skills/book-launch-strategy.md` — CM-beoordelingscriteria voor boeken: auteurgeloofwaardigheid, emotionele haakjes, community-integratie, literaire toon; expliciet géén product-criteria
+- `src/skills/skills_config.py` — centrale SKILL_MAP: campaign_type → agent → skill-namen; `get_skills(campaign_type, agent)` als publieke interface
+
+**SKILL_MAP:**
+
+| Agent | product | book |
+|---|---|---|
+| researcher | `research-brief` | `book-context` |
+| copywriter | `copywriting` | `book-copywriting` |
+| social_media | `social-media` | `book-social` |
+| email_marketer | `email-marketing` | `email-marketing` |
+| campaign_manager | `launch-strategy` | `book-launch-strategy` |
+
+**Gewijzigde bestanden:**
+- `src/state.py` — `campaign_type: str` toegevoegd als verplicht input-veld
+- `src/agents/researcher.py` — statische `SYSTEM_PROMPT` vervangen door dynamische opbouw in node-functie
+- `src/agents/copywriter.py` — idem
+- `src/agents/social_specialist.py` — idem
+- `src/agents/campaign_manager.py` — idem; nu laadt de CM `book-launch-strategy` voor boek-campagnes in plaats van productgerichte `launch-strategy`
+- `src/main.py` — `campaign_type` parameter toegevoegd aan `run_campaign()`, default `"product"`; demo ingesteld op `"book"`
+
+**Patroon per agent (na wijziging):**
+```python
+campaign_type = state.get("campaign_type", "product")
+skill_content = get_skills(campaign_type, "researcher")
+system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
+```
+
+**Waarom dit relevant is:**
+De Campaign Manager beoordeelde boekcampagnes eerder met productcriteria (`launch-strategy.md`): hij keek naar prijsvermelding, USP's, features. Een boek heeft dat niet — de CM moet kijken naar auteurgeloofwaardigheid, emotionele haakjes en literaire toon.
+
+**Backwards-compatibiliteit:**
+`get_skills()` valt terug op `"product"` als een onbekend campaign_type wordt meegegeven. Bestaande aanroepen zonder `campaign_type` werken via de default `"product"`.
+
+**Zelf bedacht:**
+- book-launch-strategy als apart bestand (niet combineren met product-versie) — schoner, geen if/else in de skill-tekst zelf
+- get_skills als centrale functie zodat agents niet zelf de SKILL_MAP hoeven te importeren
+- strategist buiten de SKILL_MAP gelaten — strategie-aanpak is voor boek en product vergelijkbaar genoeg
+
+---

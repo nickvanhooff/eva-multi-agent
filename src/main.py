@@ -10,13 +10,19 @@ from src.graph import build_graph
 from src.tracing import setup_tracing
 
 
-def run_campaign(product_description: str, pdf_path: str = None) -> dict:
+def run_campaign(
+    product_description: str,
+    pdf_path: str = None,
+    campaign_type: str = "product",
+) -> dict:
     """Run the full multi-agent campaign pipeline.
 
     Args:
         product_description: Description of the product to create a campaign for.
         pdf_path: Optional path to a product PDF. When provided, the RAG node
                   ingests it and injects retrieved context into the Researcher.
+        campaign_type: Controls which skills are loaded per agent.
+                       Supported values: "product" (default), "book".
 
     Returns:
         The final state containing all campaign artifacts.
@@ -28,6 +34,7 @@ def run_campaign(product_description: str, pdf_path: str = None) -> dict:
 
     initial_state = {
         "product_description": product_description,
+        "campaign_type": campaign_type,
         "pdf_path": pdf_path,
         "pdf_context": "",
         "copy_versions": [],
@@ -89,8 +96,8 @@ def main():
     setup_tracing()
 
     # Demo product — optionally point to a PDF for RAG context
-    product = """dubbele airfryer met 2 bakken van Philips"""
-    pdf = None  # e.g. "data/philips_airfryer.pdf"
+    product = """Boek: Een-jaar-in-de-Molukken"""
+    pdf = "data/Een-jaar-in-de-Molukken.pdf"  # e.g. "data/philips_airfryer.pdf"
 
     print("=" * 60)
     print("EVA MULTI-AGENT MARKETING CAMPAIGN GENERATOR")
@@ -100,7 +107,7 @@ def main():
         print(f"PDF:     {pdf}")
     print("\nStarting campaign generation...\n")
 
-    result = run_campaign(product, pdf_path=pdf)
+    result = run_campaign(product, pdf_path=pdf, campaign_type="book")
 
     # Print results
     print("\n" + "=" * 60)

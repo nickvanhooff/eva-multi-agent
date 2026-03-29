@@ -29,16 +29,27 @@ def researcher_node(state: CampaignState) -> dict:
     print("=" * 60)
 
     product = state["product_description"]
+    pdf_context = state.get("pdf_context", "")
 
     print("[RESEARCHER] Fetching live data via tools...")
     search_results = duckduckgo_search(f"{product} markt concurrenten doelgroep")
     wiki_results = wikipedia_summary(product)
     print(f"[RESEARCHER] DuckDuckGo: {len(search_results)} chars | Wikipedia: {len(wiki_results)} chars")
 
+    if pdf_context:
+        print(f"[RESEARCHER] PDF context available ({len(pdf_context)} chars) — injecting into prompt")
+    else:
+        print("[RESEARCHER] No PDF context — using product description only")
+
+    pdf_section = f"""
+Productdocumentatie (uit PDF via RAG):
+{pdf_context}
+""" if pdf_context else ""
+
     user_prompt = f"""Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.
 
 Product: {product}
-
+{pdf_section}
 Actuele zoekresultaten (DuckDuckGo):
 {search_results}
 

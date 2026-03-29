@@ -13,6 +13,10 @@ class CampaignState(TypedDict):
 
     # --- Input ---
     product_description: str
+    pdf_path: Optional[str]  # optional: path to product PDF for RAG ingestion
+
+    # --- RAG context ---
+    pdf_context: str  # retrieved passages from the PDF, injected into Researcher prompt
 
     # --- Researcher output ---
     market_research: str

@@ -17,14 +17,20 @@ load_dotenv()
 
 # Per-agent LLM config — change model/provider/temperature here, not in agent files
 #
-# Strategy: Groq for analysis/evaluation (fast, generous limits: 500k/100k tokens/day)
-#           OpenRouter for creative writing (70B quality, saves Groq quota)
+# Best split (use when OpenRouter is available):
+#   researcher        → groq       llama-3.1-8b-instant               (500k tokens/day, fast)
+#   strateeg          → groq       llama-3.1-8b-instant               (500k tokens/day, fast)
+#   copywriter        → openrouter meta-llama/llama-3.3-70b-instruct:free  (70B quality for creative writing)
+#   social_specialist → openrouter meta-llama/llama-3.3-70b-instruct:free  (70B quality for platform content)
+#   campaign_manager  → groq       llama-3.3-70b-versatile            (100k tokens/day, deterministic)
+#
+# Current: all on Groq — OpenRouter free tier (50 req/day global) is exhausted
 AGENT_LLM_CONFIG: dict[str, dict] = {
-    "researcher":        {"provider": "groq",        "model": "llama-3.1-8b-instant",               "temperature": 0.4},
-    "strateeg":          {"provider": "groq",        "model": "llama-3.1-8b-instant",               "temperature": 0.5},
-    "copywriter":        {"provider": "openrouter",  "model": "meta-llama/llama-3.3-70b-instruct:free", "temperature": 0.9},
-    "social_specialist": {"provider": "openrouter",  "model": "meta-llama/llama-3.3-70b-instruct:free", "temperature": 0.8},
-    "campaign_manager":  {"provider": "groq",        "model": "llama-3.3-70b-versatile",            "temperature": 0.3},
+    "researcher":        {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.4},
+    "strateeg":          {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.5},
+    "copywriter":        {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.9},
+    "social_specialist": {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.8},
+    "campaign_manager":  {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.3},
 }
 
 

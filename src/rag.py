@@ -17,12 +17,14 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # Embedding model — ~80 MB, runs on CPU, no API key required
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-# Chunk settings — 500 words with 10% overlap
-CHUNK_SIZE = 500
-CHUNK_OVERLAP = 50
+# Chunk settings — characters (not words), ~10% overlap
+# 800 chars ≈ 130 words ≈ 5-6 sentences — enough context for narrative/thematic text
+CHUNK_SIZE = 800
+CHUNK_OVERLAP = 80
 
 # Number of chunks to retrieve per query
-TOP_K = 3
+# Lower = less noise injected into the researcher prompt
+TOP_K = 2
 
 # Queries per campaign type — controls what the Researcher extracts from the PDF
 _QUERIES: dict[str, list[str]] = {

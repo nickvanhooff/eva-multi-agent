@@ -6,15 +6,15 @@ Autonomous multi-agent marketing campaign generator built with **pure LangGraph*
 
 5 specialized agents collaborate to generate complete marketing campaigns:
 
-| Agent | Role | Skills | Tools | Temperature |
-|-------|------|--------|-------|-------------|
-| Researcher | Product/market analysis | `product-marketing-context`, `marketing-ideas` | DuckDuckGo search, Wikipedia | 0.4 |
+| Agent | Role | Skills (dynamic per campaign_type) | Tools | Temperature |
+|-------|------|------------------------------------|-------|-------------|
+| Researcher | Market & context analysis | `research-brief` / `book-context` | DuckDuckGo, Wikipedia | 0.4 |
 | Strateeg | Strategy & positioning | `content-strategy`, `marketing-psychology` | — | 0.5 |
-| Copywriter | Marketing copy | `copywriting`, `copy-editing` | — | 0.9 |
-| Social Specialist | Platform-specific content | `social-content` | — | 0.8 |
-| Campaign Manager | Coordination & QA | `launch-strategy` | — | 0.3 |
+| Copywriter | Marketing copy | `copywriting` / `book-copywriting` | — | 0.9 |
+| Social Specialist | Platform-specific content | `social-media` / `book-social` | — | 0.8 |
+| Campaign Manager | Coordination & QA | `launch-strategy` / `book-launch-strategy` | — | 0.3 |
 
-See [docs/architecture.md](docs/architecture.md) for detailed diagrams.
+Skills are loaded dynamically at runtime based on `campaign_type`. See [docs/architecture.md](docs/architecture.md) for detailed diagrams.
 See [docs/rag.md](docs/rag.md) for the RAG implementation design (PDF ingestion, embeddings, vector store choices).
 
 ## Setup
@@ -71,14 +71,27 @@ The 5 fixed queries extract campaign-relevant information: product features, tar
 **Usage:**
 
 ```python
-# Without PDF — works exactly as before
-run_campaign("dubbele airfryer van Philips")
-
-# With PDF — RAG runs automatically before the Researcher
+# Product campaign — default
 run_campaign("dubbele airfryer van Philips", pdf_path="data/philips.pdf")
+
+# Book campaign — loads book-specific skills for all agents
+run_campaign("Een jaar in de Molukken", pdf_path="data/boek.pdf", campaign_type="book")
 ```
 
 See [docs/rag.md](docs/rag.md) for full stack decisions and trade-offs.
+
+## Campaign types
+
+The `campaign_type` parameter controls which skills are injected into each agent's system prompt:
+
+| Agent | `product` (default) | `book` |
+|-------|---------------------|--------|
+| Researcher | `research-brief` | `book-context` |
+| Copywriter | `copywriting` | `book-copywriting` |
+| Social Specialist | `social-media` | `book-social` |
+| Campaign Manager | `launch-strategy` | `book-launch-strategy` |
+
+Skills are defined in `src/skills/` as Markdown files and loaded via `src/skills/skills_config.py`. Adding a new campaign type only requires adding entries to `SKILL_MAP` and the corresponding skill files.
 
 ## Tech Stack
 

@@ -4,11 +4,12 @@ This document describes the full LangGraph architecture for the Eva multi-agent 
 
 ## 1. Graph Flow
 
-The main pipeline: 5 agents connected via edges, with conditional feedback loops from the Campaign Manager.
+The main pipeline: a PDF ingestion node followed by 5 agents connected via edges, with conditional feedback loops from the Campaign Manager.
 
 ```mermaid
 flowchart TD
-    START((START)) --> R["Researcher\n(temp: 0.4)"]
+    START((START)) --> PDF["pdf_ingestion\n(RAG — optional)"]
+    PDF -->|edge| R["Researcher\n(temp: 0.4)"]
     R -->|edge| S["Strateeg\n(temp: 0.5)"]
     S -->|edge| CW["Copywriter\n(temp: 0.9)"]
     CW -->|edge| SS["Social Specialist\n(temp: 0.8)"]
@@ -22,11 +23,12 @@ flowchart TD
     style START fill:#4CAF50,stroke:#333,color:#fff
     style END fill:#f44336,stroke:#333,color:#fff
     style CM fill:#FFC107,stroke:#333
+    style PDF fill:#E3F2FD,stroke:#1565C0
 ```
 
 ### How it works
 
-1. **START** triggers the Researcher node
+1. **START** triggers the `pdf_ingestion` node — if `pdf_path` is set, it runs RAG and writes `pdf_context`; otherwise it writes an empty string and exits silently
 2. Each agent processes sequentially: Researcher -> Strateeg -> Copywriter -> Social Specialist -> Campaign Manager
 3. The **Campaign Manager** evaluates all content and decides:
    - **Approve** -> finalize and go to END
@@ -43,7 +45,8 @@ All agents read from and write to a shared `CampaignState` (TypedDict). Each nod
 flowchart LR
     subgraph "CampaignState (TypedDict)"
         direction TB
-        INPUT["<b>Input</b>\nproduct_description: str"]
+        INPUT["<b>Input</b>\nproduct_description: str\ncampaign_type: str\npdf_path: Optional[str]"]
+        RAG["<b>RAG Context</b>\npdf_context: str"]
         RESEARCH["<b>Researcher Output</b>\nmarket_research: str\ntarget_audience: str"]
         STRATEGY["<b>Strateeg Output</b>\nstrategy: str\npositioning: str\ntone_of_voice: str"]
         COPY["<b>Copywriter Output</b>\ncopy_draft: str\ncopy_versions: Annotated[list, add]"]
@@ -51,6 +54,7 @@ flowchart LR
         CONTROL["<b>Campaign Manager</b>\ncm_feedback: str\nphase: str\napproved: bool\niteration_count: int\nfinal_campaign: Optional[dict]"]
     end
 
+    PDF[pdf_ingestion] -.->|writes| RAG
     R[Researcher] -.->|writes| RESEARCH
     S[Strateeg] -.->|writes| STRATEGY
     CW[Copywriter] -.->|writes| COPY
@@ -58,6 +62,7 @@ flowchart LR
     CM[Campaign Manager] -.->|writes| CONTROL
 
     style INPUT fill:#E3F2FD,stroke:#1565C0
+    style RAG fill:#E3F2FD,stroke:#1565C0
     style RESEARCH fill:#E8F5E9,stroke:#2E7D32
     style STRATEGY fill:#FFF3E0,stroke:#E65100
     style COPY fill:#FCE4EC,stroke:#C62828
@@ -75,13 +80,14 @@ All other fields use the default last-write-wins strategy.
 
 ### What each agent reads
 
-| Agent             | Reads from State                                                                     |
-| ----------------- | ------------------------------------------------------------------------------------ |
-| Researcher        | `product_description`                                                                |
-| Strateeg          | `product_description`, `market_research`, `target_audience`                          |
-| Copywriter        | `product_description`, `target_audience`, `strategy`, `tone_of_voice`, `cm_feedback` |
-| Social Specialist | `product_description`, `target_audience`, `strategy`, `copy_draft`, `cm_feedback`    |
-| Campaign Manager  | ALL fields                                                                           |
+| Agent             | Reads from State                                                                                    |
+| ----------------- | --------------------------------------------------------------------------------------------------- |
+| pdf_ingestion     | `pdf_path`                                                                                          |
+| Researcher        | `product_description`, `campaign_type`, `pdf_context`                                               |
+| Strateeg          | `product_description`, `market_research`, `target_audience`                                         |
+| Copywriter        | `product_description`, `campaign_type`, `target_audience`, `strategy`, `tone_of_voice`, `cm_feedback` |
+| Social Specialist | `product_description`, `campaign_type`, `target_audience`, `strategy`, `copy_draft`, `cm_feedback`  |
+| Campaign Manager  | ALL fields (including `campaign_type` for skill selection)                                          |
 
 ## 3. LangGraph Concepts Map
 
@@ -146,3 +152,33 @@ cm_router(state) -> str:
 This creates two possible feedback loops:
 1. **Copy loop**: CM -> Copywriter -> Social Specialist -> CM (copy needs revision)
 2. **Social loop**: CM -> Social Specialist -> CM (social content needs revision)
+
+## 5. Dynamic Skill System
+
+Each agent loads its skills at runtime based on `campaign_type` from state. Skills are Markdown files in `src/skills/` injected into the agent's system prompt before the base instruction.
+
+**SKILL_MAP** (`src/skills/skills_config.py`):
+
+| Agent | `product` | `book` |
+|-------|-----------|--------|
+| Researcher | `research-brief` | `book-context` |
+| Copywriter | `copywriting` | `book-copywriting` |
+| Social Specialist | `social-media` | `book-social` |
+| Campaign Manager | `launch-strategy` | `book-launch-strategy` |
+
+The Strateeg is not in the map — its `content-strategy` + `marketing-psychology` skills apply equally to all campaign types.
+
+**Pattern inside each agent node:**
+
+```python
+campaign_type = state.get("campaign_type", "product")
+skill_content = get_skills(campaign_type, "researcher")
+system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
+```
+
+`get_skills()` falls back to `"product"` for unknown campaign types, so existing callers without `campaign_type` are unaffected.
+
+**Adding a new campaign type** requires only:
+1. Add skill Markdown files to `src/skills/`
+2. Add an entry to `SKILL_MAP` in `skills_config.py`
+3. Pass the new type as `campaign_type` to `run_campaign()`

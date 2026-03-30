@@ -35,14 +35,15 @@ AGENT_LLM_CONFIG: dict[str, dict] = {
 
 
 def get_agent_config(agent_name: str) -> dict:
-    """Return LLM config (provider, model, temperature) for the given agent.
+    """Return LLM config (provider, model, temperature, agent_name) for the given agent.
 
     Falls back to openrouter defaults if agent_name is not found.
     """
-    return AGENT_LLM_CONFIG.get(
+    base = AGENT_LLM_CONFIG.get(
         agent_name,
         {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.7},
     )
+    return {**base, "agent_name": agent_name}
 
 
 PROVIDER_DEFAULTS = {
@@ -107,18 +108,38 @@ def call_llm(
     temperature: float = 0.7,
     provider: str = None,
     model: str = None,
+    agent_name: str = "unknown",
+    **_,
 ) -> str:
     """Call an LLM via LangChain's ChatOpenAI.
 
+    Automatically pushes llm_call and llm_response events to the event bus
+    so the API can stream them to the frontend in real-time.
+
     Args:
         system_prompt: The system instructions for the LLM.
-        user_prompt: The user message / task for the LLM.
-        temperature: Creativity control (0.0 = deterministic, 1.0 = creative).
-        provider: Optional provider override (groq, openrouter, ollama).
+        user_prompt:   The user message / task for the LLM.
+        temperature:   Creativity control (0.0 = deterministic, 1.0 = creative).
+        provider:      Optional provider override (groq, openrouter, ollama).
+        model:         Optional model override.
+        agent_name:    Agent name for event logging (injected via get_agent_config).
 
     Returns:
         The LLM's response as a plain string.
     """
+    from src.event_bus import push  # late import — avoids circular on startup
+
+    resolved_model = model or PROVIDER_DEFAULTS.get(
+        provider or os.getenv("LLM_PROVIDER", "ollama"), {}
+    ).get("model", "unknown")
+
+    push(agent_name, "llm_call", f"→ Calling {resolved_model}", {
+        "system_prompt": system_prompt[:500],
+        "user_prompt": user_prompt[:500],
+        "model": resolved_model,
+        "provider": provider,
+    })
+
     llm = _get_llm(provider, model)
     llm = llm.with_config({"temperature": temperature})
 
@@ -128,4 +149,11 @@ def call_llm(
     ]
 
     response = llm.invoke(messages)
-    return response.content or ""
+    content = response.content or ""
+
+    push(agent_name, "llm_response", f"← Response from {resolved_model}", {
+        "preview": content[:800],
+        "length": len(content),
+    })
+
+    return content

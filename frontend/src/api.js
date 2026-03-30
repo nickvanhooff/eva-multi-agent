@@ -1,5 +1,13 @@
 const BASE = '/api'
 
+// Convert stored image_path (e.g. "campaigns/images/xxx.png") to a URL
+// API mounts campaigns/ at /static, so strip the "campaigns/" prefix
+export function imageUrl(imagePath) {
+  if (!imagePath) return null
+  const relative = imagePath.replace(/^campaigns[\\/]/, '')
+  return `${BASE}/static/${relative.replace(/\\/g, '/')}`
+}
+
 export async function startCampaign(body) {
   const res = await fetch(`${BASE}/campaigns`, {
     method: 'POST',

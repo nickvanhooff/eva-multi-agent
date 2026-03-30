@@ -11,6 +11,7 @@ const NODE_LABEL = {
   social_specialist: 'Social Specialist',
   campaign_manager: 'Campaign Manager',
   image_generator: 'Image Generator',
+  __system__: 'System',
 }
 
 const NODE_COLOR = {
@@ -21,6 +22,73 @@ const NODE_COLOR = {
   social_specialist: '#ec4899',
   campaign_manager: '#22c55e',
   image_generator: '#f97316',
+  __system__: '#64748b',
+}
+
+const TYPE_STYLE = {
+  node_done:    { icon: '✓', color: 'var(--green)' },
+  llm_call:     { icon: '→', color: '#6366f1' },
+  llm_response: { icon: '←', color: '#06b6d4' },
+  error:        { icon: '✗', color: 'var(--red)' },
+}
+
+function LogEntry({ entry, expanded, onToggle }) {
+  const style = TYPE_STYLE[entry.type] || { icon: '·', color: 'var(--text-muted)' }
+  const hasDetail = entry.data && (entry.data.system_prompt || entry.data.user_prompt || entry.data.preview)
+
+  return (
+    <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: 6, marginBottom: 6 }}>
+      <div
+        style={{ display: 'flex', gap: 8, alignItems: 'flex-start', cursor: hasDetail ? 'pointer' : 'default' }}
+        onClick={() => hasDetail && onToggle()}
+      >
+        <span style={{ color: 'var(--text-muted)', fontSize: 11, flexShrink: 0, paddingTop: 1 }}>
+          {new Date(entry.timestamp).toLocaleTimeString('nl')}
+        </span>
+        <span style={{ color: style.color, flexShrink: 0, fontWeight: 700 }}>{style.icon}</span>
+        <span style={{ color: NODE_COLOR[entry.node] || 'var(--text-muted)', fontWeight: 500, fontSize: 12, flexShrink: 0 }}>
+          [{NODE_LABEL[entry.node] || entry.node}]
+        </span>
+        <span style={{ color: 'var(--text)', fontSize: 12 }}>{entry.message}</span>
+        {hasDetail && (
+          <span style={{ color: 'var(--text-muted)', fontSize: 11, marginLeft: 'auto', flexShrink: 0 }}>
+            {expanded ? '▲' : '▼'}
+          </span>
+        )}
+      </div>
+
+      {expanded && hasDetail && (
+        <div style={{ marginTop: 8, marginLeft: 80, background: 'var(--surface2)', borderRadius: 6, padding: 10, fontSize: 11 }}>
+          {entry.data.system_prompt && (
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600 }}>SYSTEM PROMPT</div>
+              <pre style={{ color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: 1.5 }}>
+                {entry.data.system_prompt}
+              </pre>
+            </div>
+          )}
+          {entry.data.user_prompt && (
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600 }}>USER PROMPT</div>
+              <pre style={{ color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: 1.5 }}>
+                {entry.data.user_prompt}
+              </pre>
+            </div>
+          )}
+          {entry.data.preview && (
+            <div>
+              <div style={{ color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600 }}>
+                RESPONSE {entry.data.length ? `(${entry.data.length} chars)` : ''}
+              </div>
+              <pre style={{ color: '#22c55e', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: 1.5 }}>
+                {entry.data.preview}
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function CampaignLive() {
@@ -29,6 +97,7 @@ export default function CampaignLive() {
   const [activeNode, setActiveNode] = useState(null)
   const [doneNodes, setDoneNodes] = useState([])
   const [logs, setLogs] = useState([])
+  const [expandedIdx, setExpandedIdx] = useState(null)
   const [status, setStatus] = useState('queued')
   const [iterations, setIterations] = useState(0)
   const logRef = useRef(null)
@@ -37,32 +106,23 @@ export default function CampaignLive() {
     const es = streamCampaignEvents(
       id,
       (event) => {
-        const { node, status: s, data } = event
-        if (node === '__done__' || node === '__error__') return
+        if (event.node === '__done__' || event.node === '__error__') return
 
-        setActiveNode(node)
-        setDoneNodes(prev => prev.includes(node) ? prev : [...prev, node])
+        // Update pipeline state on node_done
+        if (event.type === 'node_done' && !event.node.startsWith('__')) {
+          setActiveNode(event.node)
+          setDoneNodes(prev => prev.includes(event.node) ? prev : [...prev, event.node])
+          if (event.data?.iteration_count) setIterations(event.data.iteration_count)
+        }
+
         setStatus('running')
-
-        if (data?.iteration_count) setIterations(data.iteration_count)
-
-        const label = NODE_LABEL[node] || node
-        const summary = Object.entries(data || {})
-          .filter(([, v]) => v && typeof v === 'string' && v.length < 80)
-          .map(([k]) => k)
-          .join(', ')
-
-        setLogs(prev => [...prev, {
-          time: new Date().toLocaleTimeString('nl'),
-          node,
-          label,
-          text: summary ? `${label} completed (${summary})` : `${label} completed`,
-        }])
+        setLogs(prev => [...prev, event])
       },
       (event) => {
         setActiveNode(null)
-        setStatus(event.status === 'failed' ? 'failed' : 'done')
-        if (event.status !== 'failed') {
+        const finalStatus = event.status === 'failed' ? 'failed' : 'done'
+        setStatus(finalStatus)
+        if (finalStatus === 'done') {
           setTimeout(() => navigate(`/campaigns/${id}`), 1500)
         }
       }
@@ -81,62 +141,86 @@ export default function CampaignLive() {
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 700 }}>
             Campaign Running
-            <span style={{ marginLeft: 10, fontSize: 13, fontWeight: 500, color: status === 'done' ? 'var(--green)' : status === 'failed' ? 'var(--red)' : 'var(--primary)', background: 'rgba(99,102,241,0.1)', borderRadius: 6, padding: '3px 10px' }}>
+            <span style={{
+              marginLeft: 10, fontSize: 13, fontWeight: 500,
+              color: status === 'done' ? 'var(--green)' : status === 'failed' ? 'var(--red)' : 'var(--primary)',
+              background: 'rgba(99,102,241,0.1)', borderRadius: 6, padding: '3px 10px'
+            }}>
               ● {status}
             </span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', marginTop: 4, fontFamily: 'monospace', fontSize: 12 }}>{id}</p>
+          <p style={{ color: 'var(--text-muted)', marginTop: 4, fontFamily: 'monospace', fontSize: 11 }}>{id}</p>
         </div>
       </div>
 
       {/* Pipeline */}
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 28, marginBottom: 24 }}>
         <AgentPipeline activeNode={activeNode} doneNodes={doneNodes} />
+        {iterations > 0 && (
+          <div style={{ marginTop: 10, fontSize: 12, color: 'var(--yellow)' }}>↻ Iteration {iterations} — Campaign Manager requested revision</div>
+        )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-        {/* Active agent */}
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Active Agent</div>
+      {/* Active agent card */}
+      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: 24, marginBottom: 24 }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
+          <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Active Agent</div>
           {activeNode ? (
             <>
-              <div style={{ fontSize: 24, fontWeight: 700, color: NODE_COLOR[activeNode] || 'var(--primary)', marginBottom: 6 }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: NODE_COLOR[activeNode] || 'var(--primary)', marginBottom: 4 }}>
                 {NODE_LABEL[activeNode]}
               </div>
-              <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Processing...</div>
-              {iterations > 0 && (
-                <div style={{ marginTop: 12, fontSize: 12, color: 'var(--yellow)' }}>↻ Iteration {iterations}</div>
-              )}
+              <div style={{ color: 'var(--text-muted)', fontSize: 12 }}>Processing...</div>
             </>
           ) : (
-            <div style={{ color: 'var(--text-muted)' }}>{status === 'done' ? '✓ Completed' : status === 'failed' ? '✗ Failed' : 'Waiting...'}</div>
+            <div style={{ color: status === 'done' ? 'var(--green)' : status === 'failed' ? 'var(--red)' : 'var(--text-muted)', fontSize: 13 }}>
+              {status === 'done' ? '✓ Completed' : status === 'failed' ? '✗ Failed' : 'Waiting...'}
+            </div>
           )}
+
+          <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--border)', fontSize: 11, color: 'var(--text-muted)' }}>
+            <div style={{ marginBottom: 4 }}>
+              <span style={{ color: '#6366f1' }}>→ llm_call</span> — prompt sent
+            </div>
+            <div style={{ marginBottom: 4 }}>
+              <span style={{ color: '#06b6d4' }}>← llm_response</span> — reply received
+            </div>
+            <div>
+              <span style={{ color: 'var(--green)' }}>✓ node_done</span> — agent completed
+            </div>
+          </div>
         </div>
 
         {/* Activity log */}
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Activity Log</div>
-          <div ref={logRef} style={{ height: 160, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
+              Activity Log — click → or ← to expand prompts & responses
+            </div>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{logs.length} events</span>
+          </div>
+          <div ref={logRef} style={{ height: 320, overflowY: 'auto' }}>
             {logs.length === 0 && <p style={{ color: 'var(--text-muted)', fontSize: 12 }}>Waiting for agents...</p>}
             {logs.map((log, i) => (
-              <div key={i} style={{ fontSize: 12, display: 'flex', gap: 8 }}>
-                <span style={{ color: 'var(--text-muted)', flexShrink: 0 }}>{log.time}</span>
-                <span style={{ color: NODE_COLOR[log.node] || 'var(--text)', fontWeight: 500 }}>[{log.label}]</span>
-                <span style={{ color: 'var(--text-muted)' }}>{log.text}</span>
-              </div>
+              <LogEntry
+                key={i}
+                entry={log}
+                expanded={expandedIdx === i}
+                onToggle={() => setExpandedIdx(expandedIdx === i ? null : i)}
+              />
             ))}
           </div>
         </div>
       </div>
 
       {status === 'done' && (
-        <div style={{ marginTop: 20, textAlign: 'center', color: 'var(--green)', fontSize: 14 }}>
+        <div style={{ textAlign: 'center', color: 'var(--green)', fontSize: 14 }}>
           ✓ Campaign completed — redirecting to results...
         </div>
       )}
       {status === 'failed' && (
-        <div style={{ marginTop: 20, textAlign: 'center', color: 'var(--red)', fontSize: 14 }}>
-          ✗ Campaign failed — check logs above
+        <div style={{ textAlign: 'center', color: 'var(--red)', fontSize: 14 }}>
+          ✗ Campaign failed
         </div>
       )}
     </div>

@@ -1322,3 +1322,55 @@ Alle schermen matchen de data die Eva al produceert: campaign_type badges (produ
 - beoordeling of stitch-output aansluit op bestaande state-structuur
 
 ---
+
+## Stap 38: Frameworkkeuze frontend + backend — voorbereiding decision log
+**Datum:** 2026-03-30
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> dit is een belangrijk moment voor stappen. hier maak ik een keuze voor de frameworks. zet hierbij in stappen.md om een decision log hierbij van te gaan maken. mijn opties zijn nuxt react+vite of pure html voor frontend, keuze word react+vite omdat het snel opgezet is en makkelijk dynamisch werkt. ookal ben ik al bekend met nuxt, alleen dit is net te zwaar voor zo'n project. react+vite is in no time opgezet en opgestart dus dit maakt het ook een sneller ontwikkelproces, nuxt is minder snel in het project opstarten ookal heb ik hier wel al meer kennis is. de keuze om ook voor react te gaan is dat ik dan ook wat meer ervaring opdoe met react+vite. ook moet hier de backend keuze gemaakt worden. hier was de keuze fastapi of django, django is een zwaardere api en veel te uitgebreid om een simpele api op te zetten die nu nodig is. django is een groter framework wat een beetje overkill is voor dit moment. zet ook erbij dat ik dit nog even moet onderzoeken en moet beargumenteren en dot research voor moet benoemen. een succescriteria is bijvoorbeeld snelheid, ontwikkeltijd, compatible in een docker container, op basis van eigen ervaring. en voor de frontend is de keuze niet zo groot omdat ik een ai engineer ben en geen designer die veel meer met frontend bezig is.
+
+**Wat is er gedaan:**
+Frameworkkeuze gemaakt voor de frontend en backend van het Eva dashboard. Deze keuze wordt uitgewerkt in een apart decision log (DL4).
+
+**Frontend — keuze: React + Vite**
+
+Opties afgewogen:
+
+| Optie | Reden afgevallen |
+|---|---|
+| Pure HTML + JS | wordt snel rommelig bij dynamische state (pipeline, logs, polling) |
+| Nuxt.js | te zwaar voor dit project; SSR niet nodig; langzamer om op te starten |
+| **React + Vite** ✓ | snel opgezet, component-based, ideaal voor dynamische UI |
+
+Keuze voor React + Vite omdat:
+- in no time opgezet en gestart (`npm create vite`)
+- `useState`/`useEffect` volstaat voor polling en live agent-status
+- Stitch HTML makkelijk te vertalen naar JSX
+- als AI engineer is de frontend keuze secundair — snelheid van ontwikkeling is leidend
+- ook: nieuwe ervaring opdoen met React + Vite (kennis van Nuxt is al aanwezig)
+
+**Backend — keuze: FastAPI** *(nog te onderbouwen via DOT research)*
+
+Opties afgewogen:
+
+| Optie | Reden afgevallen |
+|---|---|
+| Django | te zwaar framework; veel overhead voor een simpele API; overkill |
+| **FastAPI** ✓ | lichtgewicht, snel, past bij bestaande Python-stack |
+
+⚠️ **Nog te doen voor decision log:** DOT-onderzoeksmethode benoemen, keuze verder beargumenteren met bronnen en eigen ervaring.
+
+**Succescriteria (voor DL4):**
+- ontwikkeltijd: frontend in < 1 sprint werkend
+- snelheid opstarten: project draait lokaal binnen 5 minuten
+- compatibel in Docker container
+- aansluitend op bestaande Eva Python-backend
+- gebaseerd op eigen ervaring en kennis
+
+**Zelf bedacht:**
+- react+vite gekozen ondanks meer kennis van nuxt — bewust nieuwe kennis opdoen
+- fastapi als logische keuze vanwege bestaande python-stack, maar nog onderbouwen
+- dit moment vastleggen als vertrekpunt voor decision log DL4
+
+---

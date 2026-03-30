@@ -23,3 +23,11 @@ Thumbs.db
 
 # Campaign reports and generated images
 campaigns/
+
+# Tool / IDE config dirs
+.agents/
+.claude/
+.commandcode/
+.continue/
+.mcpjam/
+skills-lock.json

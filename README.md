@@ -1,104 +1,183 @@
 # Eva Multi-Agent System
 
-Autonomous multi-agent marketing campaign generator built with **pure LangGraph** (no LangChain).
+Autonomous multi-agent marketing campaign generator built with **LangGraph**. Generates complete campaigns — strategy, copy, social content, and image — via a pipeline of 7 specialized agents. Exposed via a **FastAPI backend** and a **React+Vite dashboard**.
 
 ## Architecture
 
-5 specialized agents collaborate to generate complete marketing campaigns:
+7 nodes in a sequential pipeline with conditional feedback loops from the Campaign Manager:
 
-| Agent | Role | Skills (dynamic per campaign_type) | Tools | Temperature |
-|-------|------|------------------------------------|-------|-------------|
-| Researcher | Market & context analysis | `research-brief` / `book-context` | DuckDuckGo, Wikipedia | 0.4 |
-| Strateeg | Strategy & positioning | `content-strategy`, `marketing-psychology` | — | 0.5 |
-| Copywriter | Marketing copy | `copywriting` / `book-copywriting` | — | 0.9 |
-| Social Specialist | Platform-specific content | `social-media` / `book-social` | — | 0.8 |
-| Campaign Manager | Coordination & QA | `launch-strategy` / `book-launch-strategy` | — | 0.3 |
+```
+PDF Ingestion → Researcher → Strateeg → Copywriter → Social Specialist → Campaign Manager → Image Generator
+                                              ↑________________↑
+                                           (feedback loop — max 3x)
+```
 
-Skills are loaded dynamically at runtime based on `campaign_type`. See [docs/architecture.md](docs/architecture.md) for detailed diagrams.
-See [docs/rag.md](docs/rag.md) for the RAG implementation design (PDF ingestion, embeddings, vector store choices).
+| Node | Role | Model | Temperature |
+|------|------|-------|-------------|
+| PDF Ingestion | RAG — extracts context from PDF | — | — |
+| Researcher | Market & context analysis | llama-3.1-8b (Groq) | 0.4 |
+| Strateeg | Strategy & positioning | llama-3.1-8b (Groq) | 0.5 |
+| Copywriter | Marketing copy | llama-3.3-70b (Groq) | 0.9 |
+| Social Specialist | Platform-specific content | llama-3.3-70b (Groq) | 0.8 |
+| Campaign Manager | QA — approves or requests revision | llama-3.3-70b (Groq) | 0.3 |
+| Image Generator | Campaign visual via SDXL (GPU) | SDXL-Turbo | — |
+
+Skills are loaded dynamically at runtime based on `campaign_type`. See [docs/architecture.md](docs/architecture.md) for full diagrams and state schema.
 
 ## Setup
 
 ### Docker (primary)
 
 ```bash
-cp .env.example .env        # Configure your LLM provider (Groq/OpenRouter/Ollama)
+cp .env.example .env        # set API keys (see .env.example)
 docker compose build
 docker compose up
 ```
 
-Campaign reports are saved to `./campaigns/` on the host machine via volume mount.
+The API runs at `http://localhost:8000`. Campaign reports are saved to `./campaigns/` via volume mount.
 
-To run once without keeping the container:
+### Local development
 
-```bash
-docker compose run --rm eva
-```
-
-### Local (development only)
-
+**API:**
 ```bash
 python -m venv .venv
 .venv\Scripts\activate      # Windows
 pip install -r requirements.txt
 cp .env.example .env
-python src/main.py
+uvicorn src.api:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-## RAG — PDF input support
+**Frontend (separate terminal):**
+```bash
+cd frontend
+npm install
+npm run dev                 # runs at http://localhost:5173
+```
 
-The Researcher agent can ingest a product PDF before it runs. A dedicated `pdf_ingestion` node runs first in the graph, extracts relevant passages via RAG, and injects them into the Researcher's prompt.
+The Vite dev server proxies `/api` → `http://localhost:8000` automatically.
+
+## API
+
+FastAPI backend at port 8000. Full docs at `http://localhost:8000/docs`.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/campaigns` | Start a campaign — returns `job_id` |
+| `GET` | `/campaigns/{id}` | Poll status + result |
+| `GET` | `/campaigns/{id}/stream` | SSE stream — real-time agent events |
+| `GET` | `/campaigns/{id}/events` | All events for a job (live or from file) |
+| `GET` | `/campaigns` | List all saved campaign reports |
+| `GET` | `/pdfs` | List available PDFs in `data/` |
+| `POST` | `/pdfs/upload` | Upload a PDF |
+| `GET` | `/static/...` | Serve campaign images |
+
+### Start a campaign
+
+```bash
+curl -X POST http://localhost:8000/campaigns \
+  -H "Content-Type: application/json" \
+  -d '{"product_description": "Philips Airfryer XL", "campaign_type": "product"}'
+# → {"job_id": "..."}
+
+curl http://localhost:8000/campaigns/{job_id}
+# → {"status": "done", "result": {...}}
+```
+
+### Stream agent events (SSE)
+
+Each agent call emits two events via Server-Sent Events:
+- `llm_call` — system prompt + user prompt sent to the model
+- `llm_response` — raw response received
+- `node_done` — node completed with state update
+
+Events are also saved to `campaigns/{report_name}_events.json` for later review.
+
+## Frontend
+
+React+Vite dashboard at `http://localhost:5173`.
+
+| Route | Screen |
+|-------|--------|
+| `/` | Dashboard — stats, pipeline overview, recent campaigns |
+| `/campaigns/new` | New Campaign — type toggle, description, PDF upload |
+| `/campaigns/:id/live` | Live view — real-time pipeline + agent activity log |
+| `/campaigns/:id` | Results — Strategy / Copy / Social / Image / Logs tabs |
+| `/history` | Campaign History — filterable table |
+
+## RAG — PDF context
+
+The `pdf_ingestion` node runs before the Researcher. It extracts relevant passages from a PDF and injects them into the Researcher's prompt.
 
 **Stack:**
 
-| Component | Library | Purpose |
-|---|---|---|
-| PDF parser | `PyMuPDF` | Extract raw text from PDF (local, no API) |
-| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` | Convert text chunks to vectors (local CPU, free) |
-| Vector store | `ChromaDB` | Store and search vectors by semantic similarity |
-| Glue | `LangChain` | Loaders, splitter, retriever |
+| Component | Library |
+|-----------|---------|
+| PDF parser | PyMuPDF |
+| Embeddings | sentence-transformers/all-MiniLM-L6-v2 |
+| Vector store | ChromaDB |
+| Splitter | LangChain RecursiveCharacterTextSplitter |
 
-**How it works:**
+**Chunking:** 800 characters, 80 overlap, TOP_K=2 per query.
 
-```
-PDF → PyMuPDF → chunks (500 words, 50 overlap) → embeddings → ChromaDB
-                                                                     ↑
-5 fixed campaign queries → similarity search → top 3 chunks each → pdf_context → Researcher prompt
-```
+**Queries are campaign-type-specific** — book campaigns use narrative queries (author, themes, audience), product campaigns use conversion queries (USPs, market, features).
 
-The 5 fixed queries extract campaign-relevant information: product features, target audience, USPs, brand identity, and market positioning.
-
-**Usage:**
-
-```python
-# Product campaign — default
-run_campaign("dubbele airfryer van Philips", pdf_path="data/philips.pdf")
-
-# Book campaign — loads book-specific skills for all agents
-run_campaign("Een jaar in de Molukken", pdf_path="data/boek.pdf", campaign_type="book")
-```
-
-See [docs/rag.md](docs/rag.md) for full stack decisions and trade-offs.
+See [docs/rag.md](docs/rag.md) for full stack decisions.
 
 ## Campaign types
 
-The `campaign_type` parameter controls which skills are injected into each agent's system prompt:
+`campaign_type` controls which skill Markdown files are injected per agent:
 
-| Agent | `product` (default) | `book` |
-|-------|---------------------|--------|
+| Agent | `product` | `book` |
+|-------|-----------|--------|
 | Researcher | `research-brief` | `book-context` |
 | Copywriter | `copywriting` | `book-copywriting` |
 | Social Specialist | `social-media` | `book-social` |
 | Campaign Manager | `launch-strategy` | `book-launch-strategy` |
 
-Skills are defined in `src/skills/` as Markdown files and loaded via `src/skills/skills_config.py`. Adding a new campaign type only requires adding entries to `SKILL_MAP` and the corresponding skill files.
+Adding a new type: add skill files to `src/skills/` and an entry to `SKILL_MAP` in `skills_config.py`.
+
+## Observability
+
+**LangSmith** traces all LLM calls when enabled:
+
+```env
+LANGSMITH_ENABLED=true
+LANGSMITH_API_KEY=<key>
+LANGSMITH_PROJECT=eva-multi-agent
+```
+
+Traces include per-agent latency, token usage, and full message history. Dashboard: https://smith.langchain.com/
+
+## Key files
+
+```
+src/
+├── api.py              FastAPI app — all endpoints + SSE streaming
+├── graph.py            LangGraph StateGraph assembly
+├── state.py            CampaignState TypedDict
+├── main.py             run_campaign() entry point + report saving
+├── llm.py              Provider-agnostic LLM wrapper (Groq/OpenRouter/Ollama)
+├── rag.py              PDF ingestion pipeline
+├── event_bus.py        Thread-local event bus for agent logging
+├── tracing.py          LangSmith setup
+├── agents/             One file per agent node
+└── skills/             Markdown skill files + SKILL_MAP config
+
+frontend/
+├── src/api.js          Fetch wrapper + SSE helper
+├── src/App.jsx         Router
+├── src/pages/          5 pages
+└── src/components/     Sidebar, AgentPipeline
+```
 
 ## Tech Stack
 
-- **LangGraph** — graph orchestration (StateGraph, conditional edges, checkpointing)
-- **LangChain** — LLM wrapper (`ChatOpenAI`), required for LangSmith tracing
+- **LangGraph** — graph orchestration (StateGraph, conditional edges, MemorySaver)
+- **LangChain** — LLM wrapper (ChatOpenAI), text splitter, RAG loaders
 - **LangSmith** — observability: traces, token usage, latency per agent
-- **OpenAI-compatible API** — works with Groq, OpenRouter, Ollama via `base_url`
-- **DuckDuckGo + Wikipedia** — live tool data for Researcher agent (no API key)
-- **Docker** — primary runtime, includes Ollama service for local LLM fallback
-- **PyMuPDF + ChromaDB + sentence-transformers** — RAG pipeline for PDF input
+- **FastAPI + uvicorn** — REST API + SSE streaming
+- **React + Vite** — dashboard frontend
+- **Groq / OpenRouter / Ollama** — LLM providers via OpenAI-compatible API
+- **PyMuPDF + ChromaDB + sentence-transformers** — RAG pipeline
+- **Stable Diffusion XL (SDXL-Turbo)** — local image generation via GPU
+- **Docker** — primary runtime with Ollama sidecar for local LLM fallback

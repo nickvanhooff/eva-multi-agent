@@ -4,7 +4,7 @@ This document describes the full LangGraph architecture for the Eva multi-agent 
 
 ## 1. Graph Flow
 
-The main pipeline: a PDF ingestion node followed by 5 agents connected via edges, with conditional feedback loops from the Campaign Manager.
+The main pipeline: a PDF ingestion node followed by 5 agents, conditional feedback loops from the Campaign Manager, and a final image generation step.
 
 ```mermaid
 flowchart TD
@@ -15,15 +15,16 @@ flowchart TD
     CW -->|edge| SS["Social Specialist\n(temp: 0.8)"]
     SS -->|edge| CM{"Campaign Manager\n(temp: 0.3)"}
 
-    CM -->|"conditional:\nphase=copy_review\ncopy_rejected"| CW
-    CM -->|"conditional:\nphase=social_review\nsocial_rejected"| SS
-    CM -->|"conditional:\napproved OR max_iterations"| FIN["Finalize"]
-    FIN --> END((END))
+    CM -->|"conditional:\nphase=copy_review"| CW
+    CM -->|"conditional:\nphase=social_review"| SS
+    CM -->|"conditional:\napproved OR max_iterations"| IMG["Image Generator\n(SDXL-Turbo)"]
+    IMG --> END((END))
 
     style START fill:#4CAF50,stroke:#333,color:#fff
     style END fill:#f44336,stroke:#333,color:#fff
     style CM fill:#FFC107,stroke:#333
     style PDF fill:#E3F2FD,stroke:#1565C0
+    style IMG fill:#FCE4EC,stroke:#C62828
 ```
 
 ### How it works
@@ -52,6 +53,7 @@ flowchart LR
         COPY["<b>Copywriter Output</b>\ncopy_draft: str\ncopy_versions: Annotated[list, add]"]
         SOCIAL["<b>Social Output</b>\nsocial_content: str\nsocial_versions: Annotated[list, add]"]
         CONTROL["<b>Campaign Manager</b>\ncm_feedback: str\nphase: str\napproved: bool\niteration_count: int\nfinal_campaign: Optional[dict]"]
+        IMAGE["<b>Image Generator</b>\nimage_path: Optional[str]"]
     end
 
     PDF[pdf_ingestion] -.->|writes| RAG
@@ -60,6 +62,7 @@ flowchart LR
     CW[Copywriter] -.->|writes| COPY
     SS[Social Specialist] -.->|writes| SOCIAL
     CM[Campaign Manager] -.->|writes| CONTROL
+    IG[Image Generator] -.->|writes| IMAGE
 
     style INPUT fill:#E3F2FD,stroke:#1565C0
     style RAG fill:#E3F2FD,stroke:#1565C0
@@ -82,12 +85,13 @@ All other fields use the default last-write-wins strategy.
 
 | Agent             | Reads from State                                                                                    |
 | ----------------- | --------------------------------------------------------------------------------------------------- |
-| pdf_ingestion     | `pdf_path`                                                                                          |
+| pdf_ingestion     | `pdf_path`, `campaign_type`                                                                         |
 | Researcher        | `product_description`, `campaign_type`, `pdf_context`                                               |
 | Strateeg          | `product_description`, `market_research`, `target_audience`                                         |
 | Copywriter        | `product_description`, `campaign_type`, `target_audience`, `strategy`, `tone_of_voice`, `cm_feedback` |
 | Social Specialist | `product_description`, `campaign_type`, `target_audience`, `strategy`, `copy_draft`, `cm_feedback`  |
 | Campaign Manager  | ALL fields (including `campaign_type` for skill selection)                                          |
+| Image Generator   | `product_description`, `positioning`, `tone_of_voice`                                               |
 
 ## 3. LangGraph Concepts Map
 
@@ -105,10 +109,10 @@ flowchart TB
         SE["<b>START / END</b>\nGraph entry and exit points"]
     end
 
-    subgraph "Future Phase (LangChain integration)"
-        TN["<b>ToolNode</b>\nAuto-handle tool-calling"]
-        TOOLS["Tools: web_search,\nimage_gen, analytics"]
-        MSG["<b>Messages</b>\nChatModel integration"]
+    subgraph "In use via LangChain"
+        TN["<b>ChatOpenAI</b>\nLLM wrapper (all agents)"]
+        TOOLS["<b>LangSmith</b>\nTracing + observability"]
+        MSG["<b>RecursiveCharacterTextSplitter</b>\nRAG chunking"]
     end
 
     SG --> NODES
@@ -182,3 +186,55 @@ system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE
 1. Add skill Markdown files to `src/skills/`
 2. Add an entry to `SKILL_MAP` in `skills_config.py`
 3. Pass the new type as `campaign_type` to `run_campaign()`
+
+## 6. FastAPI Backend
+
+The graph is exposed via a FastAPI app (`src/api.py`). Campaigns run asynchronously in a background thread (`asyncio.to_thread`) because `graph.stream()` is synchronous.
+
+```
+POST /campaigns          → starts _stream_campaign() in background thread, returns job_id
+GET  /campaigns/{id}     → polls in-memory job OR reads campaigns/{id}.json from disk
+GET  /campaigns/{id}/stream  → SSE stream of events (EventSource)
+GET  /campaigns/{id}/events  → all events (live or from saved _events.json)
+GET  /campaigns          → list all saved reports (excludes _events.json files)
+GET  /pdfs               → list PDFs in data/
+POST /pdfs/upload        → upload PDF to data/
+GET  /static/...         → serve campaign images (StaticFiles on campaigns/ dir)
+```
+
+**Async flow:**
+```
+POST /campaigns
+  └── asyncio.to_thread(_stream_campaign, job_id, request)
+        └── graph.stream(initial_state)
+              └── yields {node_name: state_updates} per node
+                    └── push() → jobs[job_id]["events"]
+                    └── frontend EventSource picks up via /stream
+```
+
+## 7. Agent Event Bus
+
+`src/event_bus.py` provides thread-local job tracking so any code running inside a campaign thread can push events without passing `job_id` explicitly.
+
+```python
+# In api.py — bind job to thread
+set_job(job_id)
+
+# In llm.py — automatically called for every LLM invocation
+push(agent_name, "llm_call",     "→ Calling model", {"system_prompt": ..., "user_prompt": ...})
+push(agent_name, "llm_response", "← Response",      {"preview": ..., "length": ...})
+
+# In api.py — after each graph.stream() chunk
+push(node_name, "node_done", "✓ node completed", {state_fields})
+```
+
+**Event types:**
+
+| type | When | Data |
+|------|------|------|
+| `llm_call` | Before every LLM call | `system_prompt`, `user_prompt`, `model`, `provider` |
+| `llm_response` | After every LLM call | `preview` (first 800 chars), `length` |
+| `node_done` | After every graph node | node-specific state fields |
+| `error` | On exception | `error` message |
+
+Events are streamed live via SSE and saved to `campaigns/{report}_events.json` for later review in the Logs tab.

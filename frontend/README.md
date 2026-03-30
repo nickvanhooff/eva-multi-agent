@@ -1,16 +1,57 @@
-# React + Vite
+# Eva Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React+Vite dashboard for the Eva multi-agent marketing campaign system.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev       # http://localhost:5173
+```
 
-## React Compiler
+Requires the Eva API running at `http://localhost:8000` (see root README for API setup). The Vite dev server proxies `/api` → `http://localhost:8000` automatically.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Pages
 
-## Expanding the ESLint configuration
+| Route | Description |
+|-------|-------------|
+| `/` | Dashboard — stats, pipeline overview, recent campaigns |
+| `/campaigns/new` | New Campaign — type toggle, description, PDF upload/select |
+| `/campaigns/:id/live` | Live view — real-time pipeline + expandable agent log |
+| `/campaigns/:id` | Results — Strategy / Copy / Social / Image / Logs tabs |
+| `/history` | Campaign History — filter by type and status |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Structure
+
+```
+src/
+├── api.js                  Fetch wrapper + streamCampaignEvents() (EventSource) + imageUrl()
+├── App.jsx                 React Router setup
+├── index.css               CSS variables (dark theme, indigo primary)
+├── components/
+│   ├── Sidebar.jsx         Navigation sidebar
+│   └── AgentPipeline.jsx   7-node pipeline visualization (idle/active/done)
+└── pages/
+    ├── Dashboard.jsx
+    ├── NewCampaign.jsx
+    ├── CampaignLive.jsx    SSE stream — live events with expandable prompts/responses
+    ├── CampaignResults.jsx Tabs including Logs for reviewing agent thought process
+    └── CampaignHistory.jsx
+```
+
+## Real-time agent tracking
+
+`CampaignLive` connects to `GET /api/campaigns/:id/stream` via `EventSource`. Each event is one of:
+
+- `→ llm_call` — prompt sent to the model (click to expand: system prompt + user prompt)
+- `← llm_response` — response received (click to expand: full response preview)
+- `✓ node_done` — agent node completed
+
+After completion, the Logs tab in `CampaignResults` shows the full event history loaded from the saved `_events.json` file.
+
+## Design system
+
+Based on Google Stitch-generated designs (project `9283653711690935700`):
+- Dark mode, `#6366f1` indigo primary
+- Inter font, rounded-lg corners
+- No external UI library — pure CSS variables

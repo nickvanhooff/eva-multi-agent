@@ -1248,3 +1248,48 @@ call_llm(system_prompt, user_prompt, **get_agent_config("researcher"))
 - fallback in get_agent_config zodat onbekende agents niet crashen
 
 ---
+
+## Stap 36: Frontend prototype — Google Stitch via MCP
+**Datum:** 2026-03-30
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> Doel: Ik wil experimenteren met Google Stitch via MCP in Claude Code om een UX-gedreven frontend prototype te maken voor mijn multi-agent systeem.
+>
+> Werkwijze:
+> 1. Gebruik Google Stitch (via MCP) om een eerste UI-prototype te genereren. https://stitch.withgoogle.com/docs/mcp/setup
+> 2. Focus op UX-principes: duidelijke informatie-hiërarchie, minimale cognitieve belasting, consistente componentstructuur, schaalbaarheid voor toekomstige features
+> 3. Het ontwerp moet geschikt zijn voor een multi-agent systeem dashboard.
+>
+> Rolverdeling:
+> - Google Stitch fungeert als **Design Agent**
+> - Claude Code fungeert als **Implementation Agent**
+>
+> Het prototype moet minimaal bevatten:
+> - dashboardoverzicht van agents
+> - agent status indicators
+> - interactiepaneel met agents
+> - logs / activiteitsoverzicht
+> - duidelijke navigatiestructuur
+>
+> Output: gegenereerd UI-ontwerp vanuit Stitch, voorstel voor componentstructuur, aanbevelingen voor frontend architectuur, suggesties voor verdere iteraties.
+
+**Context:**
+Prompt aangescherpt met ChatGPT om duidelijkere doelen, UX-focus en een betere AI-workflow te definiëren.
+
+**Wat is er gedaan:**
+Oriëntatiestap: experiment met Google Stitch als design tool via MCP-integratie in Claude Code. Doel is een UI-prototype voor het Eva multi-agent dashboard — niet alleen functioneel maar ook UX-gedreven.
+
+**Motivatie:**
+Het systeem heeft tot nu toe alleen een CLI-interface. Een dashboard maakt de agent-status, logs en campagne-output inzichtelijk zonder door JSON-bestanden te bladeren. Google Stitch kan snel een visueel prototype genereren dat als basis dient voor de implementatie.
+
+**Rolverdeling AI-agents in dit experiment:**
+- Google Stitch → Design Agent (UI-ontwerp, componentstructuur)
+- Claude Code → Implementation Agent (code-uitwerking op basis van ontwerp)
+
+**Zelf bedacht:**
+- twee AI-tools als agents in een design-workflow inzetten — niet één tool alles laten doen
+- UX-principes als harde requirements meegeven, niet alleen "maak een dashboard"
+- prompt eerst verfijnen via ChatGPT voor betere output van Stitch
+
+---

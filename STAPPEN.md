@@ -1424,3 +1424,52 @@ curl http://localhost:8000/campaigns/{job_id}
 - job dict in memory, niet in db — bewuste keuze voor nu
 
 ---
+
+## Stap 40: React+Vite frontend gebouwd + SSE streaming toegevoegd
+**Datum:** 2026-03-30
+**Branch:** `feature/frontend-stitch`
+
+**Wat is er gedaan:**
+React+Vite frontend opgezet op basis van de 5 Stitch-designs. API uitgebreid met SSE streaming via `graph.stream()` zodat agent-events real-time naar de frontend worden gestuurd.
+
+**API-wijzigingen (`src/api.py`):**
+- `graph.invoke()` vervangen door `graph.stream()` — yielded per node een state-update
+- `jobs[job_id]["events"]` lijst bijgehouden per job
+- `GET /campaigns/{job_id}/stream` — SSE endpoint (EventSource)
+- `GET /campaigns/{job_id}/events` — alle events tot nu (reconnect)
+
+**Frontend (`frontend/`):**
+
+| Bestand | Beschrijving |
+|---|---|
+| `src/api.js` | fetch wrapper + `streamCampaignEvents()` via EventSource |
+| `src/App.jsx` | React Router met 5 routes |
+| `src/components/Sidebar.jsx` | navigatie sidebar |
+| `src/components/AgentPipeline.jsx` | 7-node pipeline visualisatie (idle/active/done) |
+| `src/pages/Dashboard.jsx` | stats, pipeline overzicht, recente campagnes |
+| `src/pages/NewCampaign.jsx` | type toggle, beschrijving, PDF upload, launch |
+| `src/pages/CampaignLive.jsx` | SSE stream, live pipeline, activity log |
+| `src/pages/CampaignResults.jsx` | tabs Strategy/Copy/Social/Image |
+| `src/pages/CampaignHistory.jsx` | filter + tabel van alle campagnes |
+
+**Real-time flow:**
+```
+POST /campaigns → job_id
+→ navigate /campaigns/{id}/live
+→ EventSource /campaigns/{id}/stream
+→ elk node-event → pipeline highlighted + log regel
+→ bij __done__ → redirect naar /campaigns/{id} (results)
+```
+
+**Tech stack:**
+- React + Vite (npm create vite --template react)
+- react-router-dom (routing)
+- @tailwindcss/vite (styling)
+- Geen externe UI library — styling via CSS variables uit Stitch design system
+
+**Zelf bedacht:**
+- eventSource sluiten bij __done__ of __error__ node
+- graph.stream() node-events filteren op relevante velden per node (_NODE_FIELDS)
+- vite proxy /api → http://localhost:8000 voor dev zonder cors-issues
+
+---

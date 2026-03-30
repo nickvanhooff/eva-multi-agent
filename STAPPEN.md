@@ -1293,3 +1293,32 @@ Het systeem heeft tot nu toe alleen een CLI-interface. Een dashboard maakt de ag
 - prompt eerst verfijnen via ChatGPT voor betere output van Stitch
 
 ---
+
+## Stap 37: Google Stitch — 5 schermen gegenereerd en gedocumenteerd
+**Datum:** 2026-03-30
+**Branch:** `feature/frontend-stitch`
+
+**Wat is er gedaan:**
+Op basis van het plan uit stap 36 zijn 5 desktop-schermen gegenereerd via `generate_screen_from_text` (Stitch MCP). Schermen opgehaald via `list_screens`, screenshots opgeslagen in `docs/screenshots/stitch/`.
+
+**Gegenereerde schermen:**
+
+| Scherm | Bestand |
+|---|---|
+| Eva Dashboard | [`01_dashboard.png`](docs/screenshots/stitch/01_dashboard.png) |
+| New Campaign | [`02_new_campaign.png`](docs/screenshots/stitch/02_new_campaign.png) |
+| Campaign Running Progress | [`03_campaign_running.png`](docs/screenshots/stitch/03_campaign_running.png) |
+| Campaign Results | [`04_campaign_results.png`](docs/screenshots/stitch/04_campaign_results.png) |
+| Campaign History | [`05_campaign_history.png`](docs/screenshots/stitch/05_campaign_history.png) |
+
+**Stitch project:** `9283653711690935700`
+**Design system:** dark, `#6366f1` indigo, Geist/Inter, ROUND_EIGHT, TONAL_SPOT
+
+**Beoordeling:**
+Alle schermen matchen de data die Eva al produceert: campaign_type badges (product/book), iteratie-tellers, CM approval status, PDF upload, agent pipeline visualisatie. De designs sluiten direct aan op de bestaande `CampaignState` velden.
+
+**Zelf bedacht:**
+- screenshot-urls ophalen via `list_screens` en opslaan als png via playwright
+- beoordeling of stitch-output aansluit op bestaande state-structuur
+
+---

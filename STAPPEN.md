@@ -1374,3 +1374,53 @@ Opties afgewogen:
 - dit moment vastleggen als vertrekpunt voor decision log DL4
 
 ---
+
+## Stap 39: FastAPI backend opgezet in eva Docker container
+**Datum:** 2026-03-30
+**Branch:** `feature/frontend-stitch`
+
+**Wat is er gedaan:**
+FastAPI toegevoegd als API-laag aan de bestaande `eva` container. De CLI-entrypoint (`python -m src.main`) is vervangen door `uvicorn`. `run_campaign()` draait async via `asyncio.to_thread` zodat de API niet blokkeert.
+
+**Architectuur:**
+```
+Docker container (eva) — port 8000
+  POST /campaigns          → start campagne, geeft job_id terug
+  GET  /campaigns/{id}     → poll status (queued / running / done / failed)
+  GET  /campaigns          → lijst van opgeslagen JSON-rapporten
+  GET  /pdfs               → beschikbare PDF's in data/
+  POST /pdfs/upload        → PDF uploaden naar data/
+```
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/api.py` | nieuw — FastAPI app met alle endpoints |
+| `requirements.txt` | `fastapi`, `uvicorn[standard]`, `python-multipart` toegevoegd |
+| `Dockerfile` | CMD → `uvicorn src.api:app --host 0.0.0.0 --port 8000` |
+| `docker-compose.yml` | `ports: 8000:8000` toegevoegd aan eva service |
+
+**Keuzes:**
+- 1 container (niet 2): FastAPI zit in dezelfde `eva` container — geen inter-container communicatie nodig, `campaigns/` en `data/` volumes al gemount
+- async via `asyncio.to_thread`: `run_campaign()` is blocking (LangGraph), draait in thread pool
+- job status in-memory dict: eenvoudig, voldoende voor eerste versie
+- PDF upload + bestaande PDFs kiezen: beide ondersteund via aparte endpoints
+
+**Verificatie:**
+```bash
+docker compose up --build
+curl -X POST http://localhost:8000/campaigns \
+  -H "Content-Type: application/json" \
+  -d '{"product_description":"test","campaign_type":"product"}'
+# → {"job_id": "..."}
+curl http://localhost:8000/campaigns/{job_id}
+# → {"status": "done", "result": {...}}
+```
+
+**Zelf bedacht:**
+- 1 container i.p.v. 2 — simpeler voor eerste versie, volumes al beschikbaar
+- asyncio.to_thread omdat langgraph sync is maar api async moet blijven
+- job dict in memory, niet in db — bewuste keuze voor nu
+
+---

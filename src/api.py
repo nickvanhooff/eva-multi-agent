@@ -17,8 +17,12 @@ from src.event_bus import jobs, set_job, push
 from src.graph import build_graph
 from src.main import save_campaign_report
 from src.state import CampaignState
+from src.tracing import setup_tracing
 
 app = FastAPI(title="Eva API", version="1.0.0")
+
+# Initialize LangSmith tracing on startup (requires LANGSMITH_ENABLED=true + LANGSMITH_API_KEY in .env)
+setup_tracing()
 
 app.add_middleware(
     CORSMiddleware,

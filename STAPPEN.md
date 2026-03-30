@@ -1573,3 +1573,27 @@ LANGSMITH_PROJECT=eva-multi-agent
 - probleem gevonden door te vergelijken wanneer setup_tracing() werd aangeroepen vs wanneer de api daadwerkelijk runt
 
 ---
+
+## Stap 44: Projectdocumentatie bijgewerkt (README, architecture.md, frontend README)
+**Datum:** 2026-03-31
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> pas de documentatie voor het project aan zoals de readme en andere relevanten bestanden wat belangrijk is
+
+**Wat is er gedaan:**
+Alle relevante documentatiebestanden bijgewerkt om de huidige staat van het project te weerspiegelen — FastAPI backend, React+Vite frontend, agent event bus, en correcties op verouderde informatie.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijzigingen |
+|---|---|
+| `README.md` | Volledig herschreven: 7 nodes, API endpoints tabel, frontend routes, RAG 800 chars (was "500 words"), LangSmith via API, Docker start nu uvicorn |
+| `docs/architecture.md` | Image Generator node toegevoegd aan graph + state schema; "Future Phase LangChain" → "In use"; sectie 6 FastAPI backend; sectie 7 Agent Event Bus |
+| `frontend/README.md` | Vervangen: standaard Vite template tekst → project-specifieke docs met pages, structuur en SSE uitleg |
+
+**Zelf bedacht:**
+- architecture.md uitbreiden met api + event bus sectie zodat het als technisch referentiedocument bruikbaar blijft
+- frontend readme volledig vervangen — standaard vite readme heeft geen waarde voor portfolio
+
+---

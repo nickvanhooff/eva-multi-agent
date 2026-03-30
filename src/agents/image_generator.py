@@ -71,7 +71,7 @@ def image_generator_node(state: CampaignState) -> dict:
 
         image = pipe(
             prompt=prompt,
-            num_inference_steps=4,
+            num_inference_steps=10,
             guidance_scale=0.0,  # SDXL-Turbo uses guidance_scale=0
             height=512,
             width=512,

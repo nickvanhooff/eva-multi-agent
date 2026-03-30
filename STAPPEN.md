@@ -1473,3 +1473,103 @@ POST /campaigns → job_id
 - vite proxy /api → http://localhost:8000 voor dev zonder cors-issues
 
 ---
+
+## Stap 41: Campaign lookup fix — opgeslagen campagnes niet gevonden
+**Datum:** 2026-03-31
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> i did test it by myself, it works to generate a campaign, i see the campaign is being generated and see the live view of it, but if i want to view older campaigns or click on the new campaign in the history or recent campaigns i do not see the campaign, i get "Campaign not found" and it is not the same url as the other what was showing with live
+
+**Probleem:**
+Klikken op een campagne vanuit History of Dashboard gaf "Campaign not found". De API zocht alleen in de in-memory `jobs` dict, maar opgeslagen campagnes staan als `campaign_*.json` op schijf.
+
+**Oplossing:**
+`GET /campaigns/{job_id}` zoekt nu eerst in-memory, daarna in `campaigns/{job_id}.json` op schijf. Navigatie gebruikt `encodeURIComponent(filename)` en CampaignResults decodeert dit weer.
+
+**Zelf bedacht:**
+- bestaande GET endpoint uitbreiden ipv nieuw endpoint — minder frontend-aanpassingen
+- _events.json bestanden uitsluiten van glob-match
+
+---
+
+## Stap 42: Image serving fix + agent denkproces logging
+**Datum:** 2026-03-31
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> image is niet geladen, dit gaat fout: Failed to load resource: the server responded with a status of 404 (Not Found)
+>
+> tijdens live wil ik alles zien wat welke agent stuurt naar welke agent en wat er ontvangen word, dit word toch ook gelogd, dus het denkprocess van een agent bekijken op het moment dat die bezig is, wat hij uitvoert enz. dit wil ik ook terug kunnen kijken, bijvoorbeeld bij researcher dat hij de pdf leest en wat hij daarna doet ...
+
+**Problemen:**
+1. Campaign images gaven 404 — frontend probeerde `/api/static/...` maar dat endpoint bestond niet
+2. Tijdens live view alleen node-completions zichtbaar, geen prompts/responses van agents
+
+**Oplossingen:**
+
+**Image serving:**
+- `campaigns/` directory gemount als StaticFiles in FastAPI op `/static`
+- Image path (`campaigns/images/xxx.png`) → URL via `imageUrl()` helper in `api.js` die het `campaigns/` prefix stript
+
+**Agent denkproces — `src/event_bus.py` (nieuw):**
+- Thread-local `set_job(job_id)` koppelt een thread aan een job
+- `push(node, type, message, data)` voegt event toe aan `jobs[job_id]["events"]`
+- `jobs` dict leeft in `event_bus.py` — geïmporteerd door zowel `api.py` als `llm.py`
+
+**`src/llm.py` — `call_llm()` uitgebreid:**
+- `agent_name` parameter toegevoegd (via `get_agent_config()` doorgegeven)
+- Voor elke LLM-aanroep: `llm_call` event met system_prompt + user_prompt (eerste 500 chars)
+- Na elke response: `llm_response` event met preview + totale lengte
+- Werkt automatisch voor alle agents zonder extra code per agent
+
+**Events opgeslagen:**
+- Na afloop van een campagne: `campaign_{ts}_events.json` naast het rapport
+- `GET /campaigns/{id}/events` laadt live events óf het events-bestand
+
+**Frontend:**
+- `CampaignLive`: log entries klikbaar — toont system prompt, user prompt en response
+- `CampaignResults`: nieuwe **Logs** tab om het denkproces terug te kijken
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/event_bus.py` | nieuw — thread-local job tracking + push() |
+| `src/llm.py` | agent_name param + llm_call/llm_response events |
+| `src/api.py` | StaticFiles mount, events opslaan, events endpoint uitgebreid |
+| `frontend/src/api.js` | imageUrl() helper |
+| `frontend/src/pages/CampaignLive.jsx` | expandable log entries met prompts |
+| `frontend/src/pages/CampaignResults.jsx` | Logs tab + image fix |
+
+**Zelf bedacht:**
+- call_llm() als centraal punt voor logging — geen aanpassingen per agent nodig
+- events opslaan als apart json bestand naast campagnerapport
+- expandable log entries in de frontend — niet alles tegelijk tonen
+
+---
+
+## Stap 43: LangSmith tracing fix bij API startup
+**Datum:** 2026-03-31
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> langsmith is now not detecting it, what can be the problem for this, the key is right
+
+**Probleem:**
+LangSmith traceerde geen runs. `setup_tracing()` werd alleen aangeroepen vanuit `main()` — bij uitvoering via uvicorn wordt `main()` nooit aangeroepen.
+
+**Oplossing:**
+`setup_tracing()` toegevoegd aan `src/api.py` direct na de app-definitie. Wordt nu uitgevoerd bij elke API-start.
+
+**Vereiste `.env` variabelen:**
+```
+LANGSMITH_ENABLED=true
+LANGSMITH_API_KEY=<key>
+LANGSMITH_PROJECT=eva-multi-agent
+```
+
+**Zelf bedacht:**
+- probleem gevonden door te vergelijken wanneer setup_tracing() werd aangeroepen vs wanneer de api daadwerkelijk runt
+
+---

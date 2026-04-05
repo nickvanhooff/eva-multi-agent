@@ -1,0 +1,178 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-03-31T10:57:05.804569",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T10:57:08.184572",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.\n\nProduct: boek over kaas\n\nProductdocumentatie (uit PDF via RAG):\n=== PDF CONTEXT (via RAG) ===\n\n[Vraag: Wie is de auteur en wat is zijn of haar achtergrond, expertise of persoonlijke connectie met het onderwerp?]\nkenteekenen, welke de plaatselijke aandoening voorafgaan, zijn: vermindering\nvan den eetlust, onregelmatig herkaauwen; het haar is zonder glans en staat\novereind; de blik van het dier is niet helder. Het slijm",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T10:57:10.555749",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nHet boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een oud boek over kaasbereiding, geschreven in het Nederlands. Het boek is waarschijnlijk opgesteld in de 19e eeuw, aangezien het gebruik van termen als \"goudsche of stolksche en edammer kaas\" en \"afkoelingsmethode van SWARTZ\" verwijzen naar een periode van voor de Tweede Wereldoorlog.\n\nOp basis van de beschrijving van het boek en de huidige markt van boeken over kaas, kan worden geconcludeerd dat het boek waarschijnlijk niet meer in de handel is. De meeste boeken over kaas in het Nederlands zijn recent gepubliceerd en richten zich op hedendaagse aspecten van kaasbereiding en -productie.\n\nDe concurrenten van dit boek zijn waarschijnlijk modernere boeken over kaasbereiding, zoals die beschreven in de zoekresultaten. Deze boek",
+      "length": 2780
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-03-31T10:57:10.557160",
+    "data": {
+      "target_audience": "De ideale doelgroep voor dit boek is waarschijnlijk boeren en kaasmakers die op zoek zijn naar informatie over de oudere methode van kaasbereiding. Deze groep is waarschijnlijk geïnteresseerd in de geschiedenis van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n\nDemografische kenmerken van de doelgroep:\n\n* Leeftijd: 40-65 jaar\n* Geslacht: Mannen en vrouwen\n* Opleiding: Middelbare of hogere opleiding in de landbouw of melkveehouderij\n* Socio-economische status: Middelbaar tot hoger\n\nPsychografische kenmerken van de doelgroep:\n\n* Waardevolle waarden: Traditioneel, zelfvoorzienend, oorspronkelijk\n* Interessen: Landbouw, melkveehouderij, kaasbereiding\n* Motivatie: Het behouden van traditionele methoden en het delen van kennis met anderen\n* Behoeften: Informatie over de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden\n\nPijnpunten van de doelgroep:\n\n* Gebrek aan kennis over de oudere methode van kaasbereiding\n* Ongelukkige resultaten in de kaasbereiding door het gebruik van moderne methoden\n* Gevoel van verlies van traditionele methoden en expertise in de landbouw en melkveehouderij\n\nBehoeften van de doelgroep:\n\n* Informatie over de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden\n* Onderwijs en training in de kaasbereiding en -productie\n* Netwerken en contacten met andere boeren en kaasmakers die geïnteresseerd zijn in de traditionele methoden.",
+      "market_research": "Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een oud boek over kaasbereiding, geschreven in het Nederlands. Het boek is waarschijnlijk opgesteld in de 19e eeuw, aangezien het gebruik van termen als \"goudsche of stolksche en edammer kaas\" en \"afkoelingsmethode van SWARTZ\" verwijzen naar een periode van voor de Tweede Wereldoorlog.\n\nOp basis van de beschrijving van het boek en de huidige markt van boeken over kaas, kan worden geconcludeerd dat het boek waarschijnlijk niet meer in de handel is. De meeste boeken over kaas in het Nederlands zijn recent gepubliceerd en richten zich op hedendaagse aspecten van kaasbereiding en -productie.\n\nDe concurrenten van dit boek zijn waarschijnlijk modernere boeken over kaasbereiding, zoals die beschreven in de zoekresultaten. Deze boeken richten zich op hedendaagse aspecten van kaasbereiding en -productie en bieden waarschijnlijk meer informatie over de huidige markt en de productietechnieken.\n\nDe kansen voor dit boek zijn beperkt, aangezien het waarschijnlijk niet meer in de handel is en de informatie in het boek waarschijnlijk niet meer actueel is. Een mogelijke kans is om het boek te heruitgeven in een modernere uitgave, met meer informatie over hedendaagse aspecten van kaasbereiding en -productie."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T10:57:10.558115",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: boek over kaas\n\nMARKTONDERZOEK: Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een oud boek over kaasbereiding, geschreven in het Nederlands. Het boek is waarschijnlijk opgesteld in de 19e eeuw, aangezien het gebruik van termen als \"goudsche of stolksche en edammer kaas\" en \"afkoelingsmethode van SWARTZ\" verwijzen naar een periode van voor de Tweede Wereldoorlog.\n\nOp basis van de beschrijving van het boek en de huidi",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T10:57:11.797460",
+    "data": {
+      "preview": "## STRATEGIE\nDe marketingstrategie voor het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" zal zijn gericht op het herstellen van de waarde van dit oud boek en het aantrekken van de aandacht van de doelgroep. Hieronder volgt een overzicht van de strategie:\n\n1. **Heruitgave**: Het boek zal worden heruitgegeven in een moderne uitgave, met meer informatie over hedendaagse aspecten van kaasbereiding en -productie.\n2. **Digitale promotie**: Het boek zal worden gepubliceerd op digitale platforms, zoals Amazon en Google Books, om een breed publiek te bereiken.\n3. **Sociale media**: De markten van de doelgroep zullen worden gevolgd op sociale media, zoals Facebook en LinkedIn, om met hen in contact te blijven en hen te informeren over de heruitgave.\n4. **Netwerken**: Contacten zullen worden gelegd met an",
+      "length": 2763
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-03-31T10:57:11.800822",
+    "data": {
+      "strategy": "De marketingstrategie voor het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" zal zijn gericht op het herstellen van de waarde van dit oud boek en het aantrekken van de aandacht van de doelgroep. Hieronder volgt een overzicht van de strategie:\n\n1. **Heruitgave**: Het boek zal worden heruitgegeven in een moderne uitgave, met meer informatie over hedendaagse aspecten van kaasbereiding en -productie.\n2. **Digitale promotie**: Het boek zal worden gepubliceerd op digitale platforms, zoals Amazon en Google Books, om een breed publiek te bereiken.\n3. **Sociale media**: De markten van de doelgroep zullen worden gevolgd op sociale media, zoals Facebook en LinkedIn, om met hen in contact te blijven en hen te informeren over de heruitgave.\n4. **Netwerken**: Contacten zullen worden gelegd met andere boeren en kaasmakers die geïnteresseerd zijn in de traditionele methoden, om hen te betrekken bij het project en hen te informeren over de heruitgave.\n5. **Workshops en trainingen**: Workshops en trainingen zullen worden georganiseerd om de doelgroep te helpen bij het leren van de traditionele methoden van kaasbereiding en -productie.\n6. **Informatiebron**: Het boek zal worden gepresenteerd als een belangrijke informatiebron voor de doelgroep, met informatie over de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.",
+      "positioning": "Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" zal worden gepositioneerd als een uniek en waardevol boek dat de traditionele methoden van kaasbereiding en -productie herstelt en presenteert. Het boek zal worden gepresenteerd als een belangrijke informatiebron voor de doelgroep, met informatie over de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden. Het boek zal worden onderscheiden van moderne boeken over kaasbereiding en -productie, die zich richten op hedendaagse aspecten.",
+      "tone_of_voice": "De tone of voice voor de marketingcampagnes zal zijn gericht op het creëren van een warm en traditioneel gevoel, dat aansluit bij de waarden en interesses van de doelgroep. Hieronder volgt een overzicht van de toon van de communicatie:\n\n* **Traditioneel**: De communicatie zal worden gericht op het herstellen van de traditie van kaasbereiding en -productie.\n* **Waarderend**: De communicatie zal worden gericht op het waarderen van de kennis en expertise van de doelgroep.\n* **Informatief**: De communicatie zal worden gericht op het informeren van de doelgroep over de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n* **Emotief**: De communicatie zal worden gericht op het creëren van een gevoel van verbondenheid en gemeenschap tussen de doelgroep en de marketingcampagnes."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T10:57:11.805215",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: boek over kaas\n\nDOELGROEP: De ideale doelgroep voor dit boek is waarschijnlijk boeren en kaasmakers die op zoek zijn naar informatie over de oudere methode van kaasbereiding. Deze groep is waarschijnlijk geïnteresseerd in de geschiedenis van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n\nDemografische kenmerken van de doelgroep:\n\n* Leeftijd: 40-65 jaar\n* Geslacht: Mannen en vrouwen\n* Opleiding: Middelb",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T10:57:14.097812",
+    "data": {
+      "preview": "1. **Headline:** \"Ontdek de Traditionele Kunsten van Kaasbereiding\"\n2. **Subheadline:** \"Een complete gids voor boeren en kaasmakers om de oudere methode te leren\"\n\nDe wereld van kaasbereiding is een rijke en gevarieerde wereld, met een geschiedenis die teruggaat tot duizenden jaren. Als boer of kaasmaker bent u waarschijnlijk op zoek naar manieren om uw kennis en vaardigheden te verbeteren, en om de traditionele methoden van kaasbereiding te leren. Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een complete gids voor boeren en kaasmakers die geïnteresseerd zijn in de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n\nIn dit boek vindt u een schat aan informatie over de geschiedenis van kaasbereiding, de traditionele methoden van kaasbereidin",
+      "length": 1774
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-03-31T10:57:14.101198",
+    "data": {
+      "copy_draft": "1. **Headline:** \"Ontdek de Traditionele Kunsten van Kaasbereiding\"\n2. **Subheadline:** \"Een complete gids voor boeren en kaasmakers om de oudere methode te leren\"\n\nDe wereld van kaasbereiding is een rijke en gevarieerde wereld, met een geschiedenis die teruggaat tot duizenden jaren. Als boer of kaasmaker bent u waarschijnlijk op zoek naar manieren om uw kennis en vaardigheden te verbeteren, en om de traditionele methoden van kaasbereiding te leren. Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een complete gids voor boeren en kaasmakers die geïnteresseerd zijn in de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n\nIn dit boek vindt u een schat aan informatie over de geschiedenis van kaasbereiding, de traditionele methoden van kaasbereiding en de moderne technieken die gebruikt worden in de kaasindustrie. U zult leren over de verschillende soorten kaas, de verschillende methoden van kaasbereiding en de belangrijkste factoren die de kwaliteit van kaas bepalen. Of u nu een ervaren kaasmaker bent of net begint, dit boek is een essentiële bron van informatie en inspiratie om uw kennis en vaardigheden te verbeteren.\n\nMet het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" zult u in staat zijn om uw dromen van kaasbereiding te realiseren en om uw eigen unieke kaassoorten te creëren. U zult leren over de belangrijkste principes van kaasbereiding, van de selectie van de juiste melk tot de rijping van de kaas. U zult ook leren over de verschillende soorten kaas die u kunt maken, van zachte kaas tot harde kaas, en van witte kaas tot blauwe kaas.\n\n4. **Call-to-action:** \"Bestel nu uw exemplaar van 'HANDBOEK VOOR DEN KAA SM A K E R' en begin vandaag nog met het leren van de traditionele kunsten van kaasbereiding!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T10:57:14.104686",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: boek over kaas\n\nDOELGROEP: De ideale doelgroep voor dit boek is waarschijnlijk boeren en kaasmakers die op zoek zijn naar informatie over de oudere methode van kaasbereiding. Deze groep is waarschijnlijk geïnteresseerd in de geschiedenis van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n\nDemografische kenmerken van de doelgroep:\n\n* Leeftijd: 40-65 jaar\n* Geslacht: Mannen en vrouwen\n* Opleiding: Middel",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T10:57:15.727837",
+    "data": {
+      "preview": "Hier is de content voor elk platform:\n\n**1. Instagram:**\n\"Ontdek de Traditionele Kunsten van Kaasbereiding! Dit boek is een complete gids voor boeren en kaasmakers die geïnteresseerd zijn in de oudere methode van kaasbereiding. Van de geschiedenis van kaasbereiding tot de moderne technieken, dit boek heeft alles! #kaasbereiding #traditionelekaas #boeren #kaasmakers #handboekvoordenkaasmaker\"\n\n**2. LinkedIn:**\n\"Als professional in de landbouw- en melkveehouderijsector, bent u waarschijnlijk op zoek naar manieren om uw kennis en vaardigheden te verbeteren. Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een essentiële bron van informatie en inspiratie om uw kennis en vaardigheden te verbeteren. Dit boek biedt een complete gids voor boeren en kaasmakers die geïnteresseerd zijn in de oudere met",
+      "length": 1355
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-03-31T10:57:15.730327",
+    "data": {
+      "social_content": "Hier is de content voor elk platform:\n\n**1. Instagram:**\n\"Ontdek de Traditionele Kunsten van Kaasbereiding! Dit boek is een complete gids voor boeren en kaasmakers die geïnteresseerd zijn in de oudere methode van kaasbereiding. Van de geschiedenis van kaasbereiding tot de moderne technieken, dit boek heeft alles! #kaasbereiding #traditionelekaas #boeren #kaasmakers #handboekvoordenkaasmaker\"\n\n**2. LinkedIn:**\n\"Als professional in de landbouw- en melkveehouderijsector, bent u waarschijnlijk op zoek naar manieren om uw kennis en vaardigheden te verbeteren. Het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is een essentiële bron van informatie en inspiratie om uw kennis en vaardigheden te verbeteren. Dit boek biedt een complete gids voor boeren en kaasmakers die geïnteresseerd zijn in de oudere methode van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden. Lees meer over de geschiedenis van kaasbereiding, de traditionele methoden van kaasbereiding en de moderne technieken die gebruikt worden in de kaasindustrie. Bestel nu uw exemplaar en begin vandaag nog met het leren van de traditionele kunsten van kaasbereiding!\"\n\n**3. X/Twitter:**\n\"Ontdek de Traditionele Kunsten van Kaasbereiding! Bestel nu het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" en leer de oudere methode van kaasbereiding! #kaasbereiding #traditionelekaas\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T10:57:15.733594",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: boek over kaas\n\nDOELGROEP: De ideale doelgroep voor dit boek is waarschijnlijk boeren en kaasmakers die op zoek zijn naar informatie over de oudere methode van kaasbereiding. Deze groep is waarschijnlijk geïnteresseerd in de geschiedenis van kaasbereiding en de traditionele methoden die gebruikt werden in het verleden.\n\nDemografische kenmerken van de doelgroep:\n\n* Leeftijd: 40-65 jaar\n* Geslacht: Mannen en vrouwen\n* Opleiding: Middelbare of hoge",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T10:57:17.480192",
+    "data": {
+      "preview": "BESLISSING: GOEDGEKEURD\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is over het algemeen goed doordacht en aansluitend bij de doelgroep. De strategie om de waarde van het oud boek te herstellen en de aandacht van de doelgroep te trekken, is helder en overtuigend.\n\nDe marketingtekst is goed geschreven en bevat alle benodigde informatie om de doelgroep te informeren over het boek. De headline en subheadline zijn aantrekkelijk en geven een duidelijk beeld van de inhoud van het boek. De call-to-action is duidelijk en moedigt de lezer aan om het boek te bestellen.\n\nDe sociale media-content is ook goed doordacht en aansluitend bij elk platform. De Instagram-post is visueel aantrekkelijk en bevat een korte en krachtige boodschap. De LinkedIn",
+      "length": 1710
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-03-31T10:57:17.486351",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor het boek \"HANDBOEK VOOR DEN KAA SM A K E R\" is over het algemeen goed doordacht en aansluitend bij de doelgroep. De strategie om de waarde van het oud boek te herstellen en de aandacht van de doelgroep te trekken, is helder en overtuigend.\n\nDe marketingtekst is goed geschreven en bevat alle benodigde informatie om de doelgroep te informeren over het boek. De headline en subheadline zijn aantrekkelijk en geven een duidelijk beeld van de inhoud van het boek. De call-to-action is duidelijk en moedigt de lezer aan om het boek te bestellen.\n\nDe sociale media-content is ook goed doordacht en aansluitend bij elk platform. De Instagram-post is visueel aantrekkelijk en bevat een korte en krachtige boodschap. De LinkedIn-post is meer uitgebreid en bevat meer informatie over het boek en de voordelen voor professionals in de landbouw- en melkveehouderijsector. De X/Twitter-post is kort en krachtig en bevat een duidelijke call-to-action.\n\nEnkele suggesties voor verbetering:\n\n* Overweeg om meer visuele elementen toe te voegen aan de marketingtekst, zoals afbeeldingen of diagrammen, om de inhoud van het boek te verduidelijken.\n* Denk na over het toevoegen van testimonials of recensies van andere boeren en kaasmakers die het boek hebben gelezen, om de geloofwaardigheid en autoriteit van het boek te verhogen.\n* Overweeg om een speciale aanbieding of promotion te creëren voor de doelgroep, zoals een korting of een gratis bonus, om de verkoop van het boek te stimuleren.\n\nAl met al is de marketingcampagne goed doordacht en aansluitend bij de doelgroep. Met enkele kleine verbeteringen kan de campagne nog effectiever worden.",
+      "approved": true,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-03-31T10:58:44.263183",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260331_105843.png"
+    }
+  }
+]

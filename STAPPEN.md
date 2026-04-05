@@ -317,7 +317,7 @@ Lokale Ollama met qwen3.5:4b (4B parameters) was traag: 20+ minuten per pipeline
 - Elke campaign wordt opgeslagen als JSON file in `campaigns/` directory
 - Bestandsnaam bevat timestamp: `campaign_YYYYMMDD_HHMMSS.json`
 - Report bevat: product, doelgroep, strategie, positioning, tone of voice, copy, social content, versie-aantallen, iteratie-count, goedkeuring-status
-- `.gitignore` aangepast: `campaigns/` directory genegeerd (niet in git)
+- Eerder: `campaigns/` in `.gitignore` (reports niet in git). **Aangepast:** `campaigns/` (JSON + `campaigns/images/`) weer **wel** versioneren voor portfolio/evidence.
 - `docker-compose.yml` aangepast: volume mount `./campaigns:/app/campaigns` zodat reports persistent zijn op host machine
 - `main.py` print het pad naar het rapport na completion: `📄 Campaign report saved to: campaigns/campaign_20260325_142530.json`
 
@@ -1313,6 +1313,108 @@ Op basis van het plan uit stap 36 zijn 5 desktop-schermen gegenereerd via `gener
 
 **Stitch project:** `9283653711690935700`
 **Design system:** dark, `#6366f1` indigo, Geist/Inter, ROUND_EIGHT, TONAL_SPOT
+
+**Verstuurde prompts naar `generate_screen_from_text`:**
+
+<details>
+<summary>Scherm 1 — Dashboard</summary>
+
+```
+Dashboard / Home screen for Eva — an AI multi-agent marketing campaign generator.
+
+Layout: dark sidebar navigation on the left (Eva logo at top, nav items: Dashboard (active), New Campaign, History, Settings), main content area on the right.
+
+Main content:
+1. Page title "Dashboard" with subtitle "Eva Multi-Agent System"
+2. Stats row with 4 cards: "Total Campaigns" (24), "Approval Rate" (87%), "Avg Iterations" (2.1), "Tokens Today" (42k)
+3. Section "Agent Pipeline" — horizontal flow diagram showing 7 connected nodes in sequence: PDF Ingestion → Researcher → Strateeg → Copywriter → Social Specialist → Campaign Manager → Image Generator. Each node is a rounded card with an icon and label. All nodes in idle/grey state. Arrows connecting them.
+4. Section "Recent Campaigns" — table with columns: Product, Type (badge: blue=product, violet=book), Status (green=approved, red=rejected), Iterations, Date. Show 5 rows of example data including a book campaign for "Een jaar in de Molukken".
+5. Floating "New Campaign" button (indigo, bottom right).
+```
+</details>
+
+<details>
+<summary>Scherm 2 — New Campaign</summary>
+
+```
+New Campaign screen for Eva — an AI multi-agent marketing campaign generator.
+
+Layout: dark sidebar navigation on the left (same as dashboard, "New Campaign" active), main content area on the right.
+
+Main content:
+1. Page title "New Campaign" with subtitle "Configure and launch a marketing campaign"
+2. Campaign Type toggle — two large toggle buttons side by side: "Product Campaign" (blue icon, selected by default) and "Book Campaign" (violet icon). When Book is selected, different skill sets load (shown as a small info note below).
+3. Form card with:
+   - Label "Product / Book description" with large textarea (placeholder: "Describe your product or book in detail...")
+   - Label "PDF Context (optional)" with a drag-and-drop file upload zone showing a dashed border, upload icon, and text "Drop your PDF here or click to browse — used for RAG context"
+   - Small info note showing model assignment: "Researcher & Strateeg → Groq llama-3.1-8b | Copywriter & Social → Groq llama-3.3-70b | Campaign Manager → Groq llama-3.3-70b"
+4. Large indigo "Launch Campaign" button at the bottom of the form.
+5. Estimated time note: "Estimated time: 2-4 minutes depending on iterations"
+```
+</details>
+
+<details>
+<summary>Scherm 3 — Campaign Running (Live)</summary>
+
+```
+Campaign Running / Live Progress screen for Eva — an AI multi-agent marketing campaign generator.
+
+Layout: dark sidebar navigation on the left, main content area on the right.
+
+Main content:
+1. Page title "Campaign Running" with product name "Een jaar in de Molukken" as subtitle, and a pulsing "Running" green badge
+2. Agent Pipeline progress bar — 7 nodes horizontal: PDF Ingestion (✓ green completed), Researcher (✓ green completed), Strateeg (✓ green completed), Copywriter (⚡ indigo pulsing, ACTIVE), Social Specialist (grey idle), Campaign Manager (grey idle), Image Generator (grey idle). Active node is highlighted with indigo glow. Arrows between nodes.
+3. Current Agent card — shows "Copywriter" with its color (#f472b6 pink accent), role description "Writing marketing copy based on strategy and target audience", iteration badge "Iteration 2/3", and a subtle animated spinner
+4. Activity Log panel (scrollable, takes lower half) — showing recent log lines color-coded by agent:
+   - [PDF] PDF ingestion complete — 512 chunks indexed
+   - [RESEARCHER] Market research complete
+   - [STRATEEG] Strategy developed
+   - [COPYWRITER] Iteration 1 — copy rejected by CM: "Improve emotional hook"
+   - [COPYWRITER] Iteration 2 — writing in progress...
+5. Cancel button (red outline, top right)
+```
+</details>
+
+<details>
+<summary>Scherm 4 — Campaign Results</summary>
+
+```
+Campaign Results / Output Viewer screen for Eva — an AI multi-agent marketing campaign generator.
+
+Layout: dark sidebar navigation on the left, main content area on the right.
+
+Main content:
+1. Header bar: product name "Een jaar in de Molukken", violet badge "Book Campaign", green badge "CM: Approved", small stats "3 iterations · 2026-03-29 21:28"
+2. Tab bar with 4 tabs: Strategy (active), Copy, Social, Image
+3. Strategy tab content (visible):
+   - Three cards side by side: "Target Audience" (35-65 year, Molukse diaspora, academic), "Positioning" (unique yearly sensory view on one island group), "Tone of Voice" (poetic-narrative, warm, literary)
+4. Below the cards: two more sections "Market Research" and "Campaign Strategy" as collapsible panels (shown expanded with text content)
+5. Footer action bar: "Export JSON" button (outline), "New Campaign" button (indigo filled)
+6. Also show the other tab states as inactive: Copy, Social, Image tabs visible but not selected
+```
+</details>
+
+<details>
+<summary>Scherm 5 — Campaign History</summary>
+
+```
+Campaign History screen for Eva — an AI multi-agent marketing campaign generator.
+
+Layout: dark sidebar navigation on the left (History active), main content area on the right.
+
+Main content:
+1. Page title "Campaign History" with subtitle "All past campaigns"
+2. Filter bar with: search input ("Search campaigns..."), dropdown "Campaign Type" (All / Product / Book), dropdown "Status" (All / Approved / Rejected), date range picker
+3. Large table with columns: Date, Product Description (truncated to ~40 chars), Type (badge), Iterations, Status (green Approved / red Rejected), Actions (View button)
+4. Show 8 rows of realistic example data including:
+   - Several product campaigns (headphones, coffee machine, airfryer)
+   - Two book campaigns ("Een jaar in de Molukken", "De reis naar Java")
+   - Mix of approved and rejected statuses
+   - Iterations ranging from 1-3
+5. Pagination at bottom: "Showing 1-8 of 24 results" with prev/next buttons
+6. Row hover state visible on one row (subtle highlight)
+```
+</details>
 
 **Beoordeling:**
 Alle schermen matchen de data die Eva al produceert: campaign_type badges (product/book), iteratie-tellers, CM approval status, PDF upload, agent pipeline visualisatie. De designs sluiten direct aan op de bestaande `CampaignState` velden.

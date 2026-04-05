@@ -1,0 +1,178 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-03-31T13:03:37.163792",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T13:03:39.708443",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.\n\nProduct: boek over vegan kaas\n\nProductdocumentatie (uit PDF via RAG):\n=== PDF CONTEXT (via RAG) ===\n\n[Vraag: Wie is de auteur en wat is zijn of haar achtergrond, expertise of persoonlijke connectie met het onderwerp?]\nkenteekenen, welke de plaatselijke aandoening voorafgaan, zijn: vermindering\nvan den eetlust, onregelmatig herkaauwen; het haar is zonder glans en staat\novereind; de blik van het dier is niet helder. Het",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T13:03:41.499045",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nNa de analyse van de productdocumentatie en de externe bronnen, kan worden gesteld dat het boek over vegan kaas een uniek product is op de markt. Het boek biedt een diepgaande kennis over de bereiding en de geschiedenis van kaas, waaronder vegan kaas.\n\n### Concurrenten\n\nOp de markt bestaan verschillende boeken over kaas, maar deze zijn meestal gericht op traditionele kaassoorten en bieden geen specifieke informatie over vegan kaas. De markt voor vegan kaas is echter snel groeiend, met een stijgende interesse in plantaardige voedingsmiddelen en een toenemende vraag naar vegan producten.\n\n### Kansen\n\nDe markt voor vegan kaas biedt veel kansen voor producenten en consumenten. De groeiende vraag naar plantaardige voedingsmiddelen en de toenemende interesse in vegan producten",
+      "length": 2521
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-03-31T13:03:41.501346",
+    "data": {
+      "target_audience": "De ideale doelgroep voor dit boek zijn veganisten en vegetariërs die op zoek zijn naar plantaardige alternatieven voor traditionele kaas. Deze doelgroep is waarschijnlijk geïnteresseerd in de bereiding en de geschiedenis van kaas en wil meer leren over de verschillende soorten kaas en hun eigenschappen.\n\n### Demografie\n\n* Leeftijd: 25-45 jaar\n* Geslacht: Vrouwen en mannen\n* Opleiding: Hogere opleiding\n* Beroep: Freelancer, ondernemer, student\n\n### Psychografie\n\n* Waarden: Gezondheid, welzijn, duurzaamheid\n* Interesses: Koken, eten, drinken, reizen, cultuur\n* Doelen: Leven op een gezonde en duurzame manier, leren over nieuwe voedingsmiddelen en bereidingsmethoden\n\n### Pijnpunten\n\n* Moeten we ons houden aan bepaalde voedselregels?\n* Hoe kan ik gezonde en smaakvolle alternatieven voor traditionele kaas vinden?\n\n### Behoeften\n\n* Meer informatie over de bereiding en de geschiedenis van kaas\n* Tips en recepten voor plantaardige alternatieven voor traditionele kaas\n* Inspiratie en motivatie om een gezonde en duurzame levensstijl te volgen",
+      "market_research": "Na de analyse van de productdocumentatie en de externe bronnen, kan worden gesteld dat het boek over vegan kaas een uniek product is op de markt. Het boek biedt een diepgaande kennis over de bereiding en de geschiedenis van kaas, waaronder vegan kaas.\n\n### Concurrenten\n\nOp de markt bestaan verschillende boeken over kaas, maar deze zijn meestal gericht op traditionele kaassoorten en bieden geen specifieke informatie over vegan kaas. De markt voor vegan kaas is echter snel groeiend, met een stijgende interesse in plantaardige voedingsmiddelen en een toenemende vraag naar vegan producten.\n\n### Kansen\n\nDe markt voor vegan kaas biedt veel kansen voor producenten en consumenten. De groeiende vraag naar plantaardige voedingsmiddelen en de toenemende interesse in vegan producten maken het een interessante markt voor innovatieve producten en diensten. Daarnaast kan het boek over vegan kaas een belangrijke bron van informatie zijn voor consumenten die op zoek zijn naar plantaardige alternatieven voor traditionele kaas.\n\n### Uitdagingen\n\nEen van de uitdagingen op de markt voor vegan kaas is de kwaliteit en de consistentie van de producten. De bereiding van vegan kaas kan complex zijn en het is belangrijk om hoogwaardige ingrediënten en een goede productieproces te gebruiken om een topkwaliteit product te creëren. Daarnaast moet er rekening gehouden worden met de verschillende soorten vegan kaas en hun specifieke eigenschappen."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T13:03:41.503719",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: boek over vegan kaas\n\nMARKTONDERZOEK: Na de analyse van de productdocumentatie en de externe bronnen, kan worden gesteld dat het boek over vegan kaas een uniek product is op de markt. Het boek biedt een diepgaande kennis over de bereiding en de geschiedenis van kaas, waaronder vegan kaas.\n\n### Concurrenten\n\nOp de markt bestaan verschillende boeken over kaas, maar deze zijn meestal gericht op traditionele kaassoorten ",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-03-31T13:03:42.909594",
+    "data": {
+      "preview": "## STRATEGIE\n\nOm het boek over vegan kaas succesvol op de markt te brengen, is een geïntegreerde marketingstrategie nodig. Hieronder worden de belangrijkste onderdelen van de strategie beschreven:\n\n- **Positionering:** Het boek over vegan kaas zal zich onderscheiden van andere boeken over kaas door zijn focus op plantaardige alternatieven voor traditionele kaas. De positie is \"De autoritaire gids voor vegan kaas\".\n- **Berichtenhiërarchie:** De kernboodschap is \"Leer hoe je gezonde en smaakvolle vegan kaas kunt maken\". De ondersteunende claims zijn \"Met dit boek kom je tot een diepgaande kennis van de bereiding en geschiedenis van kaas\" en \"Ontdek de verschillende soorten vegan kaas en hun specifieke eigenschappen\".\n- **Kanaalstrategie:** Om de doelgroep te bereiken, zal worden gekeken naar",
+      "length": 3225
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-03-31T13:03:42.912193",
+    "data": {
+      "strategy": "Om het boek over vegan kaas succesvol op de markt te brengen, is een geïntegreerde marketingstrategie nodig. Hieronder worden de belangrijkste onderdelen van de strategie beschreven:\n\n- **Positionering:** Het boek over vegan kaas zal zich onderscheiden van andere boeken over kaas door zijn focus op plantaardige alternatieven voor traditionele kaas. De positie is \"De autoritaire gids voor vegan kaas\".\n- **Berichtenhiërarchie:** De kernboodschap is \"Leer hoe je gezonde en smaakvolle vegan kaas kunt maken\". De ondersteunende claims zijn \"Met dit boek kom je tot een diepgaande kennis van de bereiding en geschiedenis van kaas\" en \"Ontdek de verschillende soorten vegan kaas en hun specifieke eigenschappen\".\n- **Kanaalstrategie:** Om de doelgroep te bereiken, zal worden gekeken naar verschillende kanalen, zoals:\n - Online marketing: social media, influencer marketing, e-mail marketing\n - Content marketing: blogartikelen, video's, workshops\n - Offline marketing: boekhandels, evenementen, workshops\n- **Contentmix:** De contentmix zal 60% educatief, 30% inspirerend en 10% promotioneel zijn. Dit betekent dat de inhoud gericht is op het bieden van waarde aan de lezer, inspiratie en motivatie geven om een gezonde en duurzame levensstijl te volgen en de boodschap van het boek overbrengen.\n- **Aanpak:** De aanpak zal worden gecoördineerd door een projectleider die verantwoordelijk is voor de uitvoering van de strategie. Er zal worden gewerkt aan een gedetailleerde planning en een budget zal worden vastgesteld om de kosten te volgen.",
+      "positioning": "Het boek over vegan kaas zal zich onderscheiden van andere boeken over kaas door zijn focus op plantaardige alternatieven voor traditionele kaas. De positie is \"De autoritaire gids voor vegan kaas\". Dit betekent dat het boek de meest complete en betrouwbare bron van informatie is voor veganisten en vegetariërs die op zoek zijn naar plantaardige alternatieven voor traditionele kaas.\n\nDe positie zal worden ondersteund door de volgende punten:\n\n- **Expertise:** Het boek is geschreven door experts in de bereiding en geschiedenis van kaas.\n- **Gedetailleerde informatie:** Het boek biedt gedetailleerde informatie over de verschillende soorten vegan kaas en hun specifieke eigenschappen.\n- **Praktische tips:** Het boek bevat praktische tips en recepten voor plantaardige alternatieven voor traditionele kaas.",
+      "tone_of_voice": "De tone of voice voor het boek over vegan kaas zal vriendelijk en informatief zijn. De lezer zal worden geïnformeerd en geïnspireerd om een gezonde en duurzame levensstijl te volgen.\n\nDe stem zal zijn:\n\n- **Vriendelijk:** De stem zal vriendelijk en welkom zijn, alsof de lezer wordt uitgenodigd om te leren en te groeien.\n- **Informatief:** De stem zal informatief zijn, met een focus op het bieden van waarde aan de lezer.\n- **Motiverend:** De stem zal motiverend zijn, met een focus op het inspireren en motiveren van de lezer om een gezonde en duurzame levensstijl te volgen.\n\nDe lezers zullen worden geïnformeerd over de verschillende soorten vegan kaas, hun specifieke eigenschappen en de manier waarop ze kunnen worden bereid. Ze zullen ook worden geïnspireerd om hun eigen recepten te ontwikkelen en te ervaren."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T13:03:42.919366",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: boek over vegan kaas\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn veganisten en vegetariërs die op zoek zijn naar plantaardige alternatieven voor traditionele kaas. Deze doelgroep is waarschijnlijk geïnteresseerd in de bereiding en de geschiedenis van kaas en wil meer leren over de verschillende soorten kaas en hun eigenschappen.\n\n### Demografie\n\n* Leeftijd: 25-45 jaar\n* Geslacht: Vrouwen en mannen\n* Opleiding: Hogere opleiding\n",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T13:03:44.745289",
+    "data": {
+      "preview": "Hier zijn de opgevraagde teksten:\n\n1. **Headline:** \"Vegan Kaas: Een Nieuwe Wereld van Smaak\"\n\n2. **Subheadline:** \"Ontdek de geheimen van plantaardige kaasalternatieven\"\n\n3. **Bodytekst:**\nHet boek \"Vegan Kaas\" is de ultieme gids voor iedereen die op zoek is naar gezonde en smaakvolle alternatieven voor traditionele kaas. Met dit boek kom je tot een diepgaande kennis van de bereiding en geschiedenis van kaas, en leer je hoe je zelf plantaardige kaas kunt maken. Van de basisprincipes van kaasbereiding tot de meest geavanceerde recepten, dit boek heeft alles wat je nodig hebt om te beginnen met het maken van je eigen vegan kaas.\n\nIn \"Vegan Kaas\" vind je een breed scala aan recepten en technieken om verschillende soorten plantaardige kaas te maken, van zachte en romige kaas tot harde en oude",
+      "length": 1521
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-03-31T13:03:44.746744",
+    "data": {
+      "copy_draft": "Hier zijn de opgevraagde teksten:\n\n1. **Headline:** \"Vegan Kaas: Een Nieuwe Wereld van Smaak\"\n\n2. **Subheadline:** \"Ontdek de geheimen van plantaardige kaasalternatieven\"\n\n3. **Bodytekst:**\nHet boek \"Vegan Kaas\" is de ultieme gids voor iedereen die op zoek is naar gezonde en smaakvolle alternatieven voor traditionele kaas. Met dit boek kom je tot een diepgaande kennis van de bereiding en geschiedenis van kaas, en leer je hoe je zelf plantaardige kaas kunt maken. Van de basisprincipes van kaasbereiding tot de meest geavanceerde recepten, dit boek heeft alles wat je nodig hebt om te beginnen met het maken van je eigen vegan kaas.\n\nIn \"Vegan Kaas\" vind je een breed scala aan recepten en technieken om verschillende soorten plantaardige kaas te maken, van zachte en romige kaas tot harde en ouderwetse kaas. Het boek is geschreven in een vriendelijke en informatieve toon, waardoor het perfect is voor zowel beginnende als ervaren koks. Of je nu op zoek bent naar een manier om je dieet te verrijken of gewoon wilt experimenteren met nieuwe smaken, dit boek is de perfecte keuze.\n\nMet \"Vegan Kaas\" kun je je eigen recepten ontwikkelen en ervaren, en ontdekken hoe gemakkelijk en leuk het is om plantaardige kaas te maken. Het boek is vol met inspirerende verhalen en recepten van ervaren koks en kaasexperts, waardoor je altijd nieuwe ideeën en inspiratie hebt om je eigen kaascreatieën te maken.\n\n4. **Call-to-action:** \"Bestel nu en ontdek de wereld van vegan kaas! Klik hier om te beginnen met je eigen kaasreis.\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T13:03:44.750390",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: boek over vegan kaas\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn veganisten en vegetariërs die op zoek zijn naar plantaardige alternatieven voor traditionele kaas. Deze doelgroep is waarschijnlijk geïnteresseerd in de bereiding en de geschiedenis van kaas en wil meer leren over de verschillende soorten kaas en hun eigenschappen.\n\n### Demografie\n\n* Leeftijd: 25-45 jaar\n* Geslacht: Vrouwen en mannen\n* Opleiding: Hogere opleiding",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T13:03:46.076930",
+    "data": {
+      "preview": "Hier zijn de social media content voor elk platform:\n\n**1. Instagram:**\n\"Ontdek de geheimen van plantaardige kaasalternatieven! Met 'Vegan Kaas' leer je hoe je zelf gezonde en smaakvolle kaas kunt maken. Van basisprincipes tot geavanceerde recepten, dit boek heeft alles wat je nodig hebt. Bestel nu en start je eigen kaasreis! #vegankaas #plantaardigekaas #kaasrecepten #gezondeten #duurzaamleven #veganlifestyle\"\n\n**2. LinkedIn:**\n\"Als professional in de voedingsindustrie of als iemand die geïnteresseerd is in duurzame en gezonde voeding, is 'Vegan Kaas' een must-read. Dit boek biedt een diepgaande kennis van de bereiding en geschiedenis van kaas en voorziet je van praktische recepten en technieken om plantaardige kaas te maken. Ontdek de mogelijkheden van vegan kaas en verrijk je kennis met",
+      "length": 1037
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-03-31T13:03:46.078246",
+    "data": {
+      "social_content": "Hier zijn de social media content voor elk platform:\n\n**1. Instagram:**\n\"Ontdek de geheimen van plantaardige kaasalternatieven! Met 'Vegan Kaas' leer je hoe je zelf gezonde en smaakvolle kaas kunt maken. Van basisprincipes tot geavanceerde recepten, dit boek heeft alles wat je nodig hebt. Bestel nu en start je eigen kaasreis! #vegankaas #plantaardigekaas #kaasrecepten #gezondeten #duurzaamleven #veganlifestyle\"\n\n**2. LinkedIn:**\n\"Als professional in de voedingsindustrie of als iemand die geïnteresseerd is in duurzame en gezonde voeding, is 'Vegan Kaas' een must-read. Dit boek biedt een diepgaande kennis van de bereiding en geschiedenis van kaas en voorziet je van praktische recepten en technieken om plantaardige kaas te maken. Ontdek de mogelijkheden van vegan kaas en verrijk je kennis met dit boek. #vegankaas #duurzaamvoeding #gezondheid #voedingsindustrie\"\n\n**3. X/Twitter:**\n\"Ontdek de wereld van vegan kaas! Leer hoe je zelf gezonde en smaakvolle kaas kunt maken met 'Vegan Kaas'. Bestel nu! #vegankaas #plantaardigekaas\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T13:03:46.081645",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: boek over vegan kaas\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn veganisten en vegetariërs die op zoek zijn naar plantaardige alternatieven voor traditionele kaas. Deze doelgroep is waarschijnlijk geïnteresseerd in de bereiding en de geschiedenis van kaas en wil meer leren over de verschillende soorten kaas en hun eigenschappen.\n\n### Demografie\n\n* Leeftijd: 25-45 jaar\n* Geslacht: Vrouwen en mannen\n* Opleiding: Hogere opleiding\n* Beroep: F",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-03-31T13:03:47.928825",
+    "data": {
+      "preview": "BESLISSING: GOEDGEKEURD\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor het boek over vegan kaas is over het algemeen goed doordacht en aansprekend. De doelgroep is duidelijk gedefinieerd en de strategie is gericht op het bieden van waarde aan de lezer. De tone of voice is vriendelijk en informatief, wat past bij de doelgroep en het onderwerp.\n\nDe marketingteksten zijn goed geschreven en bevatten alle benodigde elementen, zoals een aantrekkelijke headline, een duidelijke subheadline en een overtuigende bodytekst. De call-to-action is duidelijk en moedigt de lezer aan om het boek te bestellen.\n\nDe social media content is ook goed gedaan, met een verschillende toon en focus voor elk platform. De Instagram-post is visueel aantrekkelijk en moedigt de lezer aan om het boek te bestellen,",
+      "length": 1698
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-03-31T13:03:47.934346",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor het boek over vegan kaas is over het algemeen goed doordacht en aansprekend. De doelgroep is duidelijk gedefinieerd en de strategie is gericht op het bieden van waarde aan de lezer. De tone of voice is vriendelijk en informatief, wat past bij de doelgroep en het onderwerp.\n\nDe marketingteksten zijn goed geschreven en bevatten alle benodigde elementen, zoals een aantrekkelijke headline, een duidelijke subheadline en een overtuigende bodytekst. De call-to-action is duidelijk en moedigt de lezer aan om het boek te bestellen.\n\nDe social media content is ook goed gedaan, met een verschillende toon en focus voor elk platform. De Instagram-post is visueel aantrekkelijk en moedigt de lezer aan om het boek te bestellen, terwijl de LinkedIn-post meer gericht is op de professionele kant van de voedingsindustrie.\n\nEen paar suggesties voor verbetering:\n\n* In de bodytekst van de marketingtekst zou je meer details kunnen geven over de inhoud van het boek, zoals de verschillende soorten plantaardige kaas die worden behandeld en de praktische recepten en technieken die worden aangeboden.\n* In de social media content zou je meer kunnen doen om de lezer te betrekken, zoals door vragen te stellen of om suggesties te vragen voor recepten of kaas-gerelateerde onderwerpen.\n* In de toekomstige iteraties zou je kunnen overwegen om meer te focussen op de emotie en het verhaal achter het boek, zoals de passie van de auteur voor vegan kaas en de impact die het boek kan hebben op de lezer.\n\nOver het algemeen is de campagne goed doordacht en aansprekend, en met een paar kleine aanpassingen kan het nog effectiever worden.",
+      "approved": true,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-03-31T13:04:38.696447",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260331_130438.png"
+    }
+  }
+]

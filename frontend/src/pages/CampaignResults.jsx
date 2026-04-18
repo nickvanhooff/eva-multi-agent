@@ -1,6 +1,73 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getCampaign, getCampaignEvents, imageUrl } from '../api'
+import ReactMarkdown from 'react-markdown'
+import { getCampaign, getCampaignEvents, imageUrl, generateWebsite, websiteUrl } from '../api'
+
+const mdStyle = {
+  color: 'var(--text)',
+  lineHeight: 1.8,
+  fontSize: 14,
+}
+
+function Md({ children }) {
+  if (!children) return <span style={{ color: 'var(--text-muted)' }}>—</span>
+  return (
+    <div style={mdStyle} className="md-content">
+      <ReactMarkdown>{children}</ReactMarkdown>
+    </div>
+  )
+}
+
+function CitedText({ text, sources }) {
+  const [tooltip, setTooltip] = useState(null)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const close = e => { if (ref.current && !ref.current.contains(e.target)) setTooltip(null) }
+    document.addEventListener('mousedown', close)
+    return () => document.removeEventListener('mousedown', close)
+  }, [])
+
+  if (!sources || sources.length === 0 || !text) return <Md>{text}</Md>
+
+  // Split on [Bron: N] markers
+  const parts = text.split(/(\[Bron:\s*\d+\])/g)
+  const rendered = parts.map((part, i) => {
+    const match = part.match(/\[Bron:\s*(\d+)\]/)
+    if (!match) return <span key={i}>{part}</span>
+    const idx = parseInt(match[1], 10) - 1
+    const src = sources[idx]
+    if (!src) return null
+    return (
+      <span key={i} style={{ position: 'relative', display: 'inline' }} ref={ref}>
+        <button
+          onClick={() => setTooltip(tooltip === i ? null : i)}
+          title={`Passage ${idx + 1}`}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 2px', color: 'var(--primary)', fontSize: 13, lineHeight: 1 }}
+        >ℹ</button>
+        {tooltip === i && (
+          <div style={{
+            position: 'absolute', zIndex: 100, bottom: '120%', left: 0,
+            background: 'var(--surface2)', border: '1px solid var(--border)',
+            borderRadius: 8, padding: 12, width: 320, boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+          }}>
+            <div style={{ fontSize: 11, color: 'var(--primary)', fontWeight: 600, marginBottom: 6 }}>
+              Passage {idx + 1}{src.page != null ? ` · pagina ${src.page + 1}` : ''}
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 8 }}>
+              {src.query}
+            </div>
+            <pre style={{ fontSize: 12, color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: 1.6 }}>
+              {src.text}
+            </pre>
+          </div>
+        )}
+      </span>
+    )
+  })
+
+  return <div style={{ ...mdStyle, whiteSpace: 'pre-wrap' }}>{rendered}</div>
+}
 
 const NODE_COLOR = {
   pdf_ingestion: '#6366f1', researcher: '#06b6d4', strateeg: '#8b5cf6',
@@ -66,10 +133,20 @@ export default function CampaignResults() {
   const [tab, setTab] = useState('strategy')
   const [loading, setLoading] = useState(true)
   const [expandedIdx, setExpandedIdx] = useState(null)
+  const [generatingWebsite, setGeneratingWebsite] = useState(false)
+  const [generatedWebsiteUrl, setGeneratedWebsiteUrl] = useState(null)
+  const [websiteError, setWebsiteError] = useState(null)
 
   useEffect(() => {
     getCampaign(decodeURIComponent(id))
-      .then(job => { setData(job.result || job); setLoading(false) })
+      .then(job => {
+        const result = job.result || job
+        setData(result)
+        setLoading(false)
+        if (result?.html_path) {
+          setGeneratedWebsiteUrl(websiteUrl(result.html_path))
+        }
+      })
       .catch(() => setLoading(false))
 
     getCampaignEvents(decodeURIComponent(id))
@@ -85,9 +162,25 @@ export default function CampaignResults() {
     </div>
   )
 
+  async function handleGenerateWebsite() {
+    setGeneratingWebsite(true)
+    setWebsiteError(null)
+    try {
+      const res = await generateWebsite(decodeURIComponent(id))
+      setGeneratedWebsiteUrl(websiteUrl(res.html_path))
+      setTab('website')
+    } catch (e) {
+      setWebsiteError(e.message)
+    } finally {
+      setGeneratingWebsite(false)
+    }
+  }
+
   const tabs = ['strategy', 'copy', 'social']
   if (data.image_path) tabs.push('image')
+  if (data.pdf_sources && data.pdf_sources.length > 0) tabs.push('sources')
   if (events.length > 0) tabs.push('logs')
+  if (generatedWebsiteUrl) tabs.push('website')
 
   return (
     <div style={{ padding: 32 }}>
@@ -107,6 +200,24 @@ export default function CampaignResults() {
           <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>
             {data.iterations ?? '—'} iteration{data.iterations !== 1 ? 's' : ''}
           </span>
+          <button
+            onClick={handleGenerateWebsite}
+            disabled={generatingWebsite}
+            style={{
+              marginLeft: 'auto',
+              background: generatingWebsite ? 'var(--surface2)' : 'var(--primary)',
+              color: generatingWebsite ? 'var(--text-muted)' : '#fff',
+              border: 'none', borderRadius: 8,
+              padding: '6px 16px', fontSize: 13, fontWeight: 600,
+              cursor: generatingWebsite ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            {generatingWebsite ? 'Generating...' : '⚡ Generate Website'}
+          </button>
+          {websiteError && (
+            <span style={{ color: 'var(--red)', fontSize: 12 }}>{websiteError}</span>
+          )}
         </div>
       </div>
 
@@ -126,18 +237,20 @@ export default function CampaignResults() {
       {tab === 'strategy' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
           {[
-            { label: 'Target Audience', value: data.target_audience },
+            { label: 'Target Audience', value: data.target_audience, cited: true },
             { label: 'Positioning', value: data.positioning },
             { label: 'Tone of Voice', value: data.tone_of_voice },
-          ].map(({ label, value }) => (
+          ].map(({ label, value, cited }) => (
             <div key={label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 }}>{label}</div>
-              <p style={{ color: 'var(--text)', lineHeight: 1.6, fontSize: 13 }}>{value || '—'}</p>
+              {cited && data.pdf_sources?.length > 0
+                ? <CitedText text={value} sources={data.pdf_sources} />
+                : <Md>{value}</Md>}
             </div>
           ))}
           <div style={{ gridColumn: '1/-1', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20 }}>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 10 }}>Strategy</div>
-            <p style={{ color: 'var(--text)', lineHeight: 1.7, fontSize: 13, whiteSpace: 'pre-wrap' }}>{data.strategy || '—'}</p>
+            <Md>{data.strategy}</Md>
           </div>
         </div>
       )}
@@ -145,14 +258,42 @@ export default function CampaignResults() {
       {tab === 'copy' && (
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24 }}>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Marketing Copy</div>
-          <p style={{ color: 'var(--text)', lineHeight: 1.8, fontSize: 14, whiteSpace: 'pre-wrap' }}>{data.copy_draft || '—'}</p>
+          <Md>{data.copy_draft}</Md>
         </div>
       )}
 
       {tab === 'social' && (
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24 }}>
           <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Social Content</div>
-          <p style={{ color: 'var(--text)', lineHeight: 1.8, fontSize: 14, whiteSpace: 'pre-wrap' }}>{data.social_content || '—'}</p>
+          <Md>{data.social_content}</Md>
+        </div>
+      )}
+
+      {tab === 'sources' && data.pdf_sources && (
+        <div>
+          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 16 }}>
+            {data.pdf_sources.length} passages opgehaald uit PDF via RAG
+          </div>
+          {data.pdf_sources.map((src, i) => (
+            <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, marginBottom: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 11, color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  Passage {i + 1}
+                </span>
+                {src.page != null && (
+                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                    pagina {src.page + 1}
+                  </span>
+                )}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: 10 }}>
+                Vraag: {src.query}
+              </div>
+              <pre style={{ color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0, lineHeight: 1.7, fontSize: 13 }}>
+                {src.text}
+              </pre>
+            </div>
+          ))}
         </div>
       )}
 
@@ -186,6 +327,34 @@ export default function CampaignResults() {
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {tab === 'website' && generatedWebsiteUrl && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>
+              Generated Landing Page
+            </div>
+            <a
+              href={generatedWebsiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: 12, color: 'var(--primary)', textDecoration: 'none' }}
+            >
+              Open in new tab ↗
+            </a>
+          </div>
+          <iframe
+            src={generatedWebsiteUrl}
+            sandbox="allow-scripts allow-same-origin"
+            style={{
+              width: '100%', height: 680,
+              border: '1px solid var(--border)',
+              borderRadius: 12, background: '#fff',
+            }}
+            title="Generated website preview"
+          />
         </div>
       )}
     </div>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molukse geschiedenis, nu toegankelijk en geïllustreerd</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lato&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --accent: #0f172a;
+            --accent2: #f59e0b;
+            --text: #1e293b;
+            --text-muted: #94a3b8;
+            --border: rgba(255,255,255,0.08);
+        }
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .hero {
+            background-image: linear-gradient(to bottom, var(--accent), var(--surface));
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            line-height: 1.2;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .feature {
+            background-color: var(--surface);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: calc(33.33% - 2rem);
+        }
+        .feature h2 {
+            font-size: 18px;
+            margin-bottom: 1rem;
+        }
+        .feature p {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+        .cta {
+            background-color: var(--accent);
+            color: var(--text);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .cta:hover {
+            background-color: var(--accent2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto flex justify-between">
+            <span class="text-2xl font-bold">Molukse geschiedenis</span>
+            <ul class="flex items-center space-x-4">
+                <li><a href="#" class="text-white hover:text-gray-300">Home</a></li>
+                <li><a href="#" class="text-white hover:text-gray-300">Over</a></li>
+                <li><a href="#" class="text-white hover:text-gray-300">Contact</a></li>
+                <li><button class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">Bestel nu</button></li>
+            </ul>
+        </div>
+    </nav>
+    <section class="hero">
+        <h1>Molukse geschiedenis, nu toegankelijk en geïllustreerd</h1>
+        <p>Ontdek de verhalen van je voorouders en verbind je met de Molukse diaspora</p>
+        <img src="https://placehold.co/1200x600/0f172a/f8fafc?text=Product+Visual" alt="Product Visual">
+    </section>
+    <section class="features">
+        <div class="feature">
+            <h2>Volledige editie</h2>
+            <p>Met footnotes, glossary, QR-codes naar audio-/videomateriaal en een exclusief forum</p>
+        </div>
+        <div class="feature">
+            <h2>Gepolijste vertaling</h2>
+            <p>Door ervaren vertalers, om de authenticiteit en diepgang van het originele manuscript te waarborgen</p>
+        </div>
+        <div class="feature">
+            <h2>Community</h2>
+            <p>Verbind je met andere lezers en deel je eigen verhaal in ons exclusieve forum</p>
+        </div>
+    </section>
+    <section class="cta-section">
+        <button class="cta">Bestel nu</button>
+    </section>
+    <footer class="bg-gray-200 text-gray-600 py-4">
+        <div class="container mx-auto flex justify-between">
+            <span>&copy; 2023 Molukse geschiedenis</span>
+            <ul class="flex items-center space-x-4">
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Home</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Over</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-gray-800">Contact</a></li>
+            </ul>
+        </div>
+    </footer>
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+</html>

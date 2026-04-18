@@ -30,27 +30,47 @@ def researcher_node(state: CampaignState) -> dict:
     system_prompt = (skill_content + "\n\n---\n\n" if skill_content else "") + _BASE_PROMPT
 
     product = state["product_description"]
-    pdf_context = state.get("pdf_context", "")
+    pdf_sources = state.get("pdf_sources", [])
 
     print("[RESEARCHER] Fetching live data via tools...")
-    search_results = duckduckgo_search(f"{product} markt concurrenten doelgroep")
+    search_query = product if not pdf_sources else f"{product} {pdf_sources[0]['text'][:80]}"
+    search_results = duckduckgo_search(f"{search_query} markt concurrenten doelgroep")
     wiki_results = wikipedia_summary(product)
     print(f"[RESEARCHER] DuckDuckGo: {len(search_results)} chars | Wikipedia: {len(wiki_results)} chars")
 
-    if pdf_context:
-        print(f"[RESEARCHER] PDF context available ({len(pdf_context)} chars) — injecting into prompt")
+    if pdf_sources:
+        print(f"[RESEARCHER] {len(pdf_sources)} PDF passages available: using as primary source")
+        parts = []
+        for i, s in enumerate(pdf_sources):
+            page_label = f" (pagina {s['page'] + 1})" if s['page'] is not None else ""
+            parts.append(f"[Passage {i+1}]{page_label}\n{s['text']}")
+        numbered = "\n\n".join(parts)
+        user_prompt = f"""Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.
+
+PDF-documentatie (primaire bron):
+{numbered}
+
+Productomschrijving (aanvullende context): {product}
+
+Actuele zoekresultaten (DuckDuckGo):
+{search_results}
+
+Achtergrondkennis (Wikipedia):
+{wiki_results}
+
+Lever marktonderzoek + doelgroepanalyse op. Baseer je primair op de PDF. Voeg na elke claim die direct uit de PDF komt een bronverwijzing toe: [Bron: N] waarbij N het passage-nummer is.
+
+## MARKTONDERZOEK
+[jouw analyse hier]
+
+## DOELGROEP
+[jouw doelgroepbeschrijving hier]"""
     else:
         print("[RESEARCHER] No PDF context — using product description only")
-
-    pdf_section = f"""
-Productdocumentatie (uit PDF via RAG):
-{pdf_context}
-""" if pdf_context else ""
-
-    user_prompt = f"""Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.
+        user_prompt = f"""Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.
 
 Product: {product}
-{pdf_section}
+
 Actuele zoekresultaten (DuckDuckGo):
 {search_results}
 

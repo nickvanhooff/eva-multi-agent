@@ -2,6 +2,22 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { startCampaign, listPdfs, uploadPdf } from '../api'
 
+const TEMPLATES = {
+  product: [
+    { label: '📦 Hardware', text: 'Product: [naam]\nDoelgroep: [leeftijd, interesse]\nKernfunctie: [wat doet het]\nUSP: [waarom beter dan alternatief]\nPrijs: [€ en segment]' },
+    { label: '💻 Software / App', text: 'App: [naam]\nPlatform: [web / iOS / Android]\nProbleem dat het oplost: [omschrijving]\nBelangrijkste feature: [feature]\nDoelgroep: [type gebruiker]' },
+    { label: '🍔 Food & Beverage', text: 'Product: [naam]\nSmaak / samenstelling: [omschrijving]\nDoelgroep: [lifestyle, dieet, leeftijd]\nVerkoop via: [supermarkt / horeca / online]\nUSP: [gezond / duurzaam / gemak]' },
+    { label: '👕 Fashion', text: 'Merk: [naam]\nProductlijn: [omschrijving]\nStijl / doelgroep: [type klant]\nPrijs: [segment]\nKernboodschap: [duurzaam / exclusief / casual]' },
+    { label: '🔧 B2B / Dienst', text: 'Bedrijf: [naam]\nDienst: [omschrijving]\nDoelklant: [sector, bedrijfsgrootte]\nProbleem dat het oplost: [pijnpunt]\nResultaat voor klant: [meetbaar voordeel]' },
+  ],
+  book: [
+    { label: '📖 Roman / Fictie', text: 'Titel: [naam]\nAuteur: [naam]\nGenre: [thriller / literair / fantasy]\nCentrale belofte: [wat ervaart de lezer]\nDoelgroep: [lezersprofiel]' },
+    { label: '📚 Non-fictie', text: 'Titel: [naam]\nAuteur: [naam]\nOnderwerp: [thema]\nWat leert de lezer: [resultaat]\nDoelgroep: [professioneel / breed publiek]' },
+    { label: '💼 Business / Zelfhulp', text: 'Titel: [naam]\nAuteur: [naam]\nCentrale these: [kernboodschap]\nVoor wie: [doelgroep]\nBelofte: [concreet resultaat na het lezen]' },
+    { label: '🎓 Educatief', text: 'Titel: [naam]\nVak / domein: [omschrijving]\nDoelgroep: [student / professional / niveau]\nLeerdoel: [wat beheers je na het lezen]\nFormaat: [leerboek / werkboek / cursus]' },
+  ],
+}
+
 export default function NewCampaign() {
   const navigate = useNavigate()
   const [type, setType] = useState('product')
@@ -92,6 +108,32 @@ export default function NewCampaign() {
           <label style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 8 }}>
             {type === 'book' ? 'Book' : 'Product'} Description
           </label>
+
+          {/* Template buttons */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+            {TEMPLATES[type].map(t => (
+              <button
+                key={t.label}
+                type="button"
+                onClick={() => setDescription(t.text)}
+                style={{
+                  background: 'var(--surface2)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 6,
+                  padding: '4px 10px',
+                  fontSize: 12,
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.color = 'var(--primary)' }}
+                onMouseLeave={e => { e.target.style.borderColor = 'var(--border)'; e.target.style.color = 'var(--text-muted)' }}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
           <textarea
             value={description}
             onChange={e => setDescription(e.target.value)}

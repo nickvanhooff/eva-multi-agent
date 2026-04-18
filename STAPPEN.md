@@ -1699,3 +1699,479 @@ Alle relevante documentatiebestanden bijgewerkt om de huidige staat van het proj
 - frontend readme volledig vervangen — standaard vite readme heeft geen waarde voor portfolio
 
 ---
+
+## Stap 46: Template-knoppen bij nieuwe campagne
+**Datum:** 2026-04-07
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> nu wil ik een keuze voor voorbeeld prompt bij de campaigns/new zodat er de keuze komt voor Product Description dus zet erboven paar knoppen neer met een keuze wat voor soort template er komt per campaign type. zorg ervoor dat als er op de knoppen geklikt word dat er een product descripion/book description input text komt te staan zodat de gebruiker het template kan invullen. maak het niet te lang. geef meer opties
+
+**Wat is er gedaan:**
+Template-knoppen toegevoegd boven het beschrijvingsveld op de nieuwe campagne-pagina. Per campaign type verschijnen andere knoppen; klikken vult de textarea met een ingevuld template.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `frontend/src/pages/NewCampaign.jsx` | `TEMPLATES` object toegevoegd met 5 product- en 4 boek-templates; knoppen gerenderd boven textarea; klik → `setDescription(t.text)` |
+
+**Templates per type:**
+
+| Type | Templates |
+|---|---|
+| product | 📦 Hardware, 💻 Software/App, 🍔 Food & Beverage, 👕 Fashion, 🔧 B2B/Dienst |
+| book | 📖 Roman/Fictie, 📚 Non-fictie, 💼 Business/Zelfhulp, 🎓 Educatief |
+
+**Zelf bedacht:**
+- `TEMPLATES` als object met `type` als sleutel — knoppen wisselen automatisch mee bij campaign type wissel, geen aparte state nodig
+- Templates met `[placeholder]` opmaak zodat de gebruiker direct ziet wat in te vullen — kort genoeg om niet te overweldigen
+- Hover-stijl via `onMouseEnter`/`onMouseLeave` zonder extra CSS class — past bij de bestaande inline-styling aanpak
+
+---
+
+## Stap 47: RAG-bronnen tonen in frontend (citaten + Sources tab)
+**Datum:** 2026-04-07
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompts:**
+> feedback van de docent was nog dat hij graag de source wilde hebben als die uit een text kwam, dus de embeddings waar de researcher het vandaan haalt. is het mogelijk om dit te tonen?
+
+> ik wil het voor de researcher velden. ook raar is als ik bij description iets neerzet over chocola en de hele pdf gaat over een kaasmaker in nederland dat het alsnog een campagne word over chocola terwijl er geen kaas in voorkomt
+
+**Wat is er gedaan:**
+
+**Backend:**
+
+`rag.py`: `retrieve_pdf_context()` geeft nu naast de context-string ook een `list[dict]` terug met per passage: `{"query": str, "text": str, "page": int|None}`. De eerste query is altijd een vaste onderwerpvraag die altijd als eerste wordt uitgevoerd, ongeacht het campagne-type:
+
+```python
+_SUBJECT_QUERY = "Waar gaat dit document over? Wat is het hoofdonderwerp, het product of de organisatie?"
+```
+
+`state.py`: `pdf_sources: list` toegevoegd aan `CampaignState`.
+
+`researcher.py`: PDF-passages worden als eerste gepresenteerd als "gezaghebbende bron". De researcher krijgt de instructie om `[Bron: N]` te schrijven na claims die op een PDF-passage zijn gebaseerd.
+
+**Frontend:**
+
+`CampaignResults.jsx`: `CitedText` component geparseerd die `[Bron: N]` markers herkent en vervangt door een ℹ️ icon. Hover over dat icon toont een tooltip met de exacte passage, het paginanummer en de query. Daarnaast is een "Sources" tab toegevoegd die alle opgehaalde passages weergeeft wanneer een PDF beschikbaar was.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/rag.py` | `_SUBJECT_QUERY` altijd als eerste; retourneert `(str, list[dict])` |
+| `src/state.py` | `pdf_sources: list` toegevoegd |
+| `src/agents/researcher.py` | PDF als primaire bron; `[Bron: N]` instructie |
+| `frontend/src/pages/CampaignResults.jsx` | `CitedText` + Sources tab |
+
+**Zelf bedacht:**
+- vaste onderwerp-query als eerste zodat het model altijd weet waar de pdf over gaat, ook als de productomschrijving iets anders zegt
+- `CitedText` als inline component: geen aparte pagina nodig, citations zitten in de bestaande tekst zelf
+- sources tab alleen zichtbaar als `pdf_sources.length > 0`
+
+---
+
+## Stap 48: Human-in-the-loop mismatch check
+**Datum:** 2026-04-07
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> alsnog als ik chocola neerzet bij description met een pdf over kaas krijg ik alsnog een hele strategy en komt er nooit kaas naar voren... kan de researcher niet zeggen dat de description niet past bij de pdf? en user input vragen, dus bijvoorbeeld human in the loop toevoegen
+
+**Wat is er gedaan:**
+
+Nieuw node `mismatch_check` toegevoegd tussen `pdf_ingestion` en `researcher`. Wanneer een PDF aanwezig is, vergelijkt dit node de productomschrijving met de eerste PDF-passage via een LLM-call die antwoordt met JSON: `{"match": true/false, "pdf_subject": "..."}`.
+
+Bij een mismatch: de graph pauzeert via `interrupt()` (LangGraph HITL mechanisme). De gebruiker ziet een modaal in de frontend met de vraag en een voorgestelde correctie. Na bevestiging hervat de graph via `Command(resume=answer)` en gaat verder met de gecorrigeerde productomschrijving.
+
+**Nieuw bestand `src/agents/mismatch_check.py`:**
+```python
+from langgraph.types import interrupt
+
+def mismatch_check_node(state):
+    if not state.get("pdf_sources"):
+        return {}  # geen PDF: overslaan
+
+    corrected = interrupt({
+        "type": "mismatch",
+        "question": f"De PDF gaat over '{pdf_subject}', maar de beschrijving zegt '{description}'. Wat is de juiste omschrijving?",
+        "suggestion": pdf_subject,
+    })
+    return {"product_description": corrected}
+```
+
+**Graph flow na wijziging:**
+```
+START → pdf_ingestion → mismatch_check → researcher → strateeg → ...
+```
+
+**Backend:**
+- `graph.py`: `mismatch_check` node + edges aangepast
+- `api.py`: `__interrupt__` detectie in de stream-loop; `graph` en `config` opgeslagen in `jobs[job_id]`; nieuw endpoint `POST /campaigns/{job_id}/resume`
+- Na resume: `graph.get_state(config).values` gebruikt voor de volledige state (inclusief `pdf_sources` van voor de interrupt)
+
+**Frontend:**
+- `CampaignLive.jsx`: `awaiting_input` event afgehandeld; modaal getoond met vraag + vooringevulde suggestie; na submit wordt de stream hervat
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/agents/mismatch_check.py` | Nieuw — LLM mismatch check + `interrupt()` |
+| `src/graph.py` | `mismatch_check` node + edges |
+| `src/api.py` | Interrupt detectie + `/resume` endpoint + `Command(resume=...)` |
+| `frontend/src/pages/CampaignLive.jsx` | `awaiting_input` event + modaal overlay |
+| `frontend/src/api.js` | `resumeCampaign()` functie toegevoegd |
+
+**Zelf bedacht:**
+- `graph.get_state(config).values` gebruiken na resume: stream-chunks na een interrupt bevatten alleen de nodes die na de interrupt hebben gedraaid, niet de eerdere state (zoals `pdf_sources`). door de volledige checkpointed state op te halen is die data er alsnog
+- SSE stream open laten staan tijdens `awaiting_input` zodat het `awaiting_input` event gewoon via de bestaande EventSource aankomt, geen reconnect nodig
+- modal voorinvullen met de suggestie (`pdf_subject`) zodat de gebruiker met één klik kan bevestigen
+
+---
+
+## Stap 45: Markdown rendering in campagne-resultaten
+**Datum:** 2026-04-07
+**Branch:** `feature/frontend-stitch`
+
+**Gebruikte prompt:**
+> nu word er een de text van de json getoond maar ik wil de markdown naar nette text weergeven, zorg ervoor dat dit mooi weergegeven word bij de campagne dat er een betere structuur staat in de frontend bij de text ipv de raw markdown
+
+**Wat is er gedaan:**
+`react-markdown` geïnstalleerd en de campagne-resultaatpagina aangepast zodat markdown correct gerenderd wordt in plaats van als ruwe tekst getoond.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `frontend/src/pages/CampaignResults.jsx` | `ReactMarkdown` geïmporteerd; herbruikbare `<Md>` component aangemaakt; Strategy/Copy/Social tabs vervangen van `<p whiteSpace: pre-wrap>` naar `<Md>` |
+| `frontend/src/index.css` | `.md-content` CSS toegevoegd voor h1–h4, p, ul/ol, li, strong, em, code, blockquote — passend bij bestaand dark theme |
+| `frontend/package.json` | `react-markdown` toegevoegd als dependency |
+
+**Waarom react-markdown en niet zelf parsen?**
+react-markdown is de standaard React-library voor markdown rendering — geen eigen parser schrijven, geen edge cases missen. Past zonder config in de bestaande Vite + React setup.
+
+**Zelf bedacht:**
+- herbruikbare `<Md>` wrapper component zodat alle contentvelden via één component gaan — niet per veld `ReactMarkdown` herhalen
+- styling via `.md-content` CSS class in `index.css` i.p.v. inline styles — makkelijker aan te passen en consistent over alle tabs
+- `h3` in de `--primary` kleur (paars) voor visuele hiërarchie binnen de dark theme
+
+---
+
+## Stap 49: Website generator agent — on-demand HTML landing page
+**Datum:** 2026-04-14
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> in this project i also will create a agent for making a simple website that is showing in a sandbox. so it should generate code of a simple html site, maybe with tailwind as styling, import the cdn in the template. and want to show it in a sandbox
+
+**Wat is er gedaan:**
+
+Nieuwe on-demand website generator toegevoegd. Na afloop van een campagne kan de gebruiker op "Generate Website" klikken — de agent genereert dan een volledige HTML landing page op basis van de campagne-content en toont het resultaat in een iframe sandbox in de frontend.
+
+Bewuste keuze om dit **buiten de graph** te houden (niet als LangGraph node), maar als losse API-call. Reden: de website is optioneel en hoeft niet altijd gegenereerd te worden. Zo blijft de hoofdpipeline snel.
+
+**Nieuw bestand `src/agents/website_generator.py`:**
+```python
+def generate_website(campaign_data: dict) -> dict:
+    # Reads: copy_draft, social_content, target_audience, tone_of_voice, positioning
+    # Saves: campaigns/websites/campaign_{timestamp}.html
+    # Returns: {"html_content": str, "html_path": str}
+```
+
+**Nieuw endpoint `POST /campaigns/{job_id}/generate-website`:**
+- Haalt campagnedata op uit `jobs[job_id]["result"]` of saved JSON report
+- Roept `generate_website()` aan via `asyncio.to_thread` (blocking LLM call in async context)
+- Retourneert `{"html_path": "/static/websites/filename.html"}`
+
+De `campaigns/` folder is al gemount op `/static/` in FastAPI — geen extra configuratie nodig.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/agents/website_generator.py` | Nieuw — standalone `generate_website()` functie |
+| `src/skills/website-generation.md` | Nieuw — skill file voor de LLM |
+| `src/skills/skills_config.py` | `website_generator` skill toegevoegd voor `product` en `book` |
+| `src/llm.py` | `website_generator` config toegevoegd (groq, llama-3.3-70b, temp 0.7) |
+| `src/api.py` | Nieuw endpoint + `campaigns/websites/` directory aanmaken bij startup |
+| `frontend/src/api.js` | `generateWebsite()` en `websiteUrl()` helpers toegevoegd |
+| `frontend/src/pages/CampaignResults.jsx` | "Generate Website" knop + Website tab met iframe |
+
+**Frontend — iframe sandbox:**
+```jsx
+<iframe
+  src={generatedWebsiteUrl}
+  sandbox="allow-scripts allow-same-origin"
+  style={{ width: '100%', height: 680 }}
+/>
+```
+`allow-scripts allow-same-origin` is nodig zodat Tailwind CDN's runtime script stijlen kan toepassen in de sandbox.
+
+**Zelf bedacht:**
+- on-demand i.p.v. automatisch in de pipeline — website is niet altijd nodig, button geeft controle
+- `asyncio.to_thread` voor de blocking LLM call in de async FastAPI endpoint — zelfde patroon als de rest van de API
+- "open in new tab" link naast de iframe, voor als de gebruiker de volledige pagina wil bekijken
+
+---
+
+## Stap 50: Website generator skill — betere design output
+**Datum:** 2026-04-14
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> maak een skill voor design zoals hier dat het echt goede websites maakt ipv standaard
+> (referentie: https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md)
+
+**Wat is er gedaan:**
+
+De eerste gegenereerde website was generiek: grijze navbar, gecentreerde hero, witte kaartjes, geen custom fonts, geen animaties. Reden: de eerste skill beschreef alleen in woorden wat de LLM moest doen — Llama volgt beschrijvende design-instructies slecht op.
+
+Aanpak gebaseerd op de Anthropic frontend-design skill: vóór het schrijven een bewuste aesthetic direction kiezen, distinctive fonts, bold kleurpaletten, CSS animaties.
+
+**Eerste iteratie (`website-generation.md` v1):**
+- Keuze uit 5 aesthetics (luxury, bold, organic, dark tech, warm story)
+- Google Fonts verplicht
+- Verbodslista (geen Inter als headline, geen purple gradient, geen centered-only layout)
+- CSS variabelen voor kleurenpalet
+
+**Kern van de aanpak (overgenomen uit Anthropic skill):**
+> "Before coding, understand the context and commit to a BOLD aesthetic direction. Choose a clear conceptual direction and execute it with precision."
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/skills/website-generation.md` | Volledig herschreven met aesthetic presets, Google Fonts, verbodslista |
+| `src/agents/website_generator.py` | `_BASE_PROMPT` aangescherpt — verwijst naar skill voor details |
+
+**Zelf bedacht:**
+- vertaalslag van de Anthropic frontend-design skill naar een LLM system prompt context (skill-formaat)
+- aesthetic preset tabel (5 opties met use-case kolom) zodat de LLM een bewuste keuze maakt
+
+**Bronnen:**
+- Anthropic frontend-design skill: https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md
+
+---
+
+## Stap 51: Website skill uitgebreid met concrete HTML/CSS boilerplate
+**Datum:** 2026-04-14
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> het ziet er nu niet uit, geef veel meer skills voor de website generator om betere output te krijgen, stel me vragen als nodig
+
+**Gevraagde vragen en antwoorden:**
+- Aanpak: concrete HTML/CSS boilerplate (niet meer beschrijvingen, maar echte code in de skill)
+- Taal: volgt de campagne (copy_draft taal)
+- Complexiteit: volledig uitgewerkt (sticky nav, IntersectionObserver, scroll-animaties)
+
+**Wat is er gedaan:**
+
+Het kernprobleem was dat Llama *beschrijvingen* negeert bij creatieve output maar *concrete code* wél volgt. De skill bevat nu kant-en-klare code die de LLM letterlijk overneemt en invult.
+
+**Inhoud van de vernieuwde `website-generation.md`:**
+
+**Stap 1 — Preset kiezen** op basis van campagne-toon:
+
+| Preset | CSS vars + fonts |
+|---|---|
+| EDITORIAL | Cormorant Garamond + Jost, cream/gold palette |
+| BOLD | Anton + DM Sans, dark/saturated palette |
+| ORGANIC | Lora + Nunito, earthy/rounded palette |
+| DARK TECH | Space Grotesk + Space Mono, dark/cyan/violet |
+| WARM STORY | Playfair Display + Source Serif 4, warm/terracotta |
+
+**Stap 2 — CSS scaffold** (copy-paste ready):
+```css
+:root { --bg: #...; --accent: #...; --font-display: '...'; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(32px) } to { opacity:1; transform:none } }
+.animate-fade-up { animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) both; }
+.reveal { opacity:0; transition: opacity 0.7s ease, transform 0.7s; }
+.reveal.visible { opacity:1; transform:none; }
+#nav { position:fixed; transition: background 0.3s; }
+#nav.scrolled { background: var(--bg); box-shadow: 0 1px 0 rgba(0,0,0,0.08); }
+```
+
+**Stap 3 — Verplicht JS** (copy-paste ready):
+```javascript
+// Sticky nav
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+// Scroll-reveal via IntersectionObserver
+const observer = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+}), { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+```
+
+**Stap 4 — HTML skeleton** met secties in vaste volgorde: sticky nav → full-viewport hero (asymmetrisch grid) → features (3 kaarten) → testimonial → full-bleed CTA → footer grid.
+
+**Absolute verboden** toegevoegd als aparte sectie zodat ze niet vergeten worden.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/skills/website-generation.md` | Volledig herschreven met 5 CSS presets, required CSS blok, required JS, HTML skeleton, verbodslista |
+| `src/agents/website_generator.py` | `_BASE_PROMPT` compacter — stuurt LLM naar skill voor alle details |
+
+**Zelf bedacht:**
+- concrete CSS/JS code in de skill i.p.v. beschrijvingen — effectiever voor Llama
+- 5 aparte presets elk met eigen Google Fonts URL zodat elke site anders oogt
+- "absolute verboden" sectie aan het einde als harde grens voor generieke output
+
+---
+
+## Stap 52: Human-in-the-loop modal — 3 keuze-opties
+**Datum:** 2026-04-14
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> na de pdf lezen word human in the loop toegevoegd, hier word nog gevraagd of je de andere omschrijving wilt gebruiken. ik wil ook de optie hebben om mijn eigen ingevulde text te gebruiken
+
+**Wat is er gedaan:**
+
+De bestaande HITL modal (stap 48) toonde alleen een tekstveld vooringevuld met de PDF-suggestie. Er was geen duidelijk onderscheid tussen de 3 opties die een gebruiker eigenlijk heeft.
+
+**Nieuwe modal — 3 klikbare kaartjes:**
+
+1. **Mijn originele omschrijving** — de tekst die bij het starten ingevoerd was
+2. **PDF-suggestie** — wat de LLM uit de PDF detecteerde
+3. **Eigen omschrijving** — klik om het kaartje te openen, typ vrij
+
+Het bevestigingsknopje blijft uitgeschakeld totdat een optie geselecteerd is (en bij "eigen" ook iets getypt is).
+
+**Backend wijziging (`mismatch_check.py`):**
+```python
+corrected = interrupt({
+    "type": "mismatch",
+    "question": "...",
+    "original": description,   # nieuw — originele productomschrijving
+    "suggestion": pdf_subject,
+})
+```
+
+**Frontend wijziging (`CampaignLive.jsx`):**
+- State: `selectedOption` (`'original'` | `'suggestion'` | `'custom'`) + `customValue`
+- Kaartjes met border-highlight op geselecteerde optie
+- Custom input-veld verschijnt alleen bij optie 3, met `autoFocus` en Enter-ondersteuning
+- `resolvedValue` berekend op basis van geselecteerde optie — één confirm-knop verstuurt de juiste waarde
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/agents/mismatch_check.py` | `original` veld toegevoegd aan interrupt data |
+| `frontend/src/pages/CampaignLive.jsx` | Modal vervangen door 3-optie kaartjes UI |
+
+**Zelf bedacht:**
+- kaartjes-UI i.p.v. radio buttons — past beter bij het bestaande dark theme en toont de volledige tekst van elke optie direct
+- `resolvedValue` variabele die de juiste string berekent op basis van selectie — één submit-handler voor alle 3 opties
+- confirm-knop disabled houden totdat er echt een keuze is gemaakt — voorkomt per ongeluk doorsturen
+
+---
+
+## Stap 54: Website tab persistent maken na navigatie
+**Datum:** 2026-04-14
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> de website blijft nu niet staan als tab als die al gemaakt is als ik er later op klik, terwijl die wel opgeslagen word
+
+**Wat is er gedaan:**
+
+De Website tab verdween zodra je wegnavigeerde van de resultatenpagina. De HTML was al opgeslagen op schijf, maar de `generatedWebsiteUrl` React state was lokaal — die raakt verloren bij navigatie.
+
+**Oplossing: sidecar-bestand + `_attach_website` helper**
+
+Bij het genereren schrijft het endpoint nu een klein sidecar-bestand `campaigns/{job_id}.website` met de html_url. Bij opvragen van het campagne-resultaat leest `_attach_website()` dit bestand en voegt `html_path` toe aan de response — ook na een server-restart.
+
+**Backend (`api.py`) — endpoint:**
+```python
+# Na genereren: persisteren in memory + sidecar
+if job_id in jobs and jobs[job_id].get("result") is not None:
+    jobs[job_id]["result"]["html_path"] = html_url
+sidecar = CAMPAIGNS_DIR / f"{job_id}.website"
+sidecar.write_text(html_url, encoding="utf-8")
+```
+
+**Backend (`api.py`) — `get_campaign_status`:**
+```python
+def _attach_website(result: dict) -> dict:
+    if result and not result.get("html_path"):
+        sidecar = CAMPAIGNS_DIR / f"{job_id}.website"
+        if sidecar.exists():
+            result["html_path"] = sidecar.read_text(encoding="utf-8").strip()
+    return result
+```
+
+**Frontend (`CampaignResults.jsx`) — `useEffect`:**
+```jsx
+getCampaign(id).then(job => {
+  const result = job.result || job
+  setData(result)
+  if (result?.html_path) setGeneratedWebsiteUrl(websiteUrl(result.html_path))
+})
+```
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/api.py` | Sidecar schrijven bij genereren; `_attach_website()` helper in `get_campaign_status` |
+| `frontend/src/pages/CampaignResults.jsx` | `useEffect` initialiseert `generatedWebsiteUrl` uit `data.html_path` |
+
+**Zelf bedacht:**
+- sidecar-bestand (`{job_id}.website`) i.p.v. het JSON report aanpassen — report heeft timestamp-bestandsnaam zonder job_id, dus niet betrouwbaar te vinden; sidecar wél direct op job_id vindbaar
+- `_attach_website` als interne helper zodat dezelfde logica geldt voor zowel in-memory als file-fallback pad
+
+---
+
+## Stap 53: Gegenereerde campagne-image gebruiken in website
+**Datum:** 2026-04-14
+**Branch:** `feature/rag-pdf-ingestion`
+
+**Gebruikte prompt:**
+> gebruik bij de website de image die gegenereert is als dat kan, dus de image die opgeslagen word
+
+**Wat is er gedaan:**
+
+De website generator gebruikte altijd `placehold.co` voor alle afbeeldingen. Als de image_generator agent al een campagne-visual heeft gegenereerd (opgeslagen in `campaigns/images/`), is het logischer om die echte afbeelding te gebruiken in de hero sectie.
+
+**Relatief pad — hoe het werkt:**
+
+```
+campaigns/
+  images/   → geserveerd op /static/images/
+  websites/ → geserveerd op /static/websites/
+```
+
+Vanuit `campaigns/websites/campaign_xxx.html` in de browser is het pad `../images/filename.png` een geldige relatieve URL naar `/static/images/filename.png` — geen absolute URL nodig, geen CORS-problemen.
+
+**Wijziging in `generate_website()` (`website_generator.py`):**
+```python
+raw_image_path = campaign_data.get("image_path")
+if raw_image_path:
+    filename = Path(raw_image_path).name
+    hero_image_url = f"../images/{filename}"
+    image_instruction = f'Use this real image for the hero: <img src="{hero_image_url}" ...>'
+else:
+    image_instruction = "Use placehold.co for all images."
+```
+
+De LLM krijgt een expliciete instructie: gebruik de echte afbeelding voor de hero, `placehold.co` alleen voor eventuele secundaire afbeeldingen.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/agents/website_generator.py` | `image_path` detectie + relatief pad bouwen + image_instruction in user prompt |
+
+**Zelf bedacht:**
+- relatief pad `../images/` i.p.v. absolute URL — werkt ongeacht host/port, geen proxy-configuratie nodig
+- fallback naar `placehold.co` als geen image beschikbaar — graceful degradation
+- instructie in user prompt (niet system prompt) omdat het campagne-specifieke data is
+
+---

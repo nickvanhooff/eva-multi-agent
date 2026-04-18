@@ -1,0 +1,430 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-04-14T12:39:07.658735",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:07.659564",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Titel: Cursus bier\nVak / domein: Bier brouwen\nDoelgroep: ?\nLeerdoel: Hoe je bier moet brouwen\nFormaat:cursus\n\nEerste passage uit de PDF:\ngoed opgeloste mout voor nodig is. De dalende infusie \nmethode geeft een betere zetmeelafbraak dan de stij-\ngende infusie, maar het oplossen van het mout en eiwi-\ntafbraak verloopt veel slechter. \nIndien een goede moutkwaliteit gebruikt wordt kan met \ndeze brouwmethode een hogere eindvergistingsgraad \nen rendement gehaald worden. Bij de sti",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:08.182920",
+    "data": {
+      "preview": "```json\n{\n  \"match\": false,\n  \"pdf_subject\": \"goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\"\n}\n```",
+      "length": 176
+    }
+  },
+  {
+    "node": "__system__",
+    "type": "awaiting_input",
+    "message": "De PDF gaat over 'goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode', maar de productomschrijving zegt 'Titel: Cursus bier\nVak / domein: Bier brouwen\nDoelgroep: ?\nLeerdoel: Hoe je bier moet brouwen\nFormaat:cursus'. Wat is de juiste omschrijving voor de campagne?",
+    "timestamp": "2026-04-14T12:39:08.186696",
+    "data": {
+      "type": "mismatch",
+      "question": "De PDF gaat over 'goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode', maar de productomschrijving zegt 'Titel: Cursus bier\nVak / domein: Bier brouwen\nDoelgroep: ?\nLeerdoel: Hoe je bier moet brouwen\nFormaat:cursus'. Wat is de juiste omschrijving voor de campagne?",
+      "suggestion": "goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:31.501321",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Titel: Cursus bier\nVak / domein: Bier brouwen\nDoelgroep: ?\nLeerdoel: Hoe je bier moet brouwen\nFormaat:cursus\n\nEerste passage uit de PDF:\ngoed opgeloste mout voor nodig is. De dalende infusie \nmethode geeft een betere zetmeelafbraak dan de stij-\ngende infusie, maar het oplossen van het mout en eiwi-\ntafbraak verloopt veel slechter. \nIndien een goede moutkwaliteit gebruikt wordt kan met \ndeze brouwmethode een hogere eindvergistingsgraad \nen rendement gehaald worden. Bij de sti",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:31.638107",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"Over de dalende infusie methode in het brouwen van bier\"}",
+      "length": 90
+    }
+  },
+  {
+    "node": "mismatch_check",
+    "type": "node_done",
+    "message": "✓ mismatch_check completed",
+    "timestamp": "2026-04-14T12:39:31.639704",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:35.051883",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.\n\nPDF-documentatie (primaire bron):\n[Passage 1] (pagina 47)\ngoed opgeloste mout voor nodig is. De dalende infusie \nmethode geeft een betere zetmeelafbraak dan de stij-\ngende infusie, maar het oplossen van het mout en eiwi-\ntafbraak verloopt veel slechter. \nIndien een goede moutkwaliteit gebruikt wordt kan met \ndeze br",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:37.357531",
+    "data": {
+      "preview": "**MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, concurrenten en kansen.\n\n* **Markt:** De markt voor bierbrouwers en thuisbrouwers is relatief klein, maar groeiend. De laatste jaren is er een toename van het aantal mensen dat thuisbier brouwt, voornamelijk vanwege de interesse in craft bier en de beschikbaarheid van online resources en community's.\n* **Concurrenten:** De concurrenten van het product zijn andere brouwmethoden en systemen, zoals RIMS en HERMS. Deze systemen worden ook gebruikt om het brouwproces te optimaliseren en een hoger r",
+      "length": 3862
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-04-14T12:39:37.358397",
+    "data": {
+      "target_audience": "**MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, concurrenten en kansen.\n\n* **Markt:** De markt voor bierbrouwers en thuisbrouwers is relatief klein, maar groeiend. De laatste jaren is er een toename van het aantal mensen dat thuisbier brouwt, voornamelijk vanwege de interesse in craft bier en de beschikbaarheid van online resources en community's.\n* **Concurrenten:** De concurrenten van het product zijn andere brouwmethoden en systemen, zoals RIMS en HERMS. Deze systemen worden ook gebruikt om het brouwproces te optimaliseren en een hoger rendement te bereiken.\n* **Kansen:** Een van de kansen voor het product is de groeiende interesse in craft bier en thuisbierbrouwen. Daarnaast kan het product ook worden gebruikt om de kosten van het brouwen te verlagen en de efficiëntie te verbeteren.\n* **Onderzoeksthema's:** Op basis van de PDF-documentatie en de actuele zoekresultaten kan worden geconcludeerd dat er nog veel onderzoek nodig is naar de optimalisatie van het brouwproces en het bereiken van een hoger rendement. Mogelijke onderzoeksthema's zijn:\n + Het optimaliseren van de maischmethoden en het gebruik van goed opgeloste mout.\n + Het effect van temperatuurregeling en isolatie op het rendement.\n + Het gebruik van verschillende enzymen en hun invloed op het brouwproces.\n\n**DOELGROEP**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten kan worden geconcludeerd dat de doelgroep voor het product bierbrouwers en thuisbrouwers zijn die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een beschrijving van de ideale doelgroep:\n\n* **Demografie:** De doelgroep is overwegend mannen tussen de 25 en 50 jaar, die geïnteresseerd zijn in craft bier en thuisbierbrouwen.\n* **Psychografie:** De doelgroep is gemotiveerd om hun brouwproces te optimaliseren en een hoger rendement te bereiken. Zij zijn ook geïnteresseerd in de theorie en de praktische toepassing van het brouwproces.\n* **Pijnpunten:** De doelgroep heeft pijnpunten zoals het bereiken van een hoger rendement, het optimaliseren van het brouwproces en het verlagen van de kosten.\n* **Behoeften:** De doelgroep heeft behoeften zoals de beschikbaarheid van goede brouwmaterialen, de kennis van het brouwproces en de mogelijkheid om met andere bierbrouwers te communiceren en te leren.\n\nBronverwijzingen:\n\n* [Bron: 1] (pagina 47) - \"goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\"\n* [Bron: 2] (pagina 94) - \"hoe het gedronken wordt\"\n* [Bron: 3] (pagina 33) - \"controleer de geur en smaak van de oplossingen\"\n* [Bron: 4] (pagina 215) - \"aan. Als vervolg op de RIMS is de HERMS gekomen met indirecte verwarming van het wort.\"\n* [Bron: 5] (pagina 9) - \"suikeroplossing indikken, denk hierbij maar aan het maken van jam of gelei.\"\n* [Bron: 6] (pagina 167) - \"(Breferm gisten zijn niet van de firma DCL, maar wel verkrijgbaar bij Brouwland en van Gelder.\"\n* [Bron: 7] (pagina 5) - \"ter het stamwort uitgedrukt in graden Plato als maat-eenheid\"\n* [Bron: 8] (pagina 96) - \"punten worden gegeven. Dit is voor de verschillende onderdelen:\"\n* [Bron: 9] (pagina 50) - \"voordelen van RIMS en HERMS maar dat is het in wezen niet.\"\n* [Bron: 10] (pagina 97) - \"met elkaar te verbinden ontstaat een figuur waarin in een oogopslag de karakteristieken te zien zijn.\"\n* [Bron: 11] (pagina 14) - \"smaakontwikkeling. Wat rest is het maken van een etiket, om de fles op te sieren.\"\n* [Bron: 12] (pagina 7) - \"vloed op de schuimkraag van het uiteindelijke bier en zijn ook nodig voor de voeding van de gist.\"",
+      "market_research": "**MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, concurrenten en kansen.\n\n* **Markt:** De markt voor bierbrouwers en thuisbrouwers is relatief klein, maar groeiend. De laatste jaren is er een toename van het aantal mensen dat thuisbier brouwt, voornamelijk vanwege de interesse in craft bier en de beschikbaarheid van online resources en community's.\n* **Concurrenten:** De concurrenten van het product zijn andere brouwmethoden en systemen, zoals RIMS en HERMS. Deze systemen worden ook gebruikt om het brouwproces te optimaliseren en een hoger rendement te bereiken.\n* **Kansen:** Een van de kansen voor het product is de groeiende interesse in craft bier en thuisbierbrouwen. Daarnaast kan het product ook worden gebruikt om de kosten van het brouwen te verlagen en de efficiëntie te verbeteren.\n* **Onderzoeksthema's:** Op basis van de PDF-documentatie en de actuele zoekresultaten kan worden geconcludeerd dat er nog veel onderzoek nodig is naar de optimalisatie van het brouwproces en het bereiken van een hoger rendement. Mogelijke onderzoeksthema's zijn:\n + Het optimaliseren van de maischmethoden en het gebruik van goed opgeloste mout.\n + Het effect van temperatuurregeling en isolatie op het rendement.\n + Het gebruik van verschillende enzymen en hun invloed op het brouwproces.\n\n**DOELGROEP**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten kan worden geconcludeerd dat de doelgroep voor het product bierbrouwers en thuisbrouwers zijn die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een beschrijving van de ideale doelgroep:\n\n* **Demografie:** De doelgroep is overwegend mannen tussen de 25 en 50 jaar, die geïnteresseerd zijn in craft bier en thuisbierbrouwen.\n* **Psychografie:** De doelgroep is gemotiveerd om hun brouwproces te optimaliseren en een hoger rendement te bereiken. Zij zijn ook geïnteresseerd in de theorie en de praktische toepassing van het brouwproces.\n* **Pijnpunten:** De doelgroep heeft pijnpunten zoals het bereiken van een hoger rendement, het optimaliseren van het brouwproces en het verlagen van de kosten.\n* **Behoeften:** De doelgroep heeft behoeften zoals de beschikbaarheid van goede brouwmaterialen, de kennis van het brouwproces en de mogelijkheid om met andere bierbrouwers te communiceren en te leren.\n\nBronverwijzingen:\n\n* [Bron: 1] (pagina 47) - \"goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\"\n* [Bron: 2] (pagina 94) - \"hoe het gedronken wordt\"\n* [Bron: 3] (pagina 33) - \"controleer de geur en smaak van de oplossingen\"\n* [Bron: 4] (pagina 215) - \"aan. Als vervolg op de RIMS is de HERMS gekomen met indirecte verwarming van het wort.\"\n* [Bron: 5] (pagina 9) - \"suikeroplossing indikken, denk hierbij maar aan het maken van jam of gelei.\"\n* [Bron: 6] (pagina 167) - \"(Breferm gisten zijn niet van de firma DCL, maar wel verkrijgbaar bij Brouwland en van Gelder.\"\n* [Bron: 7] (pagina 5) - \"ter het stamwort uitgedrukt in graden Plato als maat-eenheid\"\n* [Bron: 8] (pagina 96) - \"punten worden gegeven. Dit is voor de verschillende onderdelen:\"\n* [Bron: 9] (pagina 50) - \"voordelen van RIMS en HERMS maar dat is het in wezen niet.\"\n* [Bron: 10] (pagina 97) - \"met elkaar te verbinden ontstaat een figuur waarin in een oogopslag de karakteristieken te zien zijn.\"\n* [Bron: 11] (pagina 14) - \"smaakontwikkeling. Wat rest is het maken van een etiket, om de fles op te sieren.\"\n* [Bron: 12] (pagina 7) - \"vloed op de schuimkraag van het uiteindelijke bier en zijn ook nodig voor de voeding van de gist.\""
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:37.359079",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nMARKTONDERZOEK: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T12:39:48.845653",
+    "data": {
+      "preview": "## STRATEGIE\n**Marketingstrategie voor Good Opgeloste Mout**\n\n**Positionering:** Onze positie is die van de beste keuze voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Wij bieden een unieke oplossing met onze goed opgeloste mout, die perfect is voor de dalende infusie methode.\n\n**Berichtenhiërarchie:**\n\n* Kernboodschap: \"Met onze goed opgeloste mout bereik je een hoger rendement en een optimaler brouwproces.\"\n* Ondersteunende claims:\n + \"Opgeloste mout is essentieel voor een hogere eindvergistingsgraad en een hoger rendement.\"\n + \"Onze mout is geschikt voor de dalende infusie methode en andere brouwmethoden.\"\n + \"Met onze mout kun je je bierbrouwproces optimaliseren en je kosten verlagen.\"\n* Bewijs: \"Meer informatie vind je op onze",
+      "length": 2835
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-04-14T12:39:48.846525",
+    "data": {
+      "strategy": "**Marketingstrategie voor Good Opgeloste Mout**\n\n**Positionering:** Onze positie is die van de beste keuze voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Wij bieden een unieke oplossing met onze goed opgeloste mout, die perfect is voor de dalende infusie methode.\n\n**Berichtenhiërarchie:**\n\n* Kernboodschap: \"Met onze goed opgeloste mout bereik je een hoger rendement en een optimaler brouwproces.\"\n* Ondersteunende claims:\n + \"Opgeloste mout is essentieel voor een hogere eindvergistingsgraad en een hoger rendement.\"\n + \"Onze mout is geschikt voor de dalende infusie methode en andere brouwmethoden.\"\n + \"Met onze mout kun je je bierbrouwproces optimaliseren en je kosten verlagen.\"\n* Bewijs: \"Meer informatie vind je op onze website en in onze brochure.\"\n\n**Kanaalstrategie:** Wij zullen ons richten op online marketing, met name op zoekmachines, social media en online advertenties. Daarnaast zullen wij ook aanwezig zijn op bierbrouwersconferenties en -evenementen om ons product te presenteren en te demostreren.\n\n**Contentmix:** Wij zullen ons richten op educatief en inspirerend content, om onze doelgroep te informeren en te inspireren over de voordelen van onze goed opgeloste mout. Wij zullen ook promotioneel content gebruiken om onze producten te promoten en te verkopen.",
+      "positioning": "**Onze positie**\n\nOnze positie is die van de beste keuze voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Wij bieden een unieke oplossing met onze goed opgeloste mout, die perfect is voor de dalende infusie methode.\n\n**Waarom wij?**\n\n* Wij bieden een unieke oplossing met onze goed opgeloste mout.\n* Wij hebben jarenlange ervaring in de bierbrouwerij.\n* Wij zijn toonaangevend in de ontwikkeling van nieuwe brouwmethoden.\n\n**Onze missie:**\n\nWij zijn er om bierbrouwers en thuisbrouwers te helpen bij het optimaliseren van hun brouwproces en het bereiken van een hoger rendement. Wij bieden een unieke oplossing met onze goed opgeloste mout, die perfect is voor de dalende infusie methode.",
+      "tone_of_voice": "**Onze toon**\n\nOnze toon is professioneel, informatief en inspirerend. Wij willen onze doelgroep informeren over de voordelen van onze goed opgeloste mout, maar ook inspireren om hun brouwproces te optimaliseren en een hoger rendement te bereiken.\n\n**Onze taal:**\n\n* Wij gebruiken een professionele en zakelijke toon.\n* Wij gebruiken technische termen die relevant zijn voor de bierbrouwerij.\n* Wij gebruiken een vriendelijke en inspirerende toon om onze doelgroep te motiveren.\n\n**Onze woordkeuze:**\n\n* Wij gebruiken woorden die relevant zijn voor de bierbrouwerij.\n* Wij gebruiken woorden die inspirerend en informatief zijn.\n* Wij vermijden woorden die onprofessioneel of oninformatief zijn."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:48.849516",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:50.056483",
+    "data": {
+      "preview": "1. **Optimaliseer je brouwproces**\n2. **Met onze goed opgeloste mout voor een hoger rendement**\n3. Onze goed opgeloste mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die hun brouwproces willen optimaliseren en een hoger rendement willen bereiken. Met onze mout kun je je bierbrouwproces verbeteren en je kosten verlagen. Onze mout is perfect voor de dalende infusie methode en andere brouwmethoden.\n\nOnze goed opgeloste mout is essentieel voor een hogere eindvergistingsgraad en een hoger rendement. Wij bieden een unieke oplossing voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kun je je bierbrouwproces optimaliseren en je kosten verlagen.\n\nWij zijn ervan overtuigd dat onze goed opgeloste mout de beste keuz",
+      "length": 1169
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-14T12:39:50.057347",
+    "data": {
+      "copy_draft": "1. **Optimaliseer je brouwproces**\n2. **Met onze goed opgeloste mout voor een hoger rendement**\n3. Onze goed opgeloste mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die hun brouwproces willen optimaliseren en een hoger rendement willen bereiken. Met onze mout kun je je bierbrouwproces verbeteren en je kosten verlagen. Onze mout is perfect voor de dalende infusie methode en andere brouwmethoden.\n\nOnze goed opgeloste mout is essentieel voor een hogere eindvergistingsgraad en een hoger rendement. Wij bieden een unieke oplossing voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kun je je bierbrouwproces optimaliseren en je kosten verlagen.\n\nWij zijn ervan overtuigd dat onze goed opgeloste mout de beste keuze is voor bierbrouwers en thuisbrouwers die hun brouwproces willen optimaliseren. Onze mout is van hoge kwaliteit en wordt geleverd met een professionele en informatieve ondersteuning. Wij helpen je graag om je bierbrouwproces te optimaliseren en een hoger rendement te bereiken.\n\n4. **Ontdek hoe onze goed opgeloste mout jouw brouwproces kan verbeteren en bestel nu!**"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:50.059724",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt,",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:51.528439",
+    "data": {
+      "preview": "Hieronder volgt de social media content voor elk platform:\n\n**1. Instagram:**\nCaption: \"Optimaliseer je brouwproces met onze goed opgeloste mout! Onze mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die hun brouwproces willen verbeteren en een hoger rendement willen bereiken. #bierbrouwen #thuisbierbrouwen #goedopgelostemout #brouwproces #optimalisatie\"\nHashtags: #bierbrouwen #thuisbierbrouwen #goedopgelostemout #brouwproces #optimalisatie #bierliefhebbers #craftbier\n\n**2. LinkedIn:**\nPost: \"Als bierbrouwer of thuisbrouwer bent u op zoek naar manieren om uw brouwproces te optimaliseren en een hoger rendement te bereiken. Onze goed opgeloste mout is speciaal ontwikkeld om u te helpen bij het bereiken van deze doelen. Met onze mout kunt u uw bierbrouwproces verbeteren en uw ko",
+      "length": 1279
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-14T12:39:51.529385",
+    "data": {
+      "social_content": "Hieronder volgt de social media content voor elk platform:\n\n**1. Instagram:**\nCaption: \"Optimaliseer je brouwproces met onze goed opgeloste mout! Onze mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die hun brouwproces willen verbeteren en een hoger rendement willen bereiken. #bierbrouwen #thuisbierbrouwen #goedopgelostemout #brouwproces #optimalisatie\"\nHashtags: #bierbrouwen #thuisbierbrouwen #goedopgelostemout #brouwproces #optimalisatie #bierliefhebbers #craftbier\n\n**2. LinkedIn:**\nPost: \"Als bierbrouwer of thuisbrouwer bent u op zoek naar manieren om uw brouwproces te optimaliseren en een hoger rendement te bereiken. Onze goed opgeloste mout is speciaal ontwikkeld om u te helpen bij het bereiken van deze doelen. Met onze mout kunt u uw bierbrouwproces verbeteren en uw kosten verlagen. Onze mout is van hoge kwaliteit en wordt geleverd met professionele en informatieve ondersteuning. Neem contact met ons op om meer te weten te komen over hoe onze goed opgeloste mout uw brouwproces kan verbeteren.\"\nHashtags: #bierbrouwen #thuisbierbrouwen #goedopgelostemout #brouwproces #optimalisatie #bierindustrie\n\n**3. X/Twitter:**\nTweet: \"Optimaliseer je brouwproces met onze goed opgeloste mout! Hoger rendement, beter bier. #bierbrouwen #goedopgelostemout\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:51.532269",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, concurrente",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:53.285474",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor Good Opgeloste Mout heeft potential, maar er zijn een aantal punten waarop verbetering nodig is. Hieronder volgen enkele specifieke feedbackpunten:\n\n1. **Doelgroep**: De doelgroep van bierbrouwers en thuisbrouwers is goed gedefinieerd, maar de marketingtekst en social media content kunnen nog meer aansluiten bij de specifieke behoeften en interesses van deze doelgroep.\n2. **Tone of voice**: De toon van de marketingtekst en social media content is professioneel, maar kan nog meer inspirerend en vriendelijk zijn om de doelgroep te motiveren.\n3. **Berichtenhiërarchie**: De kernboodschap en ondersteunende claims zijn duidelijk, maar de marketingtekst en social media content kunnen nog meer gefocust zijn op de voordel",
+      "length": 1728
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-14T12:39:53.287230",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor Good Opgeloste Mout heeft potential, maar er zijn een aantal punten waarop verbetering nodig is. Hieronder volgen enkele specifieke feedbackpunten:\n\n1. **Doelgroep**: De doelgroep van bierbrouwers en thuisbrouwers is goed gedefinieerd, maar de marketingtekst en social media content kunnen nog meer aansluiten bij de specifieke behoeften en interesses van deze doelgroep.\n2. **Tone of voice**: De toon van de marketingtekst en social media content is professioneel, maar kan nog meer inspirerend en vriendelijk zijn om de doelgroep te motiveren.\n3. **Berichtenhiërarchie**: De kernboodschap en ondersteunende claims zijn duidelijk, maar de marketingtekst en social media content kunnen nog meer gefocust zijn op de voordelen van de goed opgeloste mout voor de doelgroep.\n4. **Contentmix**: De contentmix kan nog meer variëren om de doelgroep te informeren en te inspireren over de voordelen van de goed opgeloste mout.\n5. **Social media content**: De social media content kan nog meer aansluiten bij de specifieke platformen en doelgroepen. Bijvoorbeeld, de Instagram-content kan meer visueel aantrekkelijk zijn, terwijl de LinkedIn-content meer gericht kan zijn op de professionele aspecten van de bierbrouwerij.\n6. **Hashtags**: De hashtags kunnen nog meer relevant en specifiek zijn voor de doelgroep en de marketingcampagne.\n7. **Call-to-action**: De call-to-action (CTA) in de marketingtekst en social media content kan nog meer duidelijk en prominenter zijn om de doelgroep te stimuleren tot actie.\n\nAl met al is de marketingcampagne een goede start, maar er is nog ruimte voor verbetering om de doelgroep effectief te bereiken en te motiveren.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:53.287858",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:57.641626",
+    "data": {
+      "preview": "Hier zijn de gevraagde teksten:\n\n**Headline:** \"Optimaliseer je brouwproces\"\n\n**Subheadline:** \"Met onze goed opgeloste mout bereik je een hoger rendement en een optimaler brouwproces\"\n\n**Bodytekst:**\nOnze goed opgeloste mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kun je je bierbrouwproces optimaliseren en je kosten verlagen. Onze mout is geschikt voor de dalende infusie methode en andere brouwmethoden, en is ontwikkeld om een hogere eindvergistingsgraad en rendement te bereiken.\n\nOnze goed opgeloste mout is het resultaat van jarenlange onderzoek en ontwikkeling, en is getest door ervaren bierbrouwers en thuisbrouwers. Wij zijn ervan overtuigd dat onze mout de beste keuze is voor bierbr",
+      "length": 1414
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-14T12:39:57.642460",
+    "data": {
+      "copy_draft": "Hier zijn de gevraagde teksten:\n\n**Headline:** \"Optimaliseer je brouwproces\"\n\n**Subheadline:** \"Met onze goed opgeloste mout bereik je een hoger rendement en een optimaler brouwproces\"\n\n**Bodytekst:**\nOnze goed opgeloste mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kun je je bierbrouwproces optimaliseren en je kosten verlagen. Onze mout is geschikt voor de dalende infusie methode en andere brouwmethoden, en is ontwikkeld om een hogere eindvergistingsgraad en rendement te bereiken.\n\nOnze goed opgeloste mout is het resultaat van jarenlange onderzoek en ontwikkeling, en is getest door ervaren bierbrouwers en thuisbrouwers. Wij zijn ervan overtuigd dat onze mout de beste keuze is voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces.\n\nMet onze goed opgeloste mout kun je je bierbrouwproces naar een hoger niveau tillen. Onze mout is ontwikkeld om een hogere eindvergistingsgraad en rendement te bereiken, en is geschikt voor een breed scala aan brouwmethoden. Of je nu een ervaren bierbrouwer bent of net begint met thuisbrouwen, onze goed opgeloste mout is de perfecte keuze voor jou.\n\n**Call-to-action:** \"Bestel nu onze goed opgeloste mout en start met het optimaliseren van je brouwproces! Klik hier voor meer informatie en om te bestellen: [link]\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:39:57.643869",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt,",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:40:14.052529",
+    "data": {
+      "preview": "Hieronder vind je de content voor elk van de gevraagde platforms:\n\n**1. Instagram (caption + hashtags)**\nOptimaliseer je brouwproces met onze goed opgeloste mout! Onze mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kun je je bierbrouwproces naar een hoger niveau tillen en je kosten verlagen. #bierbrouwen #thuisbrouwen #goedopgelostemout #brouwproces #optimaliseren #bierliefhebber #homebrew\n\n**2. LinkedIn (professionele post)**\nAls bierbrouwer of thuisbrouwer bent u op zoek naar manieren om uw brouwproces te optimaliseren en uw rendement te verhogen. Onze goed opgeloste mout is speciaal ontwikkeld om u te helpen bij het bereiken van deze doelen. Met onze mout kunt u uw bierbrouwproces naar ",
+      "length": 1292
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-14T12:40:14.053813",
+    "data": {
+      "social_content": "Hieronder vind je de content voor elk van de gevraagde platforms:\n\n**1. Instagram (caption + hashtags)**\nOptimaliseer je brouwproces met onze goed opgeloste mout! Onze mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kun je je bierbrouwproces naar een hoger niveau tillen en je kosten verlagen. #bierbrouwen #thuisbrouwen #goedopgelostemout #brouwproces #optimaliseren #bierliefhebber #homebrew\n\n**2. LinkedIn (professionele post)**\nAls bierbrouwer of thuisbrouwer bent u op zoek naar manieren om uw brouwproces te optimaliseren en uw rendement te verhogen. Onze goed opgeloste mout is speciaal ontwikkeld om u te helpen bij het bereiken van deze doelen. Met onze mout kunt u uw bierbrouwproces naar een hoger niveau tillen en uw kosten verlagen. Onze mout is geschikt voor een breed scala aan brouwmethoden en is getest door ervaren bierbrouwers en thuisbrouwers. Neem contact met ons op om meer te weten te komen over onze goed opgeloste mout en hoe deze uw brouwproces kan verbeteren.\n\n**3. X/Twitter (kort en krachtig, max 280 tekens)**\nOptimaliseer je brouwproces met onze goed opgeloste mout! Hoger rendement, beter bier. Klik hier voor meer info: [link] #bierbrouwen #goedopgelostemout"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:40:14.054738",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, concurrente",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:40:34.848926",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor Good Opgeloste Mout is uitgebreid en geeft een duidelijke indruk van de doelgroep en de strategie. Echter, er zijn enkele punten die verbetering behoeven.\n\nTen eerste, de tone of voice is niet consequent door de hele campagne heen. Soms is de toon professioneel en informatief, maar soms is het ook te technisch of te verkoopt. Het is belangrijk om een consistent tone of voice te hanteren om de doelgroep te bereiken.\n\nTen tweede, de marketingteksten zijn soms te lang en te saai. Het is belangrijk om de teksten te verkorten en te maken dat ze meer aantrekkelijk zijn voor de doelgroep. De call-to-action moet ook duidelijker zijn en meer aandacht trekken.\n\nTen derde, de social media content is niet zo creatief en aant",
+      "length": 1686
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-14T12:40:34.850330",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor Good Opgeloste Mout is uitgebreid en geeft een duidelijke indruk van de doelgroep en de strategie. Echter, er zijn enkele punten die verbetering behoeven.\n\nTen eerste, de tone of voice is niet consequent door de hele campagne heen. Soms is de toon professioneel en informatief, maar soms is het ook te technisch of te verkoopt. Het is belangrijk om een consistent tone of voice te hanteren om de doelgroep te bereiken.\n\nTen tweede, de marketingteksten zijn soms te lang en te saai. Het is belangrijk om de teksten te verkorten en te maken dat ze meer aantrekkelijk zijn voor de doelgroep. De call-to-action moet ook duidelijker zijn en meer aandacht trekken.\n\nTen derde, de social media content is niet zo creatief en aantrekkelijk als het zou kunnen zijn. De hashtags zijn niet heel relevant en de afbeeldingen ontbreken. Het is belangrijk om meer creatieve en aantrekkelijke content te maken om de doelgroep te bereiken.\n\nTen vierde, de campagne mist een duidelijke unique selling point (USP). Wat maakt Good Opgeloste Mout uniek en beter dan andere producten op de markt? Het is belangrijk om een duidelijke USP te definiëren en te communiceren naar de doelgroep.\n\nTen slotte, de campagne zou meer gebruik moeten maken van storytelling en emoties om de doelgroep te bereiken. Het is belangrijk om een verhaal te vertellen over hoe Good Opgeloste Mout kan helpen bij het bereiken van een hoger rendement en een beter brouwproces, en om emoties te gebruiken om de doelgroep te motiveren.\n\nIn het algemeen, de campagne heeft potentieel, maar er zijn enkele verbeteringen nodig om het echt succesvol te maken.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:40:34.851000",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:40:52.476100",
+    "data": {
+      "preview": "Hier zijn de marketingteksten voor Good Opgeloste Mout:\n\n1. **Headline:** \"Optimaliseer uw brouwproces\"\n2. **Subheadline:** \"Met onze goed opgeloste mout bereikt u een hoger rendement\"\n\nOnze goed opgeloste mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kunt u uw bierbrouwproces optimaliseren en uw kosten verlagen. Onze mout is geschikt voor de dalende infusie methode en andere brouwmethoden.\n\nDoor het gebruik van onze goed opgeloste mout kunt u een hogere eindvergistingsgraad en een hoger rendement bereiken. Dit resulteert in een beter bier met een vollere smaak en een hogere kwaliteit. Onze mout is ook gemakkelijk te gebruiken en vereist geen speciale apparatuur of kennis. Met onze mout k",
+      "length": 1273
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-14T12:40:52.477234",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten voor Good Opgeloste Mout:\n\n1. **Headline:** \"Optimaliseer uw brouwproces\"\n2. **Subheadline:** \"Met onze goed opgeloste mout bereikt u een hoger rendement\"\n\nOnze goed opgeloste mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kunt u uw bierbrouwproces optimaliseren en uw kosten verlagen. Onze mout is geschikt voor de dalende infusie methode en andere brouwmethoden.\n\nDoor het gebruik van onze goed opgeloste mout kunt u een hogere eindvergistingsgraad en een hoger rendement bereiken. Dit resulteert in een beter bier met een vollere smaak en een hogere kwaliteit. Onze mout is ook gemakkelijk te gebruiken en vereist geen speciale apparatuur of kennis. Met onze mout kunt u uw brouwproces vereenvoudigen en uw resultaten verbeteren.\n\nOnze goed opgeloste mout is de ideale oplossing voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kunt u uw bierbrouwproces optimaliseren, uw kosten verlagen en uw resultaten verbeteren. Probeer onze goed opgeloste mout vandaag nog en ervaar het verschil.\n\n4. **Call-to-action:** \"Bestel nu en ontvang 10% korting op uw eerste aankoop!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:40:52.478471",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt,",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:41:07.465803",
+    "data": {
+      "preview": "Hier is de content voor elk van de gevraagde platformen:\n\n**1. Instagram (caption + hashtags)**\n\"Optimaliseer je brouwproces met onze goed opgeloste mout! Met onze mout bereik je een hoger rendement en een optimaler brouwproces. Geschikt voor de dalende infusie methode en andere brouwmethoden. #bierbrouwen #thuisbrouwen #goedopgelostemout #brouwproces #rendement\"\n\n**2. LinkedIn (professionele post)**\n\"Optimaliseer uw brouwproces met onze goed opgeloste mout\nOnze mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kunt u uw bierbrouwproces vereenvoudigen en uw resultaten verbeteren. Geschikt voor de dalende infusie methode en andere brouwmethoden.\nNeem contact met ons op om meer te weten te kome",
+      "length": 1052
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-14T12:41:07.466539",
+    "data": {
+      "social_content": "Hier is de content voor elk van de gevraagde platformen:\n\n**1. Instagram (caption + hashtags)**\n\"Optimaliseer je brouwproces met onze goed opgeloste mout! Met onze mout bereik je een hoger rendement en een optimaler brouwproces. Geschikt voor de dalende infusie methode en andere brouwmethoden. #bierbrouwen #thuisbrouwen #goedopgelostemout #brouwproces #rendement\"\n\n**2. LinkedIn (professionele post)**\n\"Optimaliseer uw brouwproces met onze goed opgeloste mout\nOnze mout is speciaal ontwikkeld voor bierbrouwers en thuisbrouwers die op zoek zijn naar een hoger rendement en een optimaler brouwproces. Met onze mout kunt u uw bierbrouwproces vereenvoudigen en uw resultaten verbeteren. Geschikt voor de dalende infusie methode en andere brouwmethoden.\nNeem contact met ons op om meer te weten te komen over onze goed opgeloste mout en hoe deze uw brouwproces kan optimaliseren.\"\n\n**3. X/Twitter (kort en krachtig, max 280 tekens)**\n\"Optimaliseer je brouwproces met onze goed opgeloste mout! Hoger rendement, beter bier. #bierbrouwen #goedopgelostemout\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:41:07.467318",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: goed opgeloste mout voor nodig is om een hogere eindvergistingsgraad en rendement te behalen met de dalende infusie methode\n\nDOELGROEP: **MARKTONDERZOEK**\n\nOp basis van de PDF-documentatie en de actuele zoekresultaten is het duidelijk dat het product gericht is op bierbrouwers en thuisbrouwers die geïnteresseerd zijn in het optimaliseren van hun proces en het bereiken van een hoger rendement. Hieronder volgt een analyse van de markt, concurrente",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T12:41:26.889355",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: final\nFEEDBACK: \n\nDe marketingcampagne voor Good Opgeloste Mout is uitgebreid en bevat veel informatie over het product en de doelgroep. Echter, er zijn enkele punten die verbeterd kunnen worden om de campagne effectiever te maken.\n\nTen eerste is de campagne te technisch en richt zich te veel op de productkenmerken. Hoewel dit belangrijke informatie is, moet de campagne ook aandacht besteden aan de voordelen en resultaten die de doelgroep kan behalen met het product. De campagne moet meer focus hebben op de waarde die het product biedt aan de doelgroep, in plaats van alleen de functies en specificaties.\n\nTen tweede ontbreekt er een duidelijke en overtuigende call-to-action in de campagne. De call-to-action \"Bestel nu en ontvang 10% korting op uw eerste aankoop\" ",
+      "length": 1854
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-14T12:41:26.891437",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor Good Opgeloste Mout is uitgebreid en bevat veel informatie over het product en de doelgroep. Echter, er zijn enkele punten die verbeterd kunnen worden om de campagne effectiever te maken.\n\nTen eerste is de campagne te technisch en richt zich te veel op de productkenmerken. Hoewel dit belangrijke informatie is, moet de campagne ook aandacht besteden aan de voordelen en resultaten die de doelgroep kan behalen met het product. De campagne moet meer focus hebben op de waarde die het product biedt aan de doelgroep, in plaats van alleen de functies en specificaties.\n\nTen tweede ontbreekt er een duidelijke en overtuigende call-to-action in de campagne. De call-to-action \"Bestel nu en ontvang 10% korting op uw eerste aankoop\" is niet genoeg om de doelgroep te motiveren om te kopen. Er moet een sterker aanbod zijn, zoals een gratis proef of een speciale promotie, om de doelgroep te overtuigen.\n\nTen derde is de social media content niet consistent over alle platformen. De Instagram-post is te kort en ontbreekt informatie, terwijl de LinkedIn-post te lang en te technisch is. De X/Twitter-post is te kort en ontbreekt context. Er moet een consistente toon en stijl zijn over alle platformen, en de content moet aangepast zijn aan het specifieke platform en de doelgroep.\n\nTot slot ontbreekt er een duidelijke meting van de succes van de campagne. Er moeten duidelijke doelen en Key Performance Indicatoren (KPI's) zijn om de effectiviteit van de campagne te meten en te evalueren.\n\nIn samenvatting, de campagne heeft potentie, maar moet verbeterd worden om effectiever te zijn. Er moet meer focus zijn op de waarde die het product biedt, een duidelijke en overtuigende call-to-action, consistentie in de social media content, en duidelijke meting van de succes van de campagne.",
+      "approved": true,
+      "phase": "final"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-04-14T12:42:27.707902",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260414_124227.png"
+    }
+  }
+]

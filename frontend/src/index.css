@@ -28,3 +28,33 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Markdown content rendering */
+.md-content h1, .md-content h2, .md-content h3, .md-content h4 {
+  color: var(--text);
+  font-weight: 600;
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+}
+.md-content h1 { font-size: 1.3em; }
+.md-content h2 { font-size: 1.15em; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.md-content h3 { font-size: 1em; color: var(--primary); }
+.md-content p { margin-bottom: 0.75em; }
+.md-content ul, .md-content ol { padding-left: 1.4em; margin-bottom: 0.75em; }
+.md-content li { margin-bottom: 0.3em; }
+.md-content strong { color: #fff; font-weight: 600; }
+.md-content em { color: var(--text-muted); font-style: italic; }
+.md-content code {
+  background: var(--surface2);
+  color: var(--primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.md-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 12px;
+  color: var(--text-muted);
+  margin: 0.75em 0;
+}
+.md-content > *:first-child { margin-top: 0; }

@@ -1,0 +1,240 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-04-07T20:22:14.969147",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:22:14.969721",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: chocola\n\nEerste passage uit de PDF:\nIs het verwen in het algemeen nadeelig, er bestaat eene methode van kleur\ngeven aan het hout, welke hier overweging verdient. Behandelt men hout met\neene krachtige oplossing van overmangaanzure kali—permanganas potassae—,\ndan wordt het zwart; de werkman noemt dit het bijten van het hout en maakt op\ndie wijze nagebootst ebbenhout. Men heeft hier niet te doen met een vernis, dat\ngemakkelijk los laat, zooals de verf, neen, de stof heeft zich ",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:22:15.373263",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"Het verwen van hout\"}",
+      "length": 54
+    }
+  },
+  {
+    "node": "__system__",
+    "type": "awaiting_input",
+    "message": "De PDF gaat over 'Het verwen van hout', maar de productomschrijving zegt 'chocola'. Wat is de juiste omschrijving voor de campagne?",
+    "timestamp": "2026-04-07T20:22:15.376247",
+    "data": {
+      "type": "mismatch",
+      "question": "De PDF gaat over 'Het verwen van hout', maar de productomschrijving zegt 'chocola'. Wat is de juiste omschrijving voor de campagne?",
+      "suggestion": "Het verwen van hout"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:23:19.032246",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: chocola\n\nEerste passage uit de PDF:\nIs het verwen in het algemeen nadeelig, er bestaat eene methode van kleur\ngeven aan het hout, welke hier overweging verdient. Behandelt men hout met\neene krachtige oplossing van overmangaanzure kali—permanganas potassae—,\ndan wordt het zwart; de werkman noemt dit het bijten van het hout en maakt op\ndie wijze nagebootst ebbenhout. Men heeft hier niet te doen met een vernis, dat\ngemakkelijk los laat, zooals de verf, neen, de stof heeft zich ",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:23:19.214366",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"de behandeling van hout\"}",
+      "length": 58
+    }
+  },
+  {
+    "node": "mismatch_check",
+    "type": "node_done",
+    "message": "✓ mismatch_check completed",
+    "timestamp": "2026-04-07T20:23:19.215702",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:23:21.957022",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.\n\nPDF-documentatie (primaire bron):\n[Passage 1] (pagina 92)\nIs het verwen in het algemeen nadeelig, er bestaat eene methode van kleur\ngeven aan het hout, welke hier overweging verdient. Behandelt men hout met\neene krachtige oplossing van overmangaanzure kali—permanganas potassae—,\ndan wordt het zwart; de werkman noemt",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:23:23.378798",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nUit de PDF-documentatie en actuele zoekresultaten kan worden afgeleid dat het product gerelateerd is aan kaasmaken in Nederland. De PDF-documentatie bevat informatie over de processtappen en technieken die nodig zijn voor kaasmaken, waaronder het gebruik van overmangaanzure kali en de afkoelingsmethode van Swartz. Dit suggereert dat het product zich richt op een niche-audience van kaasmakers of boeren in Nederland.\n\nHet ontbreken van actuele zoekresultaten op DuckDuckGo die gerelateerd zijn aan het product is opmerkelijk, aangezien de PDF-documentatie al enige tijd oud lijkt te zijn. Dit kan erop wijzen dat het product al enige tijd niet meer in productie is of dat het niet populair is onder het publiek.\n\n## DOELGROEP\n\nUit de PDF-documentatie kan worden afgeleid dat de d",
+      "length": 2477
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-04-07T20:23:23.379802",
+    "data": {
+      "target_audience": "Uit de PDF-documentatie kan worden afgeleid dat de doelgroep van het product bestaat uit kaasmakers of boeren in Nederland. Deze doelgroep kan worden beschreven als volgt:\n\n### Demografie\n\n* Geslacht: Vrouwen en mannen\n* Leeftijd: 25-65 jaar\n* Opleiding: Middelbare of bovenbouw onderwijs\n* Beroep: Kaasmaker, boer, landbouwer\n\n### Psychografie\n\n* Waarden: Kwaliteit, authenticiteit, duurzaamheid\n* Motivatie: De doelgroep is gemotiveerd om een traditionele en kwaliteitsvolle product te produceren die de lokale economie ondersteunt.\n* Doelen: De doelgroep streeft naar het creëren van een succesvolle boerderij of kaasmakerij die de lokale gemeenschap ondersteunt.\n\n### Pijnpunten\n\n* Gestructureerde markt: De doelgroep voelt zich soms beperkt door de gestructureerde markt en de eisen die daaraan worden gesteld.\n* Technologische uitdagingen: De doelgroep kan worstelen met technische uitdagingen zoals het gebruik van moderne apparaten en methoden.\n\n### Behoeften\n\n* Kwaliteit: De doelgroep streeft naar het creëren van een hoogwaardig product dat de verwachtingen van de consumenten overtreft.\n* Authenticiteit: De doelgroep wil een product creëren dat authentiek is en de lokale identiteit reflecteert.\n* Duurzaamheid: De doelgroep wil een product creëren dat milieuvriendelijk is en de duurzaamheid van de boerderij of kaasmakerij ondersteunt.\n\nBronverwijzingen:\n\n* [Bron: 1] De PDF-documentatie bevat informatie over de processtappen en technieken die nodig zijn voor kaasmaken.\n* [Bron: 2] De actuele zoekresultaten op DuckDuckGo zijn beperkt tot enkele oude zoekresultaten.\n* [Bron: 3] De achtergrondkennis over biotechnologie suggereert dat het product gerelateerd is aan fermentatieprocessen en biologische productie.",
+      "market_research": "Uit de PDF-documentatie en actuele zoekresultaten kan worden afgeleid dat het product gerelateerd is aan kaasmaken in Nederland. De PDF-documentatie bevat informatie over de processtappen en technieken die nodig zijn voor kaasmaken, waaronder het gebruik van overmangaanzure kali en de afkoelingsmethode van Swartz. Dit suggereert dat het product zich richt op een niche-audience van kaasmakers of boeren in Nederland.\n\nHet ontbreken van actuele zoekresultaten op DuckDuckGo die gerelateerd zijn aan het product is opmerkelijk, aangezien de PDF-documentatie al enige tijd oud lijkt te zijn. Dit kan erop wijzen dat het product al enige tijd niet meer in productie is of dat het niet populair is onder het publiek."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:23:23.380541",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: het gaat over kaasmaken in nederland\n\nMARKTONDERZOEK: Uit de PDF-documentatie en actuele zoekresultaten kan worden afgeleid dat het product gerelateerd is aan kaasmaken in Nederland. De PDF-documentatie bevat informatie over de processtappen en technieken die nodig zijn voor kaasmaken, waaronder het gebruik van overmangaanzure kali en de afkoelingsmethode van Swartz. Dit suggereert dat het product zich richt op een n",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T20:23:24.512845",
+    "data": {
+      "preview": "## STRATEGIE\nDe marketingstrategie voor het product Kaasmaken in Nederland zal zijn gericht op het herstellen van de populariteit en het imago van het product onder de doelgroep van kaasmakers en boeren in Nederland. De strategie zal bestaan uit de volgende onderdelen:\n\n* **Herpositioneren als autoriteit**: Het product zal worden geherpositioneerd als een autoriteit in het domein van kaasmaken in Nederland, door het delen van kennis en expertise over de processtappen en technieken die nodig zijn voor kaasmaken.\n* **Focus op niche-audience**: Het product zal worden gericht op de niche-audience van kaasmakers en boeren in Nederland, door het aanbieden van informatie en diensten die specifiek zijn ontworpen voor deze doelgroep.\n* **Schaarste en urgentie**: Het product zal worden geassocieerd ",
+      "length": 2741
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-04-07T20:23:24.513922",
+    "data": {
+      "strategy": "De marketingstrategie voor het product Kaasmaken in Nederland zal zijn gericht op het herstellen van de populariteit en het imago van het product onder de doelgroep van kaasmakers en boeren in Nederland. De strategie zal bestaan uit de volgende onderdelen:\n\n* **Herpositioneren als autoriteit**: Het product zal worden geherpositioneerd als een autoriteit in het domein van kaasmaken in Nederland, door het delen van kennis en expertise over de processtappen en technieken die nodig zijn voor kaasmaken.\n* **Focus op niche-audience**: Het product zal worden gericht op de niche-audience van kaasmakers en boeren in Nederland, door het aanbieden van informatie en diensten die specifiek zijn ontworpen voor deze doelgroep.\n* **Schaarste en urgentie**: Het product zal worden geassocieerd met schaarste en urgentie, door het benadrukken van de noodzaak om traditionele en kwaliteitsvolle producten te produceren die de lokale economie ondersteunen.\n* **Contentmarketing**: Het product zal worden geherpositioneerd als een autoriteit in het domein van kaasmaken in Nederland, door het delen van kennis en expertise over de processtappen en technieken die nodig zijn voor kaasmaken.",
+      "positioning": "Het product Kaasmaken in Nederland zal worden geherpositioneerd als een autoriteit in het domein van kaasmaken in Nederland. Het product zal worden geassocieerd met de volgende waardepropositie:\n\n* **Authentieke kaasmaken**: Het product zal worden geassocieerd met de traditionele methode van kaasmaken, die speciaal is ontworpen om de lokale economie te ondersteunen.\n* **Kwaliteitsvolle producten**: Het product zal worden geassocieerd met de productie van kwaliteitsvolle kaasproducten die de verwachtingen van de consumenten overtreffen.\n* **Duurzame boerderijen en kaasmakerijen**: Het product zal worden geassocieerd met de duurzame productie van kaasproducten, die de natuur en de lokale gemeenschap ondersteunt.",
+      "tone_of_voice": "De tone of voice voor het product Kaasmaken in Nederland zal zijn gericht op de volgende stijl:\n\n* **Educatief**: Het product zal worden gepresenteerd als een autoriteit in het domein van kaasmaken in Nederland, door het delen van kennis en expertise over de processtappen en technieken die nodig zijn voor kaasmaken.\n* **Authentiek**: Het product zal worden gepresenteerd als een traditionele methode van kaasmaken, die speciaal is ontworpen om de lokale economie te ondersteunen.\n* **Duurzaam**: Het product zal worden gepresenteerd als een duurzame manier van productie, die de natuur en de lokale gemeenschap ondersteunt.\n* **Persoonlijk**: Het product zal worden gepresenteerd als een persoonlijke ervaring, door het delen van verhalen en ervaringen van kaasmakers en boeren in Nederland."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T20:23:24.516209",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: het gaat over kaasmaken in nederland\n\nDOELGROEP: Uit de PDF-documentatie kan worden afgeleid dat de doelgroep van het product bestaat uit kaasmakers of boeren in Nederland. Deze doelgroep kan worden beschreven als volgt:\n\n### Demografie\n\n* Geslacht: Vrouwen en mannen\n* Leeftijd: 25-65 jaar\n* Opleiding: Middelbare of bovenbouw onderwijs\n* Beroep: Kaasmaker, boer, landbouwer\n\n### Psychografie\n\n* Waarden: Kwaliteit, authenticiteit, duurz",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T20:23:26.552054",
+    "data": {
+      "preview": "Hier zijn de marketingteksten voor het product Kaasmaken in Nederland:\n\n**Headline**: Kaasmaken in Nederland, Authentiek en Duurzaam\n\n**Subheadline**: Leer de traditionele methode van kaasmaken en ondersteun de lokale economie\n\n**Bodytekst**:\nIn Nederland is kaasmaken een traditionele kunst die al generaties lang wordt doorgegeven. Ons product is gericht op het behouden en promoten van deze traditionele methode, die niet alleen leidt tot de productie van hoogwaardige kaas, maar ook de lokale economie ondersteunt. Door het gebruik van natuurlijke ingrediënten en traditionele technieken, creëren we een authentieke en duurzame productieproces die de lokale gemeenschap ten goede komt.\n\nOns product is ontworpen voor kaasmakers en boeren in Nederland die op zoek zijn naar een manier om hun produ",
+      "length": 1657
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-07T20:23:26.552818",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten voor het product Kaasmaken in Nederland:\n\n**Headline**: Kaasmaken in Nederland, Authentiek en Duurzaam\n\n**Subheadline**: Leer de traditionele methode van kaasmaken en ondersteun de lokale economie\n\n**Bodytekst**:\nIn Nederland is kaasmaken een traditionele kunst die al generaties lang wordt doorgegeven. Ons product is gericht op het behouden en promoten van deze traditionele methode, die niet alleen leidt tot de productie van hoogwaardige kaas, maar ook de lokale economie ondersteunt. Door het gebruik van natuurlijke ingrediënten en traditionele technieken, creëren we een authentieke en duurzame productieproces die de lokale gemeenschap ten goede komt.\n\nOns product is ontworpen voor kaasmakers en boeren in Nederland die op zoek zijn naar een manier om hun productie te verbeteren en te verduurzamen. Onze expertise en kennis over de processtappen en technieken die nodig zijn voor kaasmaken, helpen u om uw productie te optimaliseren en uw kaas te laten schitteren. Of u nu een beginnende kaasmaker bent of een ervaren boer, ons product biedt u de tools en de kennis die u nodig heeft om uw dromen te verwezenlijken.\n\nDoor het kiezen voor ons product, ondersteunt u niet alleen de lokale economie, maar ook de traditionele methode van kaasmaken in Nederland. Ons product is een investering in de toekomst van de kaasproductie in Nederland en een manier om de authentieke smaak en kwaliteit van Nederlandse kaas te behouden.\n\n**Call-to-action**: Ontdek hoe u uw kaasproductie kunt verbeteren en verduurzamen met ons product. Neem vandaag nog contact met ons op om meer te weten te komen over onze diensten en producten."
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T20:23:26.555251",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: het gaat over kaasmaken in nederland\n\nDOELGROEP: Uit de PDF-documentatie kan worden afgeleid dat de doelgroep van het product bestaat uit kaasmakers of boeren in Nederland. Deze doelgroep kan worden beschreven als volgt:\n\n### Demografie\n\n* Geslacht: Vrouwen en mannen\n* Leeftijd: 25-65 jaar\n* Opleiding: Middelbare of bovenbouw onderwijs\n* Beroep: Kaasmaker, boer, landbouwer\n\n### Psychografie\n\n* Waarden: Kwaliteit, authenticiteit, duur",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T20:23:27.949067",
+    "data": {
+      "preview": "Hier zijn de social media content voor het product Kaasmaken in Nederland:\n\n**1. Instagram:**\nCaption: \"Ontdek de traditionele kunst van kaasmaken in Nederland! Ons product helpt kaasmakers en boeren om hoogwaardige kaas te produceren die de lokale economie ondersteunt. Leer de authentieke methode en verduurzaam uw productieproces. #kaasmaken #nederlandsekaas #duurzaamheid #localeconomie #authentiekekaas\"\nHashtags: #kaasmaken #nederlandsekaas #duurzaamheid #localeconomie #authentiekekaas #boeren #kaasmakers\n\n**2. LinkedIn:**\nPost: \"Als kaasmaker of boer in Nederland bent u op zoek naar manieren om uw productie te verbeteren en te verduurzamen. Ons product biedt u de expertise en kennis die u nodig heeft om hoogwaardige kaas te produceren die de lokale economie ondersteunt. Leer de traditio",
+      "length": 1198
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-07T20:23:27.950108",
+    "data": {
+      "social_content": "Hier zijn de social media content voor het product Kaasmaken in Nederland:\n\n**1. Instagram:**\nCaption: \"Ontdek de traditionele kunst van kaasmaken in Nederland! Ons product helpt kaasmakers en boeren om hoogwaardige kaas te produceren die de lokale economie ondersteunt. Leer de authentieke methode en verduurzaam uw productieproces. #kaasmaken #nederlandsekaas #duurzaamheid #localeconomie #authentiekekaas\"\nHashtags: #kaasmaken #nederlandsekaas #duurzaamheid #localeconomie #authentiekekaas #boeren #kaasmakers\n\n**2. LinkedIn:**\nPost: \"Als kaasmaker of boer in Nederland bent u op zoek naar manieren om uw productie te verbeteren en te verduurzamen. Ons product biedt u de expertise en kennis die u nodig heeft om hoogwaardige kaas te produceren die de lokale economie ondersteunt. Leer de traditionele methode van kaasmaken en verduurzaam uw productieproces. Neem contact met ons op om meer te weten te komen over onze diensten en producten.\"\nHashtags: #kaasmaken #nederlandsekaas #duurzaamheid #localeconomie #authentiekekaas #landbouw #foodproduktie\n\n**3. X/Twitter:**\nTweet: \"Kaasmaken in NL? Verbeter uw productie en verduurzaam met onze expertise! #kaasmaken #nederlandsekaas #duurzaamheid\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T20:23:27.952552",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: het gaat over kaasmaken in nederland\n\nDOELGROEP: Uit de PDF-documentatie kan worden afgeleid dat de doelgroep van het product bestaat uit kaasmakers of boeren in Nederland. Deze doelgroep kan worden beschreven als volgt:\n\n### Demografie\n\n* Geslacht: Vrouwen en mannen\n* Leeftijd: 25-65 jaar\n* Opleiding: Middelbare of bovenbouw onderwijs\n* Beroep: Kaasmaker, boer, landbouwer\n\n### Psychografie\n\n* Waarden: Kwaliteit, authenticiteit, duurzaamheid\n* M",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T20:23:29.880253",
+    "data": {
+      "preview": "BESLISSING: GOEDGEKEURD\nFASE: copy_review\nFEEDBACK: \nDe marketingteksten en social media content zijn over het algemeen goed geschreven en aansprekend. De tone of voice is educatief, authentiek en duurzaam, zoals gewenst. De doelgroep van kaasmakers en boeren in Nederland wordt duidelijk aangesproken en de waardepropositie van het product wordt helder uitgelegd.\n\nEnkele suggesties voor verbetering:\n- In de marketingteksten kan de call-to-action nog wat sterker worden gemaakt. In plaats van \"Neem vandaag nog contact met ons op\", kan bijvoorbeeld \"Ontdek nu hoe u uw kaasproductie kunt verbeteren\" worden gebruikt.\n- De social media content kan nog wat meer variatie gebruiken. Bijvoorbeeld, kan op Instagram een foto van een kaasmakerij worden geplaatst, terwijl op LinkedIn een artikel over de ",
+      "length": 1200
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-07T20:23:29.882507",
+    "data": {
+      "cm_feedback": "De marketingteksten en social media content zijn over het algemeen goed geschreven en aansprekend. De tone of voice is educatief, authentiek en duurzaam, zoals gewenst. De doelgroep van kaasmakers en boeren in Nederland wordt duidelijk aangesproken en de waardepropositie van het product wordt helder uitgelegd.\n\nEnkele suggesties voor verbetering:\n- In de marketingteksten kan de call-to-action nog wat sterker worden gemaakt. In plaats van \"Neem vandaag nog contact met ons op\", kan bijvoorbeeld \"Ontdek nu hoe u uw kaasproductie kunt verbeteren\" worden gebruikt.\n- De social media content kan nog wat meer variatie gebruiken. Bijvoorbeeld, kan op Instagram een foto van een kaasmakerij worden geplaatst, terwijl op LinkedIn een artikel over de voordelen van duurzame kaasproductie kan worden gedeeld.\n- De hashtags op social media kunnen nog wat meer gericht zijn op de doelgroep. Bijvoorbeeld, #kaasmakersNL of #nederlandsekaasproductie kunnen worden gebruikt om de doelgroep nog beter te bereiken.\n\nAl met al is de campagne goed opgezet en heeft een duidelijke boodschap. Met enkele kleine aanpassingen kan de campagne nog effectiever worden.",
+      "approved": true,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-04-07T20:24:30.133871",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260407_202430.png"
+    }
+  }
+]

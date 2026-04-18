@@ -26,11 +26,12 @@ load_dotenv()
 #
 # Current: all on Groq — OpenRouter free tier (50 req/day global) is exhausted
 AGENT_LLM_CONFIG: dict[str, dict] = {
-    "researcher":        {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.4},
-    "strateeg":          {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.5},
-    "copywriter":        {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.9},
-    "social_specialist": {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.8},
-    "campaign_manager":  {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.3},
+    "researcher":          {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.4},
+    "strateeg":            {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.5},
+    "copywriter":          {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.9},
+    "social_specialist":   {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.8},
+    "campaign_manager":    {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.3},
+    "website_generator":   {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.7},
 }
 
 

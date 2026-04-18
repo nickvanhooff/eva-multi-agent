@@ -44,6 +44,16 @@ export function streamCampaignEvents(jobId, onEvent, onDone) {
   return es
 }
 
+export async function resumeCampaign(jobId, answer) {
+  const res = await fetch(`${BASE}/campaigns/${jobId}/resume`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ answer }),
+  })
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}
+
 export async function listCampaigns() {
   const res = await fetch(`${BASE}/campaigns`)
   if (!res.ok) throw new Error(await res.text())
@@ -62,4 +72,16 @@ export async function uploadPdf(file) {
   const res = await fetch(`${BASE}/pdfs/upload`, { method: 'POST', body: form })
   if (!res.ok) throw new Error(await res.text())
   return res.json()
+}
+
+export async function generateWebsite(jobId) {
+  const res = await fetch(`${BASE}/campaigns/${jobId}/generate-website`, { method: 'POST' })
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}
+
+// Convert html_path returned by generate-website into a full URL
+export function websiteUrl(htmlPath) {
+  if (!htmlPath) return null
+  return `${BASE}${htmlPath}`
 }

@@ -5,6 +5,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from src.state import CampaignState
 from src.rag import retrieve_pdf_context
+from src.agents.mismatch_check import mismatch_check_node
 from src.agents.researcher import researcher_node
 from src.agents.strategist import strateeg_node
 from src.agents.copywriter import copywriter_node
@@ -24,15 +25,15 @@ def pdf_ingestion_node(state: CampaignState) -> dict:
     pdf_path = state.get("pdf_path")
     if not pdf_path:
         print("[PDF INGESTION] No pdf_path provided — skipping RAG")
-        return {"pdf_context": ""}
+        return {"pdf_context": "", "pdf_sources": []}
 
     print("\n" + "=" * 60)
     print("[PDF INGESTION] Starting PDF ingestion via RAG...")
     print("=" * 60)
 
     campaign_type = state.get("campaign_type", "product")
-    pdf_context = retrieve_pdf_context(pdf_path, campaign_type=campaign_type)
-    return {"pdf_context": pdf_context}
+    pdf_context, pdf_sources = retrieve_pdf_context(pdf_path, campaign_type=campaign_type)
+    return {"pdf_context": pdf_context, "pdf_sources": pdf_sources}
 
 
 def build_graph():
@@ -45,6 +46,7 @@ def build_graph():
 
     # Register all nodes — pdf_ingestion runs first
     graph.add_node("pdf_ingestion", pdf_ingestion_node)
+    graph.add_node("mismatch_check", mismatch_check_node)
     graph.add_node("researcher", researcher_node)
     graph.add_node("strateeg", strateeg_node)
     graph.add_node("copywriter", copywriter_node)
@@ -54,7 +56,8 @@ def build_graph():
 
     # Linear edges: the main pipeline
     graph.add_edge(START, "pdf_ingestion")
-    graph.add_edge("pdf_ingestion", "researcher")
+    graph.add_edge("pdf_ingestion", "mismatch_check")
+    graph.add_edge("mismatch_check", "researcher")
     graph.add_edge("researcher", "strateeg")
     graph.add_edge("strateeg", "copywriter")
     graph.add_edge("copywriter", "social_specialist")

@@ -1,0 +1,430 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-04-14T11:18:53.996850",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:18:53.997615",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Titel: cheese maker\nAuteur: ?\nCentrale these: [kernboodschap]\nVoor wie: [doelgroep]\nBelofte: [concreet resultaat na het lezen]\n\nEerste passage uit de PDF:\nIs het verwen in het algemeen nadeelig, er bestaat eene methode van kleur\ngeven aan het hout, welke hier overweging verdient. Behandelt men hout met\neene krachtige oplossing van overmangaanzure kali—permanganas potassae—,\ndan wordt het zwart; de werkman noemt dit het bijten van het hout en maakt op\ndie wijze nagebootst ebb",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:18:54.490290",
+    "data": {
+      "preview": "```json\n{\n  \"match\": false,\n  \"pdf_subject\": \"Methode voor het geven van kleur aan hout\"\n}\n```",
+      "length": 94
+    }
+  },
+  {
+    "node": "__system__",
+    "type": "awaiting_input",
+    "message": "De PDF gaat over 'Methode voor het geven van kleur aan hout', maar de productomschrijving zegt 'Titel: cheese maker\nAuteur: ?\nCentrale these: [kernboodschap]\nVoor wie: [doelgroep]\nBelofte: [concreet resultaat na het lezen]'. Wat is de juiste omschrijving voor de campagne?",
+    "timestamp": "2026-04-14T11:18:54.493757",
+    "data": {
+      "type": "mismatch",
+      "question": "De PDF gaat over 'Methode voor het geven van kleur aan hout', maar de productomschrijving zegt 'Titel: cheese maker\nAuteur: ?\nCentrale these: [kernboodschap]\nVoor wie: [doelgroep]\nBelofte: [concreet resultaat na het lezen]'. Wat is de juiste omschrijving voor de campagne?",
+      "suggestion": "Methode voor het geven van kleur aan hout"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:19:39.625162",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Titel: cheese maker\nAuteur: ?\nCentrale these: [kernboodschap]\nVoor wie: [doelgroep]\nBelofte: [concreet resultaat na het lezen]\n\nEerste passage uit de PDF:\nIs het verwen in het algemeen nadeelig, er bestaat eene methode van kleur\ngeven aan het hout, welke hier overweging verdient. Behandelt men hout met\neene krachtige oplossing van overmangaanzure kali—permanganas potassae—,\ndan wordt het zwart; de werkman noemt dit het bijten van het hout en maakt op\ndie wijze nagebootst ebb",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:19:39.838049",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"Over het geven van kleur aan hout\"}",
+      "length": 68
+    }
+  },
+  {
+    "node": "mismatch_check",
+    "type": "node_done",
+    "message": "✓ mismatch_check completed",
+    "timestamp": "2026-04-14T11:19:39.839854",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:19:42.794338",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.\n\nPDF-documentatie (primaire bron):\n[Passage 1] (pagina 92)\nIs het verwen in het algemeen nadeelig, er bestaat eene methode van kleur\ngeven aan het hout, welke hier overweging verdient. Behandelt men hout met\neene krachtige oplossing van overmangaanzure kali—permanganas potassae—,\ndan wordt het zwart; de werkman noemt",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:19:44.673281",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nOp basis van de PDF-documentatie en productomschrijving kan worden geconcludeerd dat het product een methode voor het geven van kleur aan hout is. Hieronder volgt een marktonderzoekanalyse:\n\n- **Concurrenten**: Aan de hand van de actuele zoekresultaten op DuckDuckGo kan worden geconcludeerd dat er meerdere methoden voor het kleuren van hout bestaan, zoals het gebruik van verf, beits en kleurstoffen. Deze methoden worden beschreven op websites als Verf Briljant, HoutenWonen en LakenOlie.nl. Deze websites geven aan dat het kleuren van hout een populair onderwerp is, met verschillende technieken en trends voor 2025.\n- **Markt**: De markt voor houtkleuring is waarschijnlijk groot, aangezien er veel verschillende methoden en producten beschikbaar zijn. Het is ook waarschijnli",
+      "length": 3142
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-04-14T11:19:44.674715",
+    "data": {
+      "target_audience": "Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in de methode omdat het een unieke manier is om hout te kleuren. Consumenten zijn waarschijnlijk op zoek naar manieren om hun hout te kleuren en kunnen geïnteresseerd zijn in de methode omdat het een eenvoudige en efficiënte manier is.\n- **Psychografie**: De doelgroep is waarschijnlijk geïnteresseerd in het kleuren van hout omdat het een manier is om hun hout te personaliseren en te maken dat het uniek is. Ze zijn waarschijnlijk op zoek naar een methode die eenvoudig en efficiënt is en die hun hout niet beschadigt.\n- **Pijnpunten**: De doelgroep heeft waarschijnlijk pijnpunten in het kleuren van hout, zoals de moeilijkheid om een gelijkmatig resultaat te krijgen of de kosten van de methode. Ze zijn waarschijnlijk op zoek naar een methode die deze pijnpunten oplost.\n- **Behoeften**: De doelgroep heeft waarschijnlijk behoeften in het kleuren van hout, zoals een eenvoudige en efficiënte methode die hun hout niet beschadigt. Ze zijn waarschijnlijk op zoek naar een methode die hun hout uniek maakt en dat het een unieke manier is om hun hout te kleuren.\n\nBronverwijzingen:\n\n- [Bron: 1] (Passage 1) [Bron: 2] (Passage 2) [Bron: 3] (Passage 3) [Bron: 4] (Passage 4) [Bron: 5] (Passage 5) [Bron: 6] (Passage 6) [Bron: 7] (Passage 7) [Bron: 8] (Passage 8) [Bron: 9] (Passage 9) [Bron: 10] (Passage 10)",
+      "market_research": "Op basis van de PDF-documentatie en productomschrijving kan worden geconcludeerd dat het product een methode voor het geven van kleur aan hout is. Hieronder volgt een marktonderzoekanalyse:\n\n- **Concurrenten**: Aan de hand van de actuele zoekresultaten op DuckDuckGo kan worden geconcludeerd dat er meerdere methoden voor het kleuren van hout bestaan, zoals het gebruik van verf, beits en kleurstoffen. Deze methoden worden beschreven op websites als Verf Briljant, HoutenWonen en LakenOlie.nl. Deze websites geven aan dat het kleuren van hout een populair onderwerp is, met verschillende technieken en trends voor 2025.\n- **Markt**: De markt voor houtkleuring is waarschijnlijk groot, aangezien er veel verschillende methoden en producten beschikbaar zijn. Het is ook waarschijnlijk dat er een groot aantal consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren.\n- **Kansen**: Een kans voor dit product is dat het een unieke methode voor het geven van kleur aan hout biedt, zoals het gebruik van krachtige oplossingen van overmangaanzure kali-permanganas-potassae. Dit kan een interessante optie zijn voor consumenten die op zoek zijn naar een unieke manier om hun hout te kleuren.\n- **Bedreigingen**: Een bedreiging voor dit product kan zijn dat er al bestaande methoden voor het kleuren van hout zijn, zoals het gebruik van verf of beits. Dit kan consumenten afhouden van het gebruik van deze methode."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:19:44.675436",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nMARKTONDERZOEK: Op basis van de PDF-documentatie en productomschrijving kan worden geconcludeerd dat het product een methode voor het geven van kleur aan hout is. Hieronder volgt een marktonderzoekanalyse:\n\n- **Concurrenten**: Aan de hand van de actuele zoekresultaten op DuckDuckGo kan worden geconcludeerd dat er meerdere methoden voor het kleuren van hout bestaan, zoals het",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-14T11:19:46.109790",
+    "data": {
+      "preview": "## STRATEGIE\n\nOp basis van het marktonderzoek en de doelgroep kan de volgende marketingstrategie worden ontwikkeld:\n\n**Hoofddoel:** De marketingstrategie moet erin slagen om de doelgroep te informeren over de unieke methode voor het geven van kleur aan hout, en om hen aan te zetten om dit product te gebruiken.\n\n**Subdoelen:**\n\n* De doelgroep informeren over de unieke methode voor het geven van kleur aan hout\n* De doelgroep aanmoedigen om dit product te gebruiken\n* De concurrenten overtreffen door een unieke en efficiënte methode voor het kleuren van hout aan te bieden\n\n**Marketingmix:**\n\n* **Product:** De methode voor het geven van kleur aan hout wordt als een unieke en efficiënte oplossing gepresenteerd\n* **Prijs:** De prijs van het product wordt zo laag mogelijk gehouden om consumenten a",
+      "length": 3133
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-04-14T11:19:46.110863",
+    "data": {
+      "strategy": "Op basis van het marktonderzoek en de doelgroep kan de volgende marketingstrategie worden ontwikkeld:\n\n**Hoofddoel:** De marketingstrategie moet erin slagen om de doelgroep te informeren over de unieke methode voor het geven van kleur aan hout, en om hen aan te zetten om dit product te gebruiken.\n\n**Subdoelen:**\n\n* De doelgroep informeren over de unieke methode voor het geven van kleur aan hout\n* De doelgroep aanmoedigen om dit product te gebruiken\n* De concurrenten overtreffen door een unieke en efficiënte methode voor het kleuren van hout aan te bieden\n\n**Marketingmix:**\n\n* **Product:** De methode voor het geven van kleur aan hout wordt als een unieke en efficiënte oplossing gepresenteerd\n* **Prijs:** De prijs van het product wordt zo laag mogelijk gehouden om consumenten aan te trekken\n* **Promotie:** De marketingcampagnes zullen gericht zijn op het aantrekken van consumenten die op zoek zijn naar een unieke manier om hun hout te kleuren\n* **Plaats:** De marketingactiviteiten zullen plaatsvinden op online platforms, zoals sociale media en websites, om de doelgroep te bereiken\n* **Persoon:** De marketingcampagnes zullen gericht zijn op het demonstreren van de expertise en autoriteit van het bedrijf in het kleuren van hout\n\n**Contentmix:**\n\n* **Educatief:** Informatieve content over de methode voor het geven van kleur aan hout en de voordelen ervan\n* **Inspirerend:** Content die de creativiteit van de doelgroep inspireert en hen aanmoedigt om hun hout te kleuren\n* **Promotieel:** Content die het product aanbeveelt en de doelgroep aanmoedigt om het te gebruiken",
+      "positioning": "Op basis van het marktonderzoek en de doelgroep kan de volgende positionering worden ontwikkeld:\n\n**Onze unieke methode voor het geven van kleur aan hout:** \"Onze methode is de eenvoudigste en efficiëntste manier om hout te kleuren. Met onze unieke methode kun je je hout uniek maken en het een uniek karakter geven.\"\n\n**Waarom kiezen we voor deze positionering?**\n\n* De doelgroep is op zoek naar een unieke en efficiënte methode voor het kleuren van hout\n* Onze methode is uniek en efficiënt\n* De positionering is eenvoudig en gemakkelijk te herinneren",
+      "tone_of_voice": "Op basis van het marktonderzoek en de doelgroep kan de volgende tone of voice worden ontwikkeld:\n\n**Vriendelijk en informerend:** \"Hallo! We zijn blij dat je geïnteresseerd bent in onze unieke methode voor het geven van kleur aan hout. Wij zijn hier om je te helpen en om je te informeren over de voordelen van onze methode.\"\n\n**Een beetje creatief:** \"Wil je je hout uniek maken? Dan zijn we hier om je te helpen! Onze unieke methode voor het geven van kleur aan hout is de perfecte oplossing voor jou.\"\n\n**Professional:** \"Onze unieke methode voor het geven van kleur aan hout is ontworpen om jou te helpen je hout uniek te maken. Wij zijn hier om je te informeren over de voordelen van onze methode en om je te helpen om het te gebruiken.\"\n\nDeze tone of voice is geschikt voor de marketingcampagnes omdat hij de doelgroep informeert over de unieke methode voor het geven van kleur aan hout en hem aanmoedigt om het product te gebruiken."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:46.112222",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in d",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:47.580791",
+    "data": {
+      "preview": "**Headline:** \"Kleur uw hout uniek\"\n\n**Subheadline:** \"Ontdek de eenvoudige en efficiënte methode voor het kleuren van hout\"\n\n**Bodytekst:**\nBen jij op zoek naar een manier om uw hout te kleuren zonder dat het beschadigd raakt? Dan is onze unieke methode voor het geven van kleur aan hout de perfecte oplossing voor jou. Onze methode is ontworpen om uw hout uniek te maken en het een persoonlijke touch te geven. Met onze methode kunt u uw hout in een verscheidenheid aan kleuren en patronen kleuren, zonder dat u specialistische kennis of apparatuur nodig hebt.\n\nOnze methode is niet alleen eenvoudig en efficiënt, maar ook veilig en milieuvriendelijk. Wij gebruiken alleen de hoogste kwaliteit materialen en onze methode is ontworpen om het milieu te respecteren. Of u nu een ervaren houtbewerker b",
+      "length": 1431
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-14T11:19:47.582521",
+    "data": {
+      "copy_draft": "**Headline:** \"Kleur uw hout uniek\"\n\n**Subheadline:** \"Ontdek de eenvoudige en efficiënte methode voor het kleuren van hout\"\n\n**Bodytekst:**\nBen jij op zoek naar een manier om uw hout te kleuren zonder dat het beschadigd raakt? Dan is onze unieke methode voor het geven van kleur aan hout de perfecte oplossing voor jou. Onze methode is ontworpen om uw hout uniek te maken en het een persoonlijke touch te geven. Met onze methode kunt u uw hout in een verscheidenheid aan kleuren en patronen kleuren, zonder dat u specialistische kennis of apparatuur nodig hebt.\n\nOnze methode is niet alleen eenvoudig en efficiënt, maar ook veilig en milieuvriendelijk. Wij gebruiken alleen de hoogste kwaliteit materialen en onze methode is ontworpen om het milieu te respecteren. Of u nu een ervaren houtbewerker bent of een beginner, onze methode is geschikt voor iedereen die zijn hout wil kleuren.\n\nMet onze unieke methode voor het geven van kleur aan hout kunt u uw creativiteit de vrije loop laten en uw hout uniek maken. Onze methode is perfect voor wie op zoek is naar een manier om zijn hout te personaliseren en te maken dat het opvalt. Of u nu een houten meubelstuk, een decoratief voorwerp of een kunstwerk wilt maken, onze methode is de perfecte keuze.\n\n**Call-to-action:** \"Ontdek nu hoe u uw hout uniek kunt maken met onze eenvoudige en efficiënte methode. Klik hier om meer te leren en om te beginnen met het kleuren van uw hout!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:47.584315",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:48.709644",
+    "data": {
+      "preview": "Hier is de content voor elk platform:\n\n**1. Instagram:**\nCaption: \"Kleur uw hout uniek met onze eenvoudige en efficiënte methode! Onze methode is ontworpen om uw hout te personaliseren en te maken dat het opvalt. #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefde #diy #houtdecoratie\"\nHashtags: #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefde #diy #houtdecoratie\n\n**2. LinkedIn:**\nPost: \"Ben jij op zoek naar een manier om uw hout te kleuren zonder dat het beschadigd raakt? Onze unieke methode voor het geven van kleur aan hout is de perfecte oplossing voor jou. Onze methode is ontworpen om uw hout uniek te maken en het een persoonlijke touch te geven. Met onze methode kunt u uw hout in een verscheidenheid aan kleuren en patronen kleuren, zonder dat u specialistische kennis",
+      "length": 1122
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-14T11:19:48.710434",
+    "data": {
+      "social_content": "Hier is de content voor elk platform:\n\n**1. Instagram:**\nCaption: \"Kleur uw hout uniek met onze eenvoudige en efficiënte methode! Onze methode is ontworpen om uw hout te personaliseren en te maken dat het opvalt. #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefde #diy #houtdecoratie\"\nHashtags: #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefde #diy #houtdecoratie\n\n**2. LinkedIn:**\nPost: \"Ben jij op zoek naar een manier om uw hout te kleuren zonder dat het beschadigd raakt? Onze unieke methode voor het geven van kleur aan hout is de perfecte oplossing voor jou. Onze methode is ontworpen om uw hout uniek te maken en het een persoonlijke touch te geven. Met onze methode kunt u uw hout in een verscheidenheid aan kleuren en patronen kleuren, zonder dat u specialistische kennis of apparatuur nodig hebt. Ontdek nu hoe u uw hout uniek kunt maken met onze eenvoudige en efficiënte methode.\"\nHashtags: #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefde #innovatie #duurzaamheid\n\n**3. X/Twitter:**\nTweet: \"Kleur uw hout uniek met onze eenvoudige methode! #houtkleuren #houtbewerken #uniekehout\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:48.711414",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in de methode o",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:50.537406",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor de methode voor het geven van kleur aan hout toont enkele sterke punten, zoals een duidelijke doelgroepbeschrijving en een goed ontwikkelde positionering. Echter, er zijn een aantal verbeterpunten die aandacht nodig hebben.\n\nTen eerste, de marketingtekst en social media content zijn nogal algemeen en ontbreken een duidelijke unieke verkooppropositie (USP). De campagne zou meer gefocust moeten zijn op wat de methode uniek maakt en waarom het beter is dan bestaande methoden.\n\nTen tweede, de tone of voice is niet consistent over alle kanalen. Op sommige kanalen, zoals Instagram, wordt een informele en creatieve toon gebruikt, terwijl op andere kanalen, zoals LinkedIn, een meer professionele toon wordt gebruikt. Het ",
+      "length": 1798
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-14T11:19:50.540922",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor de methode voor het geven van kleur aan hout toont enkele sterke punten, zoals een duidelijke doelgroepbeschrijving en een goed ontwikkelde positionering. Echter, er zijn een aantal verbeterpunten die aandacht nodig hebben.\n\nTen eerste, de marketingtekst en social media content zijn nogal algemeen en ontbreken een duidelijke unieke verkooppropositie (USP). De campagne zou meer gefocust moeten zijn op wat de methode uniek maakt en waarom het beter is dan bestaande methoden.\n\nTen tweede, de tone of voice is niet consistent over alle kanalen. Op sommige kanalen, zoals Instagram, wordt een informele en creatieve toon gebruikt, terwijl op andere kanalen, zoals LinkedIn, een meer professionele toon wordt gebruikt. Het is belangrijk om een consistente tone of voice te gebruiken over alle kanalen om de doelgroep te bereiken.\n\nTen derde, de call-to-action (CTA) in de marketingtekst is niet duidelijk genoeg. De CTA zou meer specifiek moeten zijn en de doelgroep moeten aanzetten om actie te ondernemen, zoals \"Klik hier om onze gratis gids te downloaden\" of \"Schrijf je in voor onze workshop om meer te leren over onze methode\".\n\nTot slot, de social media content ontbrekt een duidelijke strategie voor het gebruik van hashtags. Het is belangrijk om een consistente set van hashtags te gebruiken over alle kanalen om de doelgroep te bereiken en om de zichtbaarheid van de content te verhogen.\n\nAl met al, de marketingcampagne toont enkele sterke punten, maar er zijn nog enkele verbeterpunten nodig om de campagne effectief te maken. Ik zou aanraden om de marketingtekst en social media content te herzien en te focussen op de unieke verkooppropositie, consistentie in tone of voice en een duidelijke call-to-action.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:50.543164",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in d",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:52.045657",
+    "data": {
+      "preview": "Hier zijn de marketingteksten:\n\n1. **Headline:** \"Kleur uw hout uniek\"\n2. **Subheadline:** \"Ontdek de eenvoudige en efficiënte methode\"\n3. **Bodytekst:**\n\nOnze methode voor het geven van kleur aan hout is een unieke en efficiënte oplossing voor houtbewerkers en consumenten. Met onze methode kunt u uw hout uniek maken en het een persoonlijke touch geven. Onze methode is ontworpen om eenvoudig en efficiënt te zijn, zodat u snel en gemakkelijk uw hout kunt kleuren.\n\nOnze methode is gebaseerd op jarenlange ervaring en expertise in het kleuren van hout. Wij hebben onze methode ontwikkeld om aan de behoeften van houtbewerkers en consumenten te voldoen. Onze methode is niet alleen eenvoudig en efficiënt, maar ook duurzaam en milieuvriendelijk. Wij gebruiken alleen de beste materialen en technieke",
+      "length": 1252
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-14T11:19:52.046669",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten:\n\n1. **Headline:** \"Kleur uw hout uniek\"\n2. **Subheadline:** \"Ontdek de eenvoudige en efficiënte methode\"\n3. **Bodytekst:**\n\nOnze methode voor het geven van kleur aan hout is een unieke en efficiënte oplossing voor houtbewerkers en consumenten. Met onze methode kunt u uw hout uniek maken en het een persoonlijke touch geven. Onze methode is ontworpen om eenvoudig en efficiënt te zijn, zodat u snel en gemakkelijk uw hout kunt kleuren.\n\nOnze methode is gebaseerd op jarenlange ervaring en expertise in het kleuren van hout. Wij hebben onze methode ontwikkeld om aan de behoeften van houtbewerkers en consumenten te voldoen. Onze methode is niet alleen eenvoudig en efficiënt, maar ook duurzaam en milieuvriendelijk. Wij gebruiken alleen de beste materialen en technieken om uw hout te kleuren.\n\nMet onze methode kunt u uw hout uniek maken en het een persoonlijke touch geven. U kunt kiezen uit een breed scala aan kleuren en patronen om uw hout te kleuren. Onze methode is perfect voor houtbewerkers en consumenten die op zoek zijn naar een unieke en efficiënte manier om hun hout te kleuren.\n\n4. **Call-to-action:** \"Klik hier om onze gratis gids te downloaden en ontdek hoe u uw hout uniek kunt maken met onze methode!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:52.047645",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:58.476465",
+    "data": {
+      "preview": "Hier zijn de social media content voor elk platform:\n\n**1. Instagram:**\nCaption: \"Kleur uw hout uniek met onze eenvoudige en efficiënte methode! Ontdek hoe u uw hout een persoonlijke touch kunt geven en kies uit een breed scala aan kleuren en patronen. Klik op de link in onze bio om onze gratis gids te downloaden en start met het kleuren van uw hout vandaag! #houtkleuren #uniekehout #houtbewerken #interieurstyling #diy\"\nHashtags: #houtkleuren #uniekehout #houtbewerken #interieurstyling #diy #houtliefde #kleuren #houtdecoratie\n\n**2. LinkedIn:**\nProfessionele post:\n\"Als houtbewerker of consument bent u op zoek naar een unieke en efficiënte manier om uw hout te kleuren. Onze methode voor het geven van kleur aan hout is een oplossing die aan uw behoeften voldoet. Met onze methode kunt u uw hou",
+      "length": 1278
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-14T11:19:58.477458",
+    "data": {
+      "social_content": "Hier zijn de social media content voor elk platform:\n\n**1. Instagram:**\nCaption: \"Kleur uw hout uniek met onze eenvoudige en efficiënte methode! Ontdek hoe u uw hout een persoonlijke touch kunt geven en kies uit een breed scala aan kleuren en patronen. Klik op de link in onze bio om onze gratis gids te downloaden en start met het kleuren van uw hout vandaag! #houtkleuren #uniekehout #houtbewerken #interieurstyling #diy\"\nHashtags: #houtkleuren #uniekehout #houtbewerken #interieurstyling #diy #houtliefde #kleuren #houtdecoratie\n\n**2. LinkedIn:**\nProfessionele post:\n\"Als houtbewerker of consument bent u op zoek naar een unieke en efficiënte manier om uw hout te kleuren. Onze methode voor het geven van kleur aan hout is een oplossing die aan uw behoeften voldoet. Met onze methode kunt u uw hout uniek maken en het een persoonlijke touch geven. Onze methode is gebaseerd op jarenlange ervaring en expertise in het kleuren van hout en is ontworpen om eenvoudig en efficiënt te zijn. Klik op de link om onze gratis gids te downloaden en ontdek hoe u uw hout uniek kunt maken met onze methode.\"\n\n**3. X/Twitter:**\n\"Kleur uw hout uniek met onze eenvoudige en efficiënte methode! Download onze gratis gids en start met het kleuren van uw hout vandaag! #houtkleuren #uniekehout\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:19:58.478167",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in de methode o",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:20:16.115487",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor de methode voor het geven van kleur aan hout toont enkele sterke punten, zoals de duidelijke beschrijving van de doelgroep en de positionering van het product. Echter, er zijn een aantal gebieden die verbeterd kunnen worden om de campagne effectiever te maken.\n\nTen eerste, de marketingteksten zijn nogal algemeen en ontbreken specifieke details over de unieke methode voor het geven van kleur aan hout. Het is belangrijk om meer specifieke informatie te verstrekken over hoe de methode werkt, wat de voordelen zijn en waarom het een betere oplossing is dan bestaande methoden.\n\nTen tweede, de tone of voice is niet consistent over alle platformen. De Instagram-post is bijvoorbeeld meer informeel en gericht op visuele aa",
+      "length": 2084
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-14T11:20:16.118267",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor de methode voor het geven van kleur aan hout toont enkele sterke punten, zoals de duidelijke beschrijving van de doelgroep en de positionering van het product. Echter, er zijn een aantal gebieden die verbeterd kunnen worden om de campagne effectiever te maken.\n\nTen eerste, de marketingteksten zijn nogal algemeen en ontbreken specifieke details over de unieke methode voor het geven van kleur aan hout. Het is belangrijk om meer specifieke informatie te verstrekken over hoe de methode werkt, wat de voordelen zijn en waarom het een betere oplossing is dan bestaande methoden.\n\nTen tweede, de tone of voice is niet consistent over alle platformen. De Instagram-post is bijvoorbeeld meer informeel en gericht op visuele aantrekkingskracht, terwijl de LinkedIn-post meer professioneel en zakelijk is. Het is belangrijk om een consistent tone of voice te hanteren over alle platformen om de merkidentiteit te versterken.\n\nTen derde, de social media content ontbreekt aan een duidelijke call-to-action. Het is belangrijk om een duidelijke oproep tot actie te includeren in alle social media posts om de doelgroep aan te moedigen om meer te leren over de methode en om het product te gebruiken.\n\nTot slot, de campagne ontbreekt aan een duidelijke meting van succes. Het is belangrijk om duidelijke doelstellingen en meetcriteria te definiëren om de effectiviteit van de campagne te evalueren en om eventuele aanpassingen te maken.\n\nIn de volgende iteratie van de campagne, is het aanbevolen om de volgende verbeteringen door te voeren:\n\n* Meer specifieke details over de unieke methode voor het geven van kleur aan hout te verstrekken\n* Een consistent tone of voice te hanteren over alle platformen\n* Een duidelijke call-to-action te includeren in alle social media posts\n* Duidelijke doelstellingen en meetcriteria te definiëren om de effectiviteit van de campagne te evalueren\n\nDoor deze verbeteringen door te voeren, kan de marketingcampagne effectiever worden en kan de doelgroep beter worden aangesproken.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:20:16.119307",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in d",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:20:32.054882",
+    "data": {
+      "preview": "**Headline:** \"Kleur je hout uniek met onze methode\"\n\n**Subheadline:** \"Ontdek de eenvoudige en efficiënte manier om je hout te kleuren\"\n\n**Bodytekst:**\nOnze unieke methode voor het geven van kleur aan hout is ontworpen om jou te helpen je hout uniek te maken. Met onze methode kun je gemakkelijk en efficiënt je hout kleuren, zonder dat je daarvoor veel ervaring of speciale apparatuur nodig hebt. Onze methode is gebaseerd op een speciaal ontwikkelde techniek die ervoor zorgt dat de kleur diep in het hout doordringt, waardoor je een prachtig en duurzaam resultaat krijgt.\n\nOnze methode is niet alleen eenvoudig en efficiënt, maar ook veilig en milieuvriendelijk. We gebruiken alleen de hoogste kwaliteit materialen en onze methode is vrij van schadelijke chemicaliën. Dat betekent dat je je geen ",
+      "length": 1407
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-14T11:20:32.055851",
+    "data": {
+      "copy_draft": "**Headline:** \"Kleur je hout uniek met onze methode\"\n\n**Subheadline:** \"Ontdek de eenvoudige en efficiënte manier om je hout te kleuren\"\n\n**Bodytekst:**\nOnze unieke methode voor het geven van kleur aan hout is ontworpen om jou te helpen je hout uniek te maken. Met onze methode kun je gemakkelijk en efficiënt je hout kleuren, zonder dat je daarvoor veel ervaring of speciale apparatuur nodig hebt. Onze methode is gebaseerd op een speciaal ontwikkelde techniek die ervoor zorgt dat de kleur diep in het hout doordringt, waardoor je een prachtig en duurzaam resultaat krijgt.\n\nOnze methode is niet alleen eenvoudig en efficiënt, maar ook veilig en milieuvriendelijk. We gebruiken alleen de hoogste kwaliteit materialen en onze methode is vrij van schadelijke chemicaliën. Dat betekent dat je je geen zorgen hoeft te maken over de impact op het milieu of je eigen gezondheid. Onze methode is ook zeer flexibel, waardoor je je hout in elke gewenste kleur kunt kleuren.\n\nOf je nu een professioneel houtbewerker bent of een hobbyist, onze methode is perfect voor jou. We bieden een uitgebreide handleiding en ondersteuning, zodat je alles kunt leren over onze methode en hoe je het beste resultaat kunt behalen. Onze klanten zijn erg tevreden met onze methode en we zijn ervan overtuigd dat jij dat ook zult zijn.\n\n**Call-to-action:** \"Lees meer over onze unieke methode en bestel nu om je hout uniek te maken!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:20:32.056668",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:20:44.370683",
+    "data": {
+      "preview": "Hier zijn de social media content voor het product:\n\n**1. Instagram (caption + hashtags)**\n\"Maak je hout uniek met onze eenvoudige en efficiënte methode! Onze speciaal ontwikkelde techniek zorgt voor een diepe, duurzame kleur zonder schadelijke chemicaliën. Perfect voor houtbewerkers en hobbyisten! Lees meer en bestel nu! #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefhebbers #diy #hobby\"\n\n**2. LinkedIn (professionele post)**\n\"Ontdek de unieke methode voor het geven van kleur aan hout die professionals en hobbyisten inspireert! Onze methode is gebaseerd op een speciaal ontwikkelde techniek die ervoor zorgt dat de kleur diep in het hout doordringt, waardoor je een prachtig en duurzaam resultaat krijgt. Onze methode is niet alleen eenvoudig en efficiënt, maar ook veilig en milieuvr",
+      "length": 1167
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-14T11:20:44.373741",
+    "data": {
+      "social_content": "Hier zijn de social media content voor het product:\n\n**1. Instagram (caption + hashtags)**\n\"Maak je hout uniek met onze eenvoudige en efficiënte methode! Onze speciaal ontwikkelde techniek zorgt voor een diepe, duurzame kleur zonder schadelijke chemicaliën. Perfect voor houtbewerkers en hobbyisten! Lees meer en bestel nu! #houtkleuren #houtbewerken #uniekehout #kleuren #houtliefhebbers #diy #hobby\"\n\n**2. LinkedIn (professionele post)**\n\"Ontdek de unieke methode voor het geven van kleur aan hout die professionals en hobbyisten inspireert! Onze methode is gebaseerd op een speciaal ontwikkelde techniek die ervoor zorgt dat de kleur diep in het hout doordringt, waardoor je een prachtig en duurzaam resultaat krijgt. Onze methode is niet alleen eenvoudig en efficiënt, maar ook veilig en milieuvriendelijk. Lees meer over onze methode en hoe je het beste resultaat kunt behalen. #houtkleuren #houtbewerken #innovatie #duurzaam #professioneel\"\n\n**3. X/Twitter (kort en krachtig, max 280 tekens)**\n\"Kleur je hout uniek met onze eenvoudige & efficiënte methode! Diepe, duurzame kleur zonder schadelijke chemicaliën. Lees meer & bestel nu! #houtkleuren #houtbewerken\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:20:44.374278",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: Methode voor het geven van kleur aan hout\n\nDOELGROEP: Op basis van de PDF-documentatie kan worden geconcludeerd dat de doelgroep voor dit product waarschijnlijk houtbewerkers of consumenten zijn die op zoek zijn naar manieren om hun hout te kleuren. Hieronder volgt een doelgroepbeschrijving:\n\n- **Demografie**: De doelgroep is waarschijnlijk een mix van houtbewerkers en consumenten. Houtbewerkers zijn waarschijnlijk geïnteresseerd in de methode o",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-14T11:21:03.039437",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK:\n\nDe marketingcampagne voor de methode voor het geven van kleur aan hout is over het algemeen goed doordacht, maar er zijn enkele punten die verbeterd kunnen worden.\n\nEen van de belangrijkste punten is dat de campagne te veel op de productfuncties en -voordelen is gericht, en niet genoeg op de behoeften en emoties van de doelgroep. De koppen en subkoppen zijn bijvoorbeeld meer gericht op het product dan op de voordelen die het product kan bieden aan de doelgroep.\n\nBovendien is de tone of voice niet consistent over de hele campagne. De Instagram-post is bijvoorbeeld meer informeel en creatief, terwijl de LinkedIn-post meer professioneel is. Het is belangrijk om een consistent tone of voice te hanteren over alle kanalen om de doelgroep te bere",
+      "length": 1681
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-14T11:21:03.041728",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor de methode voor het geven van kleur aan hout is over het algemeen goed doordacht, maar er zijn enkele punten die verbeterd kunnen worden.\n\nEen van de belangrijkste punten is dat de campagne te veel op de productfuncties en -voordelen is gericht, en niet genoeg op de behoeften en emoties van de doelgroep. De koppen en subkoppen zijn bijvoorbeeld meer gericht op het product dan op de voordelen die het product kan bieden aan de doelgroep.\n\nBovendien is de tone of voice niet consistent over de hele campagne. De Instagram-post is bijvoorbeeld meer informeel en creatief, terwijl de LinkedIn-post meer professioneel is. Het is belangrijk om een consistent tone of voice te hanteren over alle kanalen om de doelgroep te bereiken en te overtuigen.\n\nVerder is de call-to-action niet duidelijk genoeg. De campagne vraagt de doelgroep om \"meer te lezen\" of \"nu te bestellen\", maar het is niet duidelijk wat de doelgroep precies moet doen of wat ze kunnen verwachten als ze dat doen.\n\nTen slotte is de campagne niet genoeg gericht op de unieke verkooppropositie (USP) van het product. De campagne moet duidelijker maken wat het product uniek maakt en waarom de doelgroep het product moet kiezen boven andere opties.\n\nOm de campagne te verbeteren, zou ik de volgende aanpassingen voorstellen:\n\n* Meer gericht op de behoeften en emoties van de doelgroep\n* Consistente tone of voice over alle kanalen\n* Duidelijkere call-to-action\n* Meer gericht op de unieke verkooppropositie (USP) van het product\n\nDoor deze aanpassingen te maken, kan de campagne effectiever zijn in het bereiken en overtuigen van de doelgroep.",
+      "approved": true,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-04-14T11:22:14.269925",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260414_112213.png"
+    }
+  }
+]

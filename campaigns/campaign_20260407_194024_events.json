@@ -1,0 +1,273 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-04-07T19:38:49.077741",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:38:50.981311",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.\n\nProduct: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nProductdocumentatie (uit PDF via RAG):\n=== PDF CONTEXT (via RAG) ===\n\n[Vraag: Wie is de auteur en wat is zijn of haar achtergrond, expertise of persoonlijke connectie met het onderwerp?]\nkenteekenen, welke de plaatselijke aandoening voorafgaan, zijn: vermindering\nvan de",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:38:52.474509",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nHet handboek voor den kaasmaker in Nederland is een oud werk dat geschreven is in een tijd waarin kaasproductie nog een belangrijke rol speelde in de Nederlandse landbouw. Het boek is geschreven voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas.\n\nDe markt waarop dit boek is gericht, is de Nederlandse landbouw en kaasindustrie in het begin van de 20e eeuw. De concurrenten van dit boek zullen waarschijnlijk andere handboeken en leerboeken zijn die geschreven zijn voor boeren en kaasmakers, maar het is moeilijk om een exacte lijst op te maken van de concurrenten vanwege het oude karakter van het boek.\n\nDe kansen voor dit boek zijn beperkt, aangezien de Nederlandse landbo",
+      "length": 2430
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-04-07T19:38:52.475336",
+    "data": {
+      "target_audience": "De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, die een middelbare of hogere opleiding hebben gevolgd en werkzaam zijn in de Nederlandse landbouw of kaasindustrie.\n\nDe psychografie van deze doelgroep is die van iemand die een sterk gevoel heeft voor de Nederlandse landbouw en kaasindustrie, en die een diepgaande kennis wil verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk ook gemotiveerd om de Nederlandse landbouw en kaasindustrie te verbeteren en om de kwaliteit van de kaas te verhogen.\n\nDe leeservaring die dit boek biedt, is die van kennis en educatie. Het boek is geschreven in een formalistische stijl en bevat veel technische termen en definities, wat het moeilijk maakt om het boek te lezen voor mensen die geen achtergrond hebben in de Nederlandse landbouw en kaasindustrie. Echter, voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas, is dit boek een waardevolle bron van kennis.",
+      "market_research": "Het handboek voor den kaasmaker in Nederland is een oud werk dat geschreven is in een tijd waarin kaasproductie nog een belangrijke rol speelde in de Nederlandse landbouw. Het boek is geschreven voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas.\n\nDe markt waarop dit boek is gericht, is de Nederlandse landbouw en kaasindustrie in het begin van de 20e eeuw. De concurrenten van dit boek zullen waarschijnlijk andere handboeken en leerboeken zijn die geschreven zijn voor boeren en kaasmakers, maar het is moeilijk om een exacte lijst op te maken van de concurrenten vanwege het oude karakter van het boek.\n\nDe kansen voor dit boek zijn beperkt, aangezien de Nederlandse landbouw en kaasindustrie sterk zijn veranderd sinds het boek werd geschreven. Er zijn echter nog steeds boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas, en dus kan dit boek nog steeds nuttig zijn voor hen."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:38:52.475904",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nMARKTONDERZOEK: Het handboek voor den kaasmaker in Nederland is een oud werk dat geschreven is in een tijd waarin kaasproductie nog een belangrijke rol speelde in de Nederlandse landbouw. Het boek is geschreven voor boeren en kaasmakers die een diepgaande kennis willen verwerve",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:38:53.596601",
+    "data": {
+      "preview": "## STRATEGIE\n\nOp basis van het marktonderzoek en de doelgroep, ontwikkel ik een marketingstrategie die gericht is op het herontdekken en heruitgeven van het handboek voor den kaasmaker in Nederland. Het doel is om het boek beschikbaar te maken voor een moderne Nederlandse landbouw- en kaasindustrie, terwijl tegelijkertijd de authenticiteit en waarde van het originele boek behouden blijft.\n\nDe strategie bestaat uit drie onderdelen:\n\n1. **Heruitgave**: Het oorspronkelijke handboek voor den kaasmaker in Nederland wordt heruitgegeven, met een nieuw voorwoord en illustraties die de inhoud van het boek visueel ondersteunen.\n2. **Marketingcampagne**: Een marketingcampagne wordt opgezet om het boek bekend te maken bij een moderne Nederlandse landbouw- en kaasindustrie. De campagne zal bestaan uit:",
+      "length": 2710
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-04-07T19:38:53.597561",
+    "data": {
+      "strategy": "Op basis van het marktonderzoek en de doelgroep, ontwikkel ik een marketingstrategie die gericht is op het herontdekken en heruitgeven van het handboek voor den kaasmaker in Nederland. Het doel is om het boek beschikbaar te maken voor een moderne Nederlandse landbouw- en kaasindustrie, terwijl tegelijkertijd de authenticiteit en waarde van het originele boek behouden blijft.\n\nDe strategie bestaat uit drie onderdelen:\n\n1. **Heruitgave**: Het oorspronkelijke handboek voor den kaasmaker in Nederland wordt heruitgegeven, met een nieuw voorwoord en illustraties die de inhoud van het boek visueel ondersteunen.\n2. **Marketingcampagne**: Een marketingcampagne wordt opgezet om het boek bekend te maken bij een moderne Nederlandse landbouw- en kaasindustrie. De campagne zal bestaan uit:\n * Online marketing (social media, e-mail marketing, online advertenties)\n * Influencer marketing (invloedrijke personen in de Nederlandse landbouw- en kaasindustrie)\n * Eventen (boekpresentaties, workshops, webinars)\n3. **Distributie**: Het boek wordt beschikbaar gesteld in een digitale en fysieke versie, voor zowel particuliere als zakelijke klanten.",
+      "positioning": "Het handboek voor den kaasmaker in Nederland is een uniek en waardevol onderdeel van de Nederlandse landbouw- en kaasindustrie. Het boek biedt een diepgaande kennis over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas, en is geschreven door een expert in het gebied.\n\nHet boek onderscheidt zich van andere handboeken en leerboeken door zijn historische waarde en authenticiteit. Het boek biedt een uniek inzicht in de ontwikkeling van de Nederlandse landbouw- en kaasindustrie en de technieken die gebruikt werden in het verleden.\n\nHet boek is ontworpen voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Het boek is geschikt voor zowel beginners als ervaren professionals in de Nederlandse landbouw- en kaasindustrie.",
+      "tone_of_voice": "De tone of voice voor het handboek voor den kaasmaker in Nederland is formele en zakelijke. De tekst is geschreven in een formalistische stijl en bevat veel technische termen en definities. De toon is serieus en autoritair, en de bedoeling is om de lezer te informeren en te educeren over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas.\n\nDe toon is ook nostalgisch en respectvol voor de historische waarde van het boek. De tekst is geschreven in een stijl die aanspreekt bij boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:53.598347",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, d",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:55.174803",
+    "data": {
+      "preview": "Hier zijn de marketingteksten voor het handboek voor den kaasmaker in Nederland:\n\n1. **Headline:** \"Het ultieme kaasmakershandboek\"\n2. **Subheadline:** \"Verdiep je kennis over kaasmaken met dit klassieke handboek\"\n\nHet handboek voor den kaasmaker in Nederland is een waardevolle bron van kennis voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Dit boek is geschreven in een formalistische stijl en bevat veel technische termen en definities, waardoor het een essentieel instrument is voor iedereen die serieus kaasmaken wil beoefenen.\n\nHet handboek behandelt alle aspecten van kaasmaken, van de basisprincipes tot de meest geavanceerde technieken. Met dit boek kun je je kennis en vaardigheden",
+      "length": 1472
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-07T19:38:55.175602",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten voor het handboek voor den kaasmaker in Nederland:\n\n1. **Headline:** \"Het ultieme kaasmakershandboek\"\n2. **Subheadline:** \"Verdiep je kennis over kaasmaken met dit klassieke handboek\"\n\nHet handboek voor den kaasmaker in Nederland is een waardevolle bron van kennis voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Dit boek is geschreven in een formalistische stijl en bevat veel technische termen en definities, waardoor het een essentieel instrument is voor iedereen die serieus kaasmaken wil beoefenen.\n\nHet handboek behandelt alle aspecten van kaasmaken, van de basisprincipes tot de meest geavanceerde technieken. Met dit boek kun je je kennis en vaardigheden verbeteren en je eigen kaasproducten creëren. Of je nu een beginner bent of een ervaren kaasmaker, dit handboek heeft iets te bieden voor iedereen. De heruitgave van dit klassieke handboek is een must-have voor elke kaasliefhebber en -maker.\n\nMet de heruitgave van het handboek voor den kaasmaker in Nederland kun je nu profiteren van de wijsheid en ervaring van generaties kaasmakers. Het boek is beschikbaar in een digitale en fysieke versie, voor zowel particuliere als zakelijke klanten. Dus, als je serieus kaasmaken wilt beoefenen, is dit handboek een absolute must-have.\n\n4. **Call-to-action:** \"Bestel nu en start met het maken van je eigen kwaliteitsvolle kaas!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:55.176425",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:56.275119",
+    "data": {
+      "preview": "Hieronder vind je de social media content voor het handboek voor den kaasmaker in Nederland:\n\n**1. Instagram:**\n\"Verdiep je kennis over kaasmaken met dit klassieke handboek! Het handboek voor den kaasmaker in Nederland is een waardevolle bron van kennis voor boeren en kaasmakers. Met dit boek kun je je eigen kwaliteitsvolle kaasproducten creëren. #kaasmaken #kaasliefhebber #nederlandsekaas #boeren #kaasmaker #handboek\"\n\n**2. LinkedIn:**\n\"Professionele kaasmakers en boeren, let op! Het handboek voor den kaasmaker in Nederland is nu beschikbaar in een nieuwe heruitgave. Dit klassieke handboek biedt een diepgaande kennis over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Met dit boek kun je je kennis en vaardigheden verbeteren en je eigen kaasproducten creë",
+      "length": 1147
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-07T19:38:56.275909",
+    "data": {
+      "social_content": "Hieronder vind je de social media content voor het handboek voor den kaasmaker in Nederland:\n\n**1. Instagram:**\n\"Verdiep je kennis over kaasmaken met dit klassieke handboek! Het handboek voor den kaasmaker in Nederland is een waardevolle bron van kennis voor boeren en kaasmakers. Met dit boek kun je je eigen kwaliteitsvolle kaasproducten creëren. #kaasmaken #kaasliefhebber #nederlandsekaas #boeren #kaasmaker #handboek\"\n\n**2. LinkedIn:**\n\"Professionele kaasmakers en boeren, let op! Het handboek voor den kaasmaker in Nederland is nu beschikbaar in een nieuwe heruitgave. Dit klassieke handboek biedt een diepgaande kennis over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Met dit boek kun je je kennis en vaardigheden verbeteren en je eigen kaasproducten creëren. Bestel nu en start met het maken van je eigen kwaliteitsvolle kaas! #kaasmaken #kaasindustrie #nederlandsekaas #boeren #kaasmaker #handboek\"\n\n**3. X/Twitter:**\n\"Verdiep je kennis over kaasmaken met het ultieme kaasmakershandboek! Bestel nu en start met het maken van je eigen kwaliteitsvolle kaas! #kaasmaken #kaasliefhebber #nederlandsekaas\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:56.276781",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, die een midd",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:58.755575",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK: \n\nDe marketingcampagne voor het handboek voor den kaasmaker in Nederland is goed gestructureerd en richt zich op de juiste doelgroep. Echter, er zijn een aantal punten die verbeterd kunnen worden om de campagne effectiever te maken.\n\nTen eerste is de tone of voice in de marketingteksten niet consistent met de strategie. De tone of voice is formeel en zakelijk, maar de tekst bevat ook een aantal zinnen die te commercieel klinken. Bijvoorbeeld, de zin \"Bestel nu en start met het maken van je eigen kwaliteitsvolle kaas!\" klinkt te veel als een verkoopboodschap. Het zou beter zijn om de focus te leggen op de kennis en educatie die het boek biedt.\n\nTen tweede is de social media content niet geoptimaliseerd voor elk platform. De Instagram-tekst i",
+      "length": 2112
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-07T19:38:58.757647",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor het handboek voor den kaasmaker in Nederland is goed gestructureerd en richt zich op de juiste doelgroep. Echter, er zijn een aantal punten die verbeterd kunnen worden om de campagne effectiever te maken.\n\nTen eerste is de tone of voice in de marketingteksten niet consistent met de strategie. De tone of voice is formeel en zakelijk, maar de tekst bevat ook een aantal zinnen die te commercieel klinken. Bijvoorbeeld, de zin \"Bestel nu en start met het maken van je eigen kwaliteitsvolle kaas!\" klinkt te veel als een verkoopboodschap. Het zou beter zijn om de focus te leggen op de kennis en educatie die het boek biedt.\n\nTen tweede is de social media content niet geoptimaliseerd voor elk platform. De Instagram-tekst is te lang en bevat te veel hashtags, terwijl de LinkedIn-tekst te formeel is en niet genoeg aandacht trekt. De X/Twitter-tekst is te kort en mist context.\n\nTen derde ontbreekt het aan emotionele haakjes in de marketingteksten. De tekst is te veel gericht op de feiten en de functionaliteit van het boek, en niet genoeg op de emoties en de ervaringen van de doelgroep. Het zou beter zijn om te focussen op de passie en de liefde voor kaasmaken die de doelgroep heeft, en hoe het boek hen kan helpen om hun vaardigheden te verbeteren en hun eigen kaasproducten te creëren.\n\nTen slotte zou het goed zijn om meer visuals en beelden te gebruiken in de marketingcampagne. Een boek over kaasmaken kan heel visueel zijn, met prachtige foto's van kaas en kaasmakers. Het zou beter zijn om deze visuals te gebruiken om de doelgroep te trekken en hen te inspireren om het boek te kopen.\n\nIn de volgende iteratie zou ik het volgende aanbevelen:\n\n* Verbeter de consistentie van de tone of voice in de marketingteksten\n* Optimaliseer de social media content voor elk platform\n* Voeg emotionele haakjes toe aan de marketingteksten\n* Gebruik meer visuals en beelden in de marketingcampagne\n\nDoor deze aanbevelingen op te volgen, kan de marketingcampagne effectiever worden en kan het boek beter worden verkocht aan de doelgroep.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:38:58.758375",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, d",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:39:00.702994",
+    "data": {
+      "preview": "**Headline:** Kaasmaken voor professionals\n\n**Subheadline:** Het ultieme handboek voor kwaliteitsvolle kaas\n\n**Bodytekst:**\nHet handboek voor den kaasmaker in Nederland is een waardevolle bron van kennis voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Dit boek biedt een complete gids voor het kaasmaken, van de grondstoffen tot het eindproduct. Met dit boek kunt u uw vaardigheden verbeteren en uw eigen unieke kaasproducten creëren.\n\nHet handboek is geschreven in een formalistische stijl en bevat veel technische termen en definities, waardoor het een waardevolle bron van informatie is voor professionals in de kaasindustrie. De inhoud is zorgvuldig samengesteld om u te helpen bij het ve",
+      "length": 1537
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-07T19:39:00.704059",
+    "data": {
+      "copy_draft": "**Headline:** Kaasmaken voor professionals\n\n**Subheadline:** Het ultieme handboek voor kwaliteitsvolle kaas\n\n**Bodytekst:**\nHet handboek voor den kaasmaker in Nederland is een waardevolle bron van kennis voor boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Dit boek biedt een complete gids voor het kaasmaken, van de grondstoffen tot het eindproduct. Met dit boek kunt u uw vaardigheden verbeteren en uw eigen unieke kaasproducten creëren.\n\nHet handboek is geschreven in een formalistische stijl en bevat veel technische termen en definities, waardoor het een waardevolle bron van informatie is voor professionals in de kaasindustrie. De inhoud is zorgvuldig samengesteld om u te helpen bij het verbeteren van uw kaasmaken, van het kiezen van de juiste melk tot het afwerken van het eindproduct. Met dit boek zult u in staat zijn om uw passie voor kaasmaken te combineren met uw professionele vaardigheden.\n\n Door het lezen van dit boek zult u niet alleen meer weten over de technieken en methoden van kaasmaken, maar zult u ook inspiratie opdoen om uw eigen unieke kaasproducten te creëren. Het boek is voorzien van prachtige foto's en illustraties die de inhoud visueel ondersteunen, waardoor het een waardevolle aanwinst is voor elke kaasmaker.\n\n**Call-to-action:** Ontdek de kunst van kaasmaken en bestel nu het handboek voor den kaasmaker in Nederland om uw vaardigheden te verbeteren en uw eigen unieke kaasproducten te creëren."
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:39:00.704893",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, ",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:39:02.919905",
+    "data": {
+      "preview": "Hier zijn de social media content voor het handboek voor den kaasmaker in Nederland:\n\n**1. Instagram:**\nCaption: \"Verbeter je kaasmaken vaardigheden met het ultieme handboek voor kwaliteitsvolle kaas! Dit boek biedt een complete gids voor het kaasmaken, van de grondstoffen tot het eindproduct. Bestel nu en creëer je eigen unieke kaasproducten! #kaasmaken #kaasindustrie #nederlandsekaz #boeren #kaasmakers #kwaliteitsvollekaas\"\nHashtags: #kaasmaken #kaasindustrie #nederlandsekaz #boeren #kaasmakers #kwaliteitsvollekaas #handboek #kaasproducten #nederlandsekaas\n\n**2. LinkedIn:**\nPost: \"Als professional in de kaasindustrie, bent u op zoek naar een waardevolle bron van kennis om uw vaardigheden te verbeteren? Het handboek voor den kaasmaker in Nederland is het ultieme handboek voor kwaliteitsvo",
+      "length": 1331
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-07T19:39:02.920876",
+    "data": {
+      "social_content": "Hier zijn de social media content voor het handboek voor den kaasmaker in Nederland:\n\n**1. Instagram:**\nCaption: \"Verbeter je kaasmaken vaardigheden met het ultieme handboek voor kwaliteitsvolle kaas! Dit boek biedt een complete gids voor het kaasmaken, van de grondstoffen tot het eindproduct. Bestel nu en creëer je eigen unieke kaasproducten! #kaasmaken #kaasindustrie #nederlandsekaz #boeren #kaasmakers #kwaliteitsvollekaas\"\nHashtags: #kaasmaken #kaasindustrie #nederlandsekaz #boeren #kaasmakers #kwaliteitsvollekaas #handboek #kaasproducten #nederlandsekaas\n\n**2. LinkedIn:**\nPost: \"Als professional in de kaasindustrie, bent u op zoek naar een waardevolle bron van kennis om uw vaardigheden te verbeteren? Het handboek voor den kaasmaker in Nederland is het ultieme handboek voor kwaliteitsvolle kaas. Dit boek biedt een complete gids voor het kaasmaken, van de grondstoffen tot het eindproduct, en is geschreven in een formalistische stijl met veel technische termen en definities. Bestel nu en verbeter uw kaasmaken vaardigheden!\n#kaasmaken #kaasindustrie #nederlandsekaz #boeren #kaasmakers #kwaliteitsvollekaas\"\n\n**3. X/Twitter:**\nTweet: \"Verbeter je kaasmaken vaardigheden met het ultieme handboek voor kwaliteitsvolle kaas! Bestel nu en creëer je eigen unieke kaasproducten! #kaasmaken #kaasindustrie #nederlandsekaz\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:39:02.921692",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: Titel: handboek voor den kaasmaker in nederland\nVak / domein: kennis boek over kaas\nLeerdoel: kennis\nFormaat: [leerboek / werkboek / cursus]\n\nDOELGROEP: De ideale doelgroep voor dit boek zijn boeren en kaasmakers die een diepgaande kennis willen verwerven over de technieken en methoden die nodig zijn voor het maken van kwaliteitsvolle kaas. Deze doelgroep is waarschijnlijk bestaande uit mannen en vrouwen tussen de 25 en 55 jaar oud, die een midd",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:39:15.996218",
+    "data": {
+      "preview": "BESLISSING: GOEDGEKEURD\nFASE: final\nFEEDBACK:\n\nDe marketingcampagne voor het handboek voor den kaasmaker in Nederland is over het algemeen goed doordacht en uitgevoerd. De strategie om het boek te heruitgeven en te promoten via online marketing, influencer marketing en eventen is een goed plan. De tone of voice is formele en zakelijke, wat past bij het doel van het boek om professionals in de kaasindustrie te informeren en te educeren.\n\nDe marketingtekst is goed geschreven en bevat alle noodzakelijke informatie over het boek. De headline en subheadline zijn aantrekkelijk en geven een duidelijke indicatie van wat het boek te bieden heeft. De bodytekst is informatief en geeft een goed overzicht van de inhoud van het boek.\n\nDe social media content is ook goed doordacht en past bij de tone of ",
+      "length": 1776
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-07T19:39:15.997978",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor het handboek voor den kaasmaker in Nederland is over het algemeen goed doordacht en uitgevoerd. De strategie om het boek te heruitgeven en te promoten via online marketing, influencer marketing en eventen is een goed plan. De tone of voice is formele en zakelijke, wat past bij het doel van het boek om professionals in de kaasindustrie te informeren en te educeren.\n\nDe marketingtekst is goed geschreven en bevat alle noodzakelijke informatie over het boek. De headline en subheadline zijn aantrekkelijk en geven een duidelijke indicatie van wat het boek te bieden heeft. De bodytekst is informatief en geeft een goed overzicht van de inhoud van het boek.\n\nDe social media content is ook goed doordacht en past bij de tone of voice van het boek. De hashtags zijn relevant en zullen helpen om het bereik van de posts te vergroten.\n\nEen paar suggesties voor verbetering:\n\n* Overweeg om een video-teaser te maken om het boek te promoten. Dit kan helpen om de aandacht van potentiële klanten te trekken en om het boek te laten zien als een waardevolle bron van kennis.\n* Denk na over het creëren van een community rondom het boek. Dit kan worden gedaan door een Facebook-groep of een forum te starten waar kaasmakers en professionals in de kaasindustrie kunnen discussiëren en vragen stellen over het boek en de kaasindustrie in het algemeen.\n* Overweeg om een aantal gratis artikelen of blogposts te publiceren op de website van het boek. Dit kan helpen om het boek te promoten en om potentiële klanten te laten zien dat het boek een waardevolle bron van kennis is.\n\nAl met al is de marketingcampagne goed doordacht en uitgevoerd. Met een paar kleine verbeteringen kan de campagne nog succesvoller worden.",
+      "approved": true,
+      "phase": "final"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-04-07T19:40:24.498552",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260407_194024.png"
+    }
+  }
+]

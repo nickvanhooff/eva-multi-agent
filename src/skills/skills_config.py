@@ -4,18 +4,20 @@ from src.skills import load_skill
 
 SKILL_MAP: dict[str, dict[str, list[str]]] = {
     "product": {
-        "researcher":        ["research-brief"],
-        "copywriter":        ["copywriting"],
-        "social_media":      ["social-media"],
-        "email_marketer":    ["email-marketing"],
-        "campaign_manager":  ["launch-strategy"],
+        "researcher":          ["research-brief"],
+        "copywriter":          ["copywriting"],
+        "social_media":        ["social-media"],
+        "email_marketer":      ["email-marketing"],
+        "campaign_manager":    ["launch-strategy"],
+        "website_generator":   ["website-generation"],
     },
     "book": {
-        "researcher":        ["book-context"],
-        "copywriter":        ["book-copywriting"],
-        "social_media":      ["book-social"],
-        "email_marketer":    ["email-marketing"],
-        "campaign_manager":  ["book-launch-strategy"],
+        "researcher":          ["book-context"],
+        "copywriter":          ["book-copywriting"],
+        "social_media":        ["book-social"],
+        "email_marketer":      ["email-marketing"],
+        "campaign_manager":    ["book-launch-strategy"],
+        "website_generator":   ["website-generation"],
     },
 }
 

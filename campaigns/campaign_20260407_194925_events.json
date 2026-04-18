@@ -1,0 +1,368 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-04-07T19:47:36.065587",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:47:39.048238",
+    "data": {
+      "system_prompt": "# Book Marketing Context\n\nGedeelde kennisbasis voor alle agents bij het promoten van een boek. Analyseer altijd eerst:\n\n**Boek:** Wat is het genre? Wat is het centrale thema of de belofte aan de lezer? Wat maakt dit boek uniek?\n**Auteur:** Wie is de auteur? Wat is diens achtergrond, geloofwaardigheid of autoriteit op dit onderwerp?\n**Lezer:** Wie leest dit? Wat zijn hun motieven (identiteit, kennis, escapisme, verbinding, educatie)?\n**Markt:** Welke andere boeken bestaan in dit genre? Wat is de ",
+      "user_prompt": "Analyseer het volgende product en lever marktonderzoek + doelgroepanalyse op.\n\nProduct: chocola\n\nProductdocumentatie (uit PDF via RAG):\n=== PDF CONTEXT (via RAG) ===\n\n[Vraag: Wie is de auteur en wat is zijn of haar achtergrond, expertise of persoonlijke connectie met het onderwerp?]\nkenteekenen, welke de plaatselijke aandoening voorafgaan, zijn: vermindering\nvan den eetlust, onregelmatig herkaauwen; het haar is zonder glans en staat\novereind; de blik van het dier is niet helder. Het slijmvlies v",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:47:40.578423",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nOp basis van de gegeven bronnen kan worden vastgesteld dat de chocolademarkt een complexe en gevarieerde markt is met verschillende subsegmenten. Volgens de rapporten zijn er verschillende strategieën om zich te onderscheiden op de markt, zoals beperkte edities, samenwerkingen met beroemde chefs en gewaagde smaakvariaties.\n\nDe competitie in de chocolademarkt is hoog, met grote spelers die actief zijn op de markt. Volgens het rapport \"De segmentatie van de chocolademarkt\" zijn er verschillende belangrijke concurrenten op de markt, waaronder bedrijven die bekend zijn voor hun innovatieve en unieke chocoladeproducten.\n\nDe marktomvang van de chocolademarkt is aanzienlijk en groeit jaarlijks. Volgens het rapport \"Wereldwijde chocolademarktomvang, branchetrends en prognoses\" z",
+      "length": 2406
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-04-07T19:47:40.579245",
+    "data": {
+      "target_audience": "Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die worden gebruikt.\n* **Pijnpunten:** De prijs van chocolade, de kwaliteit van sommige producten en de beperkte beschikbaarheid van sommige subsegmenten.\n* **Behoeften:** Personen die op zoek zijn naar unieke en authentieke chocoladeproducten, die een ervaring willen creëren met chocolade en die waarderen voor duurzaamheid en sociale verantwoordelijkheid.\n\nDe doelgroep kan worden opgesplitst in verschillende subsegmenten, zoals:\n\n* **Chocolade liefhebbers:** Personen die regelmatig chocolade kopen en waarderen voor kwaliteit en uniekheid.\n* **Zoetekauwen:** Personen die vaak zoetwaren eten en waarderen voor de combinatie van smaak en textuur.\n* **Natuur-en-duurzaamheid liefhebbers:** Personen die waarderen voor duurzaamheid en sociale verantwoordelijkheid in hun chocoladeproducten.\n\nDe bovenstaande informatie kan worden gebruikt om een effectieve marketingstrategie te ontwikkelen die de behoeften en de pijnpunten van de doelgroep aanpakt.",
+      "market_research": "Op basis van de gegeven bronnen kan worden vastgesteld dat de chocolademarkt een complexe en gevarieerde markt is met verschillende subsegmenten. Volgens de rapporten zijn er verschillende strategieën om zich te onderscheiden op de markt, zoals beperkte edities, samenwerkingen met beroemde chefs en gewaagde smaakvariaties.\n\nDe competitie in de chocolademarkt is hoog, met grote spelers die actief zijn op de markt. Volgens het rapport \"De segmentatie van de chocolademarkt\" zijn er verschillende belangrijke concurrenten op de markt, waaronder bedrijven die bekend zijn voor hun innovatieve en unieke chocoladeproducten.\n\nDe marktomvang van de chocolademarkt is aanzienlijk en groeit jaarlijks. Volgens het rapport \"Wereldwijde chocolademarktomvang, branchetrends en prognoses\" zal de marktomvang in 2030 meer dan $200 miljard bereiken. De groei van de markt wordt gestimuleerd door de toename van de vraag naar chocolade in ontwikkelde landen en de opkomst van nieuwe subsegmenten zoals cacaovervangers."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:47:40.580061",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: chocola\n\nMARKTONDERZOEK: Op basis van de gegeven bronnen kan worden vastgesteld dat de chocolademarkt een complexe en gevarieerde markt is met verschillende subsegmenten. Volgens de rapporten zijn er verschillende strategieën om zich te onderscheiden op de markt, zoals beperkte edities, samenwerkingen met beroemde chefs en gewaagde smaakvariaties.\n\nDe competitie in de chocolademarkt is hoog, met grote spelers die act",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-04-07T19:47:41.749652",
+    "data": {
+      "preview": "## STRATEGIE\n\nOp basis van het marktonderzoek en de doelgroep, stellen we een marketingstrategie op om de chocolademarkt te domineren. De strategie is gericht op het onderscheiden van ons product van de concurrentie en het aanpakken van de pijnpunten van de doelgroep.\n\n**Kernstrategie:** Unieke en authentieke chocoladeproducten aanbieden die een ervaring creëren met chocolade en waarborgen van duurzaamheid en sociale verantwoordelijkheid.\n\n**Substrategieën:**\n\n* **Beperkte edities:** Samenwerkingen met beroemde chefs en gewaagde smaakvariaties om een unieke ervaring te bieden aan de doelgroep.\n* **Duurzame productie:** Gebruik van duurzame ingrediënten en productiemethoden om de verantwoordelijkheid voor de milieu-impact te reduceren.\n* **Innovatieve producten:** Het ontwikkelen van nieuwe",
+      "length": 2414
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-04-07T19:47:41.750814",
+    "data": {
+      "strategy": "Op basis van het marktonderzoek en de doelgroep, stellen we een marketingstrategie op om de chocolademarkt te domineren. De strategie is gericht op het onderscheiden van ons product van de concurrentie en het aanpakken van de pijnpunten van de doelgroep.\n\n**Kernstrategie:** Unieke en authentieke chocoladeproducten aanbieden die een ervaring creëren met chocolade en waarborgen van duurzaamheid en sociale verantwoordelijkheid.\n\n**Substrategieën:**\n\n* **Beperkte edities:** Samenwerkingen met beroemde chefs en gewaagde smaakvariaties om een unieke ervaring te bieden aan de doelgroep.\n* **Duurzame productie:** Gebruik van duurzame ingrediënten en productiemethoden om de verantwoordelijkheid voor de milieu-impact te reduceren.\n* **Innovatieve producten:** Het ontwikkelen van nieuwe en unieke chocoladeproducten die kwaliteit en innovatie combineert.\n* **Social Media:** Actief zijn op social media om de doelgroep te verbindingen en te informeren over nieuwe producten en initiatieven.\n* **Evenementen:** Organiseren van evenementen en workshops om de doelgroep te laten ervaren hoe onze chocolade wordt gemaakt en om kennis te delen over duurzaamheid en sociale verantwoordelijkheid.",
+      "positioning": "Ons product onderscheidt zich van de concurrentie door onze focus op uniekheid, authentiekheid en duurzaamheid. We bieden onze klanten een unieke ervaring met chocolade en waarborgen van sociale verantwoordelijkheid en milieu-impact.\n\n**Kernboodschap:** \"Onze chocolade is gemaakt met liefde, uniekheid en duurzaamheid.\"\n\n**Ondersteunende claims:**\n\n* \"Gebruik van duurzame ingrediënten en productiemethoden.\"\n* \"Samenwerkingen met beroemde chefs voor unieke smaakvariaties.\"\n* \"Unieke en authentieke chocoladeproducten die een ervaring creëren.\"",
+      "tone_of_voice": "Onze tone of voice is warm, vriendelijk en inspirerend. We stellen ons op als een bedrijf dat liefde en zorg voor de natuur heeft. Wij willen onze klanten inspireren om onze chocolade te proeven en te ervaren hoe onze producten een verschil maken.\n\n**Schrijfstijl:** We gebruiken een vriendelijke en informele schrijfstijl om onze klanten te verbindingen. We gebruikten woorden als \"liefde\", \"uniek\" en \"authentiek\" om onze waarden en doelen te communiceren.\n\n**Toon:** Onze toon is inspirerend en vriendelijk. We willen onze klanten motiveren om onze chocolade te proeven en te ervaren hoe onze producten een verschil maken."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:41.751773",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die wo",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:43.190089",
+    "data": {
+      "preview": "Hier zijn de marketingteksten voor het product chocola:\n\n1. **Headline:** \"Liefde in elke beet\"\n2. **Subheadline:** \"Unieke en authentieke chocoladeproducten voor een onvergetelijke ervaring\"\n3. **Bodytekst:**\n\nOnze chocolade is meer dan alleen een zoetigheid. Het is een ervaring die je zintuigen prikkelt en je hart verwarmt. Wij zijn gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Onze chocolade wordt gemaakt met liefde en zorg, met duurzame ingrediënten en productiemethoden die de natuur respecteren.\n\nOnze beperkte edities zijn het resultaat van samenwerkingen met beroemde chefs en gewaagde smaakvariaties. Elke beet is een ontdekking, een reis van smaken en texturen die je zintuigen prikkelen. Wij zijn ook actief op social media, waar w",
+      "length": 1313
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-07T19:47:43.191004",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten voor het product chocola:\n\n1. **Headline:** \"Liefde in elke beet\"\n2. **Subheadline:** \"Unieke en authentieke chocoladeproducten voor een onvergetelijke ervaring\"\n3. **Bodytekst:**\n\nOnze chocolade is meer dan alleen een zoetigheid. Het is een ervaring die je zintuigen prikkelt en je hart verwarmt. Wij zijn gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Onze chocolade wordt gemaakt met liefde en zorg, met duurzame ingrediënten en productiemethoden die de natuur respecteren.\n\nOnze beperkte edities zijn het resultaat van samenwerkingen met beroemde chefs en gewaagde smaakvariaties. Elke beet is een ontdekking, een reis van smaken en texturen die je zintuigen prikkelen. Wij zijn ook actief op social media, waar we onze klanten informeren over nieuwe producten en initiatieven, en waar we evenementen en workshops organiseren om de kunst van chocoladeproductie te delen.\n\nOnze missie is om onze klanten te inspireren om onze chocolade te proeven en te ervaren hoe onze producten een verschil maken. Wij geloven dat chocolade meer is dan alleen een product, het is een manier om mensen te verbinden en om de wereld een beetje leuker te maken.\n\n4. **Call-to-action:** \"Proef de liefde, ontdek onze unieke chocoladeproducten nu!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:43.192015",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die w",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:44.606149",
+    "data": {
+      "preview": "Hier is de content voor elk platform:\n\n**1. Instagram:**\n\"Liefde in elke beet! Onze unieke en authentieke chocoladeproducten zijn gemaakt met liefde en zorg, met duurzame ingrediënten en productiemethoden die de natuur respecteren. Proef de liefde en ontdek onze beperkte edities, gemaakt in samenwerking met beroemde chefs! #chocoladeliefde #duurzaamheid #uniekechocolade #beperkteeditie #chocoladeaddict\"\n\n**2. LinkedIn:**\n\"Als expert in de chocolade-industrie, zijn wij gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Onze beperkte edities zijn het resultaat van samenwerkingen met beroemde chefs en gewaagde smaakvariaties. Wij zijn actief op social media en organiseren evenementen en workshops om de kunst van chocoladeproductie te delen. Lee",
+      "length": 1113
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-07T19:47:44.606838",
+    "data": {
+      "social_content": "Hier is de content voor elk platform:\n\n**1. Instagram:**\n\"Liefde in elke beet! Onze unieke en authentieke chocoladeproducten zijn gemaakt met liefde en zorg, met duurzame ingrediënten en productiemethoden die de natuur respecteren. Proef de liefde en ontdek onze beperkte edities, gemaakt in samenwerking met beroemde chefs! #chocoladeliefde #duurzaamheid #uniekechocolade #beperkteeditie #chocoladeaddict\"\n\n**2. LinkedIn:**\n\"Als expert in de chocolade-industrie, zijn wij gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Onze beperkte edities zijn het resultaat van samenwerkingen met beroemde chefs en gewaagde smaakvariaties. Wij zijn actief op social media en organiseren evenementen en workshops om de kunst van chocoladeproductie te delen. Lees meer over onze missie en hoe wij onze klanten inspireren om onze chocolade te proeven en te ervaren. #chocolade #duurzaamheid #innovatie #chocoladeproductie\"\n\n**3. X/Twitter:**\n\"Liefde in elke beet! Proef onze unieke en authentieke chocoladeproducten, gemaakt met liefde en zorg. #chocoladeliefde #duurzaamheid\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:44.607622",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die worden gebrui",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:46.742262",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK:\n\nDe marketingcampagne voor het product chocola heeft een aantal sterke punten, zoals de focus op uniekheid, authentiekheid en duurzaamheid. De tone of voice is warm, vriendelijk en inspirerend, wat aansluit bij de doelgroep. Echter, er zijn een aantal verbeterpunten om de campagne effectiever te maken.\n\nEen van de belangrijkste verbeterpunten is de consistentie in de tone of voice en de boodschap. In de marketingtekst en social media content wordt de boodschap \"Liefde in elke beet\" gebruikt, maar in de LinkedIn-post wordt een meer zakelijke toon gebruikt. Het is belangrijk om een consistentere tone of voice te gebruiken om de doelgroep te bereiken.\n\nVerder is de call-to-action (CTA) \"Proef de liefde, ontdek onze unieke chocoladeproducten nu",
+      "length": 1618
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-07T19:47:46.743801",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor het product chocola heeft een aantal sterke punten, zoals de focus op uniekheid, authentiekheid en duurzaamheid. De tone of voice is warm, vriendelijk en inspirerend, wat aansluit bij de doelgroep. Echter, er zijn een aantal verbeterpunten om de campagne effectiever te maken.\n\nEen van de belangrijkste verbeterpunten is de consistentie in de tone of voice en de boodschap. In de marketingtekst en social media content wordt de boodschap \"Liefde in elke beet\" gebruikt, maar in de LinkedIn-post wordt een meer zakelijke toon gebruikt. Het is belangrijk om een consistentere tone of voice te gebruiken om de doelgroep te bereiken.\n\nVerder is de call-to-action (CTA) \"Proef de liefde, ontdek onze unieke chocoladeproducten nu!\" niet sterk genoeg. De CTA moet duidelijker en meer actiegericht zijn, zoals \"Bestel nu\" of \"Ontdek onze collectie\".\n\nOok is de social media content niet optimaal. De Instagram-post is te lang en bevat te veel hashtags. Het is beter om een korte, visuele post te maken met een paar relevante hashtags. De LinkedIn-post is te zakelijk en moet meer aansluiten bij de tone of voice van de merk.\n\nTot slot, de campagne moet meer aandacht besteden aan de pijnpunten van de doelgroep, zoals de prijs van chocolade en de beperkte beschikbaarheid van sommige producten. De campagne moet laten zien hoe het product deze pijnpunten oplost en waarom het een betere keuze is dan de concurrentie.\n\nIn de volgende iteratie moet de campagne deze verbeterpunten aanpakken om een effectievere en meer consistente campagne te creëren.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:46.744434",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die wo",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:48.524939",
+    "data": {
+      "preview": "Hier zijn de opgevraagde marketingteksten:\n\n1. **Headline:** \"Liefde in elke beet, ontdek ons\"\n2. **Subheadline:** \"Unieke en authentieke chocoladeproducten voor een onvergetelijke ervaring\"\n3. **Bodytekst:**\n\nOnze chocolade is meer dan alleen een zoetigheid. Het is een ervaring die je zintuigen zal verrassen en je hart zal verwarmen. Wij zijn gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die zijn gemaakt met liefde en zorg. Van de selectie van de beste ingrediënten tot het zorgvuldige productieproces, wij stellen ons op als een bedrijf dat liefde en zorg voor de natuur heeft.\n\nWij weten dat de prijs van chocolade soms een obstakel kan zijn, maar wij zijn ervan overtuigd dat onze producten de moeite waard zijn. Wij gebruiken alleen de beste ingrediënten en pro",
+      "length": 1500
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-07T19:47:48.525614",
+    "data": {
+      "copy_draft": "Hier zijn de opgevraagde marketingteksten:\n\n1. **Headline:** \"Liefde in elke beet, ontdek ons\"\n2. **Subheadline:** \"Unieke en authentieke chocoladeproducten voor een onvergetelijke ervaring\"\n3. **Bodytekst:**\n\nOnze chocolade is meer dan alleen een zoetigheid. Het is een ervaring die je zintuigen zal verrassen en je hart zal verwarmen. Wij zijn gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die zijn gemaakt met liefde en zorg. Van de selectie van de beste ingrediënten tot het zorgvuldige productieproces, wij stellen ons op als een bedrijf dat liefde en zorg voor de natuur heeft.\n\nWij weten dat de prijs van chocolade soms een obstakel kan zijn, maar wij zijn ervan overtuigd dat onze producten de moeite waard zijn. Wij gebruiken alleen de beste ingrediënten en productiemethoden om ervoor te zorgen dat onze chocolade niet alleen smaakt naar liefde, maar ook duurzaam en verantwoord is. Onze producten zijn beperkt beschikbaar, maar wij zijn ervan overtuigd dat de ervaring die wij bieden onvergetelijk zal zijn.\n\nOnze chocolade is niet alleen een product, maar een ervaring die je zal doen terugkomen voor meer. Wij zijn ervan overtuigd dat onze passie en liefde voor chocolade in elke beet zullen schijnen en dat je onze producten zal waarderen om hun uniekheid en authenticiteit. Dus, kom en ontdek onze collectie van unieke en authentieke chocoladeproducten en ervaar de liefde in elke beet.\n\n4. **Call-to-action:** \"Bestel nu en ervaar de liefde in elke beet\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:48.526365",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die w",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:50.099789",
+    "data": {
+      "preview": "Hier is de social media content voor het product chocola:\n\n**1. Instagram:**\nCaption: \"Liefde in elke beet, ontdek ons! Onze unieke en authentieke chocoladeproducten zijn gemaakt met liefde en zorg. Van de selectie van de beste ingrediënten tot het zorgvuldige productieproces, wij stellen ons op als een bedrijf dat liefde en zorg voor de natuur heeft. Bestel nu en ervaar de liefde in elke beet! #chocoladeliefhebber #duurzaamheid #socialeverantwoordelijkheid #uniekechocolade #authentiekechocolade #liefdeineelkebeet\"\nHashtags: #chocoladeliefhebber #duurzaamheid #socialeverantwoordelijkheid #uniekechocolade #authentiekechocolade #liefdeineelkebeet #chocoladeproducten #chocolade #zoetwaren #smaak #textuur\n\n**2. LinkedIn:**\nPost: \"Ons bedrijf is gepassioneerd over het creëren van unieke en auth",
+      "length": 1611
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-07T19:47:50.100475",
+    "data": {
+      "social_content": "Hier is de social media content voor het product chocola:\n\n**1. Instagram:**\nCaption: \"Liefde in elke beet, ontdek ons! Onze unieke en authentieke chocoladeproducten zijn gemaakt met liefde en zorg. Van de selectie van de beste ingrediënten tot het zorgvuldige productieproces, wij stellen ons op als een bedrijf dat liefde en zorg voor de natuur heeft. Bestel nu en ervaar de liefde in elke beet! #chocoladeliefhebber #duurzaamheid #socialeverantwoordelijkheid #uniekechocolade #authentiekechocolade #liefdeineelkebeet\"\nHashtags: #chocoladeliefhebber #duurzaamheid #socialeverantwoordelijkheid #uniekechocolade #authentiekechocolade #liefdeineelkebeet #chocoladeproducten #chocolade #zoetwaren #smaak #textuur\n\n**2. LinkedIn:**\nPost: \"Ons bedrijf is gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die zijn gemaakt met liefde en zorg. Wij gebruiken alleen de beste ingrediënten en productiemethoden om ervoor te zorgen dat onze chocolade niet alleen smaakt naar liefde, maar ook duurzaam en verantwoord is. Onze producten zijn beperkt beschikbaar, maar wij zijn ervan overtuigd dat de ervaring die wij bieden onvergetelijk zal zijn. Neem contact met ons op om meer te weten te komen over onze producten en hoe wij onze passie en liefde voor chocolade in elke beet laten schijnen.\"\n#chocolade #duurzaamheid #socialeverantwoordelijkheid #uniekechocolade #authentiekechocolade\n\n**3. X/Twitter:**\nPost: \"Liefde in elke beet! Onze unieke & authentieke chocoladeproducten zijn gemaakt met liefde & zorg. Bestel nu & ervaar de liefde! #chocoladeliefhebber #duurzaamheid #liefdeineelkebeet\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:47:50.101241",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die worden gebrui",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:02.328026",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK:\n\nDe marketingcampagne voor chocolade is over het algemeen goed doordacht, maar er zijn enkele punten die aandacht verdienen. Hieronder volgen enkele specifieke feedbackpunten:\n\n* De doelgroepanalyse is zeer gedetailleerd en goed doordacht. De strategie om unieke en authentieke chocoladeproducten aan te bieden is een goede manier om de doelgroep te bereiken.\n* De tone of voice is warm en vriendelijk, maar soms kan het een beetje te commercieel overkomen. Het is belangrijk om een balans te vinden tussen het overtuigen van de klant en het respecteren van hun intelligentie.\n* De marketingteksten zijn over het algemeen goed geschreven, maar soms kan het een beetje te langdradig zijn. Het is belangrijk om de klant te boeien en te overtuigen met k",
+      "length": 1729
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-07T19:48:02.329889",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor chocolade is over het algemeen goed doordacht, maar er zijn enkele punten die aandacht verdienen. Hieronder volgen enkele specifieke feedbackpunten:\n\n* De doelgroepanalyse is zeer gedetailleerd en goed doordacht. De strategie om unieke en authentieke chocoladeproducten aan te bieden is een goede manier om de doelgroep te bereiken.\n* De tone of voice is warm en vriendelijk, maar soms kan het een beetje te commercieel overkomen. Het is belangrijk om een balans te vinden tussen het overtuigen van de klant en het respecteren van hun intelligentie.\n* De marketingteksten zijn over het algemeen goed geschreven, maar soms kan het een beetje te langdradig zijn. Het is belangrijk om de klant te boeien en te overtuigen met korte en krachtige zinnen.\n* De social media content is goed doordacht, maar het is belangrijk om ervoor te zorgen dat de content op elk platform afgestemd is op de specifieke doelgroep en het platform.\n* De call-to-action (\"Bestel nu en ervaar de liefde in elke beet\") is wat te commercieel en kan beter worden geformuleerd om de klant te motiveren om meer te weten te komen over de producten.\n\nOm de campagne te verbeteren, zou ik de volgende aanpassingen voorstellen:\n\n* Maak de marketingteksten korter en krachtiger.\n* Zorg ervoor dat de tone of voice consistent is over alle kanalen.\n* Pas de call-to-action aan om meer gericht te zijn op het informeren en motiveren van de klant.\n* Zorg ervoor dat de social media content op elk platform afgestemd is op de specifieke doelgroep en het platform.\n\nOver het algemeen is de campagne goed doordacht, maar er zijn enkele aanpassingen nodig om de campagne nog effectiever te maken.",
+      "approved": false,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:02.330688",
+    "data": {
+      "system_prompt": "# Book Copywriting\n\nGebruik het juiste format voor boek-promotieteksten:\n\n**Blurb-format (achterflapstekst):**\n1. **Hook** — één zin die de lezer direct raakt of nieuwsgierig maakt\n2. **Premise** — wat is de situatie, het conflict of de belofte van het boek?\n3. **Thematische belofte** — wat krijgt de lezer mee? Inzicht, emotie, kennis, verwondering?\n4. **CTA** — uitnodiging om te lezen, geen verkooptaal\n\n**Headline-formules voor boeken:**\n- \"Het verhaal van [onderwerp] dat je nooit vergeet\"\n- \"V",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die wo",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:16.157046",
+    "data": {
+      "preview": "Dit is mijn bijdrage:\n\n1. **Headline:** \"Ontdek de liefde in elke beet\"\n2. **Subheadline:** \"Unieke en authentieke chocoladeproducten voor een onvergetelijke ervaring\"\n\n3. **Bodytekst:**\nOnze chocolade is meer dan alleen een lekkernij. Het is een ervaring die je zintuigen prikkelt en je hart verwarmt. Wij zijn gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Van de zorgvuldige selectie van ingrediënten tot de liefdevolle productie, wij zetten ons in om elke beet een onvergetelijke ervaring te maken.\n\nWij begrijpen dat iedereen uniek is en daarom bieden wij een breed aanbod aan chocoladeproducten aan. Of je nu een liefhebber bent van klassieke smaken of op zoek bent naar iets nieuws en spannends, wij hebben iets voor iedereen. Onze chocolad",
+      "length": 1337
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-04-07T19:48:16.157875",
+    "data": {
+      "copy_draft": "Dit is mijn bijdrage:\n\n1. **Headline:** \"Ontdek de liefde in elke beet\"\n2. **Subheadline:** \"Unieke en authentieke chocoladeproducten voor een onvergetelijke ervaring\"\n\n3. **Bodytekst:**\nOnze chocolade is meer dan alleen een lekkernij. Het is een ervaring die je zintuigen prikkelt en je hart verwarmt. Wij zijn gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Van de zorgvuldige selectie van ingrediënten tot de liefdevolle productie, wij zetten ons in om elke beet een onvergetelijke ervaring te maken.\n\nWij begrijpen dat iedereen uniek is en daarom bieden wij een breed aanbod aan chocoladeproducten aan. Of je nu een liefhebber bent van klassieke smaken of op zoek bent naar iets nieuws en spannends, wij hebben iets voor iedereen. Onze chocolade is gemaakt met liefde en zorg, en wij hopen dat je dat kan proeven in elke beet.\n\nOnze missie is om niet alleen heerlijke chocolade te maken, maar ook om een positieve impact te hebben op de wereld. Wij gebruiken alleen duurzame ingrediënten en productiemethoden om onze milieu-impact te reduceren. Wij geloven dat iedereen recht heeft op een beetje liefde en geluk, en dat is precies wat wij in elke beet van onze chocolade stoppen.\n\n4. **Call-to-action:** \"Leer meer over onze unieke chocoladeproducten en hoe wij een verschil maken\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:16.158757",
+    "data": {
+      "system_prompt": "# Book Social Media\n\nBoeken hebben een eigen social media-ecosysteem. Gebruik de juiste formats per platform:\n\n**Bookstagram (Instagram):**\n- Begin met een citaat uit het boek of een sfeervolle eerste zin\n- Beschrijf de leeservaring, niet de marketing (\"Dit boek nam me mee naar...\")\n- Gebruik reading community hashtags: #bookstagram #boekenliefde #lezenisleuk #nederlandsboek\n- Vraag om interactie: \"Heb jij dit gelezen?\" of \"Wat vind jij van dit thema?\"\n- Visuele suggestie: historische foto's, ka",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die w",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:26.803420",
+    "data": {
+      "preview": "Hier is de content voor elk platform:\n\n**1. Instagram:**\n\"Ontdek de liefde in elke beet! Onze chocolade is meer dan alleen een lekkernij, het is een ervaring die je zintuigen prikkelt en je hart verwarmt. Van de zorgvuldige selectie van ingrediënten tot de liefdevolle productie, wij zetten ons in om elke beet een onvergetelijke ervaring te maken. #chocoladeliefde #uniekechocolade #duurzaamheid #smaakvolleervaring\"\n\n**2. LinkedIn:**\n\"Als leider in de chocolademarkt, zijn wij gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Onze missie is om niet alleen heerlijke chocolade te maken, maar ook om een positieve impact te hebben op de wereld. Wij gebruiken alleen duurzame ingrediënten en productiemethoden om onze milieu-impact te reduceren. Leer",
+      "length": 1088
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-04-07T19:48:26.804314",
+    "data": {
+      "social_content": "Hier is de content voor elk platform:\n\n**1. Instagram:**\n\"Ontdek de liefde in elke beet! Onze chocolade is meer dan alleen een lekkernij, het is een ervaring die je zintuigen prikkelt en je hart verwarmt. Van de zorgvuldige selectie van ingrediënten tot de liefdevolle productie, wij zetten ons in om elke beet een onvergetelijke ervaring te maken. #chocoladeliefde #uniekechocolade #duurzaamheid #smaakvolleervaring\"\n\n**2. LinkedIn:**\n\"Als leider in de chocolademarkt, zijn wij gepassioneerd over het creëren van unieke en authentieke chocoladeproducten die een verschil maken. Onze missie is om niet alleen heerlijke chocolade te maken, maar ook om een positieve impact te hebben op de wereld. Wij gebruiken alleen duurzame ingrediënten en productiemethoden om onze milieu-impact te reduceren. Leer meer over onze unieke chocoladeproducten en hoe wij een verschil maken: [link naar website] #chocolade #duurzaamheid #smaakvolleervaring #innovatie\"\n\n**3. X/Twitter:**\n\"Ontdek de liefde in elke beet! Unieke & authentieke chocolade met een positieve impact #chocoladeliefde #duurzaamheid\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:26.805114",
+    "data": {
+      "system_prompt": "# Book Launch Strategy — Campaign Review Criteria\n\nGebruik deze criteria om een boek-campagne te beoordelen. Dit zijn andere maatstaven dan voor productcampagnes.\n\n**Auteurgeloofwaardigheid**\n- Is de auteur of diens achtergrond zichtbaar in de campagne?\n- Wordt expertise, ervaring of persoonlijk verhaal ingezet als social proof?\n- Is de toon consistent met wie de auteur is?\n\n**Emotionele haakjes**\n- Raakt de campagne een emotie of herkenning bij de lezer?\n- Wordt de leeservaring beloofd, niet he",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: chocola\n\nDOELGROEP: Op basis van de bovenstaande marktonderzoek kan worden vastgesteld dat de doelgroep van de chocolademarkt diverse is en bestaat uit:\n\n* **Demografie:** Vrouwen en mannen van alle leeftijden, met een focus op de 25-45 jaar oude doelgroep.\n* **Psychografie:** Personen die waarderen voor kwaliteit, innovatie en uniekheid in hun chocoladeproducten. Zij zijn geïnteresseerd in de productieproces en de ingrediënten die worden gebrui",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-04-07T19:48:41.486348",
+    "data": {
+      "preview": "BESLISSING: GOEDGEKEURD\nFASE: final\nFEEDBACK: \n\nDe marketingcampagne voor de chocolade-producten is over het algemeen goed doordacht en consistent in tone of voice. De strategie om unieke en authentieke chocoladeproducten aan te bieden die een ervaring creëren met chocolade en waarborgen van duurzaamheid en sociale verantwoordelijkheid, is duidelijk en aantrekkelijk voor de doelgroep.\n\nDe marketingteksten zijn vriendelijk en inspirerend, en de schrijfstijl is informeel en aansprekend. De gebruikte woorden als \"liefde\", \"uniek\" en \"authentiek\" communiceren de waarden en doelen van het bedrijf effectief.\n\nDe social media content is eveneens goed doordacht en afgestemd op elk platform. De hashtags zijn relevant en helpen om de content te verspreiden.\n\nEen klein punt van verbetering is dat de ",
+      "length": 1344
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-04-07T19:48:41.487764",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor de chocolade-producten is over het algemeen goed doordacht en consistent in tone of voice. De strategie om unieke en authentieke chocoladeproducten aan te bieden die een ervaring creëren met chocolade en waarborgen van duurzaamheid en sociale verantwoordelijkheid, is duidelijk en aantrekkelijk voor de doelgroep.\n\nDe marketingteksten zijn vriendelijk en inspirerend, en de schrijfstijl is informeel en aansprekend. De gebruikte woorden als \"liefde\", \"uniek\" en \"authentiek\" communiceren de waarden en doelen van het bedrijf effectief.\n\nDe social media content is eveneens goed doordacht en afgestemd op elk platform. De hashtags zijn relevant en helpen om de content te verspreiden.\n\nEen klein punt van verbetering is dat de call-to-action in de marketingtekst en social media content niet heel duidelijk is. Het zou beter zijn om een specifieke actie te vragen, zoals \"Koop nu\" of \"Lees meer over onze producten\", in plaats van \"Leer meer over onze unieke chocoladeproducten en hoe wij een verschil maken\".\n\nOver het algemeen is de campagne goed doordacht en effectief in het bereiken van de doelgroep. Het is een goed voorbeeld van hoe een bedrijf zijn waarden en doelen kan communiceren door middel van een consistente tone of voice en aansprekende marketingteksten.",
+      "approved": true,
+      "phase": "final"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-04-07T19:49:25.422286",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260407_194925.png"
+    }
+  }
+]

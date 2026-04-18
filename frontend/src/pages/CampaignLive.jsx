@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { streamCampaignEvents } from '../api'
+import { resumeCampaign, streamCampaignEvents } from '../api'
 import AgentPipeline from '../components/AgentPipeline'
 
 const NODE_LABEL = {
   pdf_ingestion: 'PDF Ingestion',
+  mismatch_check: 'Mismatch Check',
   researcher: 'Researcher',
   strateeg: 'Strateeg',
   copywriter: 'Copywriter',
@@ -16,6 +17,7 @@ const NODE_LABEL = {
 
 const NODE_COLOR = {
   pdf_ingestion: '#6366f1',
+  mismatch_check: '#f59e0b',
   researcher: '#06b6d4',
   strateeg: '#8b5cf6',
   copywriter: '#f59e0b',
@@ -100,6 +102,10 @@ export default function CampaignLive() {
   const [expandedIdx, setExpandedIdx] = useState(null)
   const [status, setStatus] = useState('queued')
   const [iterations, setIterations] = useState(0)
+  const [awaitingInput, setAwaitingInput] = useState(null) // { question, original, suggestion }
+  const [selectedOption, setSelectedOption] = useState(null) // 'original' | 'suggestion' | 'custom'
+  const [customValue, setCustomValue] = useState('')
+  const [resuming, setResuming] = useState(false)
   const logRef = useRef(null)
 
   useEffect(() => {
@@ -109,6 +115,15 @@ export default function CampaignLive() {
         if (event.node === '__done__' || event.node === '__error__') return
 
         // Update pipeline state on node_done
+        if (event.type === 'awaiting_input') {
+          setStatus('awaiting_input')
+          setAwaitingInput(event.data)
+          setSelectedOption(null)
+          setCustomValue('')
+          setLogs(prev => [...prev, event])
+          return
+        }
+
         if (event.type === 'node_done' && !event.node.startsWith('__')) {
           setActiveNode(event.node)
           setDoneNodes(prev => prev.includes(event.node) ? prev : [...prev, event.node])
@@ -143,7 +158,7 @@ export default function CampaignLive() {
             Campaign Running
             <span style={{
               marginLeft: 10, fontSize: 13, fontWeight: 500,
-              color: status === 'done' ? 'var(--green)' : status === 'failed' ? 'var(--red)' : 'var(--primary)',
+              color: status === 'done' ? 'var(--green)' : status === 'failed' ? 'var(--red)' : status === 'awaiting_input' ? 'var(--yellow)' : 'var(--primary)',
               background: 'rgba(99,102,241,0.1)', borderRadius: 6, padding: '3px 10px'
             }}>
               ● {status}
@@ -212,6 +227,114 @@ export default function CampaignLive() {
           </div>
         </div>
       </div>
+
+      {/* Human-in-the-loop modal */}
+      {awaitingInput && status === 'awaiting_input' && (() => {
+        const resolvedValue =
+          selectedOption === 'original'   ? awaitingInput.original :
+          selectedOption === 'suggestion' ? awaitingInput.suggestion :
+          selectedOption === 'custom'     ? customValue : ''
+        const canConfirm = !resuming && selectedOption && (selectedOption !== 'custom' || customValue.trim())
+
+        const optionStyle = (key) => ({
+          border: `1.5px solid ${selectedOption === key ? 'var(--primary)' : 'var(--border)'}`,
+          borderRadius: 10,
+          padding: '12px 16px',
+          marginBottom: 8,
+          cursor: 'pointer',
+          background: selectedOption === key ? 'rgba(99,102,241,0.08)' : 'var(--surface2)',
+          transition: 'border-color 0.15s, background 0.15s',
+        })
+
+        return (
+          <div style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200,
+          }}>
+            <div style={{
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              borderRadius: 16, padding: 32, maxWidth: 520, width: '90%',
+            }}>
+              <div style={{ fontSize: 11, color: 'var(--yellow)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, fontWeight: 600 }}>
+                ⚠ Verificatie nodig
+              </div>
+              <p style={{ color: 'var(--text)', fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>
+                {awaitingInput.question}
+              </p>
+
+              {/* Option 1 — original */}
+              <div style={optionStyle('original')} onClick={() => setSelectedOption('original')}>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Mijn originele omschrijving
+                </div>
+                <div style={{ fontSize: 13, color: 'var(--text)' }}>{awaitingInput.original}</div>
+              </div>
+
+              {/* Option 2 — PDF suggestion */}
+              <div style={optionStyle('suggestion')} onClick={() => setSelectedOption('suggestion')}>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  PDF-suggestie
+                </div>
+                <div style={{ fontSize: 13, color: 'var(--text)' }}>{awaitingInput.suggestion}</div>
+              </div>
+
+              {/* Option 3 — custom */}
+              <div style={optionStyle('custom')} onClick={() => setSelectedOption('custom')}>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  Eigen omschrijving
+                </div>
+                {selectedOption === 'custom' ? (
+                  <input
+                    autoFocus
+                    type="text"
+                    value={customValue}
+                    onChange={e => setCustomValue(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && canConfirm) {
+                        setResuming(true)
+                        resumeCampaign(id, customValue.trim())
+                          .then(() => { setAwaitingInput(null); setSelectedOption(null); setStatus('running'); setResuming(false) })
+                          .catch(() => setResuming(false))
+                      }
+                    }}
+                    onClick={e => e.stopPropagation()}
+                    placeholder="Typ je eigen omschrijving..."
+                    style={{
+                      width: '100%', boxSizing: 'border-box', marginTop: 4,
+                      background: 'var(--surface)', border: '1px solid var(--border)',
+                      borderRadius: 6, padding: '8px 12px', color: 'var(--text)',
+                      fontSize: 13, outline: 'none',
+                    }}
+                  />
+                ) : (
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)', fontStyle: 'italic' }}>Klik om zelf te typen...</div>
+                )}
+              </div>
+
+              <button
+                disabled={!canConfirm}
+                onClick={() => {
+                  setResuming(true)
+                  resumeCampaign(id, resolvedValue)
+                    .then(() => { setAwaitingInput(null); setSelectedOption(null); setStatus('running'); setResuming(false) })
+                    .catch(() => setResuming(false))
+                }}
+                style={{
+                  marginTop: 8,
+                  width: '100%',
+                  background: 'var(--primary)', color: '#fff', border: 'none',
+                  borderRadius: 8, padding: '11px 24px', fontSize: 14, fontWeight: 600,
+                  cursor: canConfirm ? 'pointer' : 'not-allowed',
+                  opacity: canConfirm ? 1 : 0.4,
+                  transition: 'opacity 0.15s',
+                }}
+              >
+                {resuming ? 'Bezig...' : 'Bevestigen en doorgaan →'}
+              </button>
+            </div>
+          </div>
+        )
+      })()}
 
       {status === 'done' && (
         <div style={{ textAlign: 'center', color: 'var(--green)', fontSize: 14 }}>

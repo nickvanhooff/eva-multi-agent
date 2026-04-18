@@ -18,6 +18,7 @@ class CampaignState(TypedDict):
 
     # --- RAG context ---
     pdf_context: str  # retrieved passages from the PDF, injected into Researcher prompt
+    pdf_sources: list  # structured sources: [{query, text, page}] — shown in frontend
 
     # --- Researcher output ---
     market_research: str

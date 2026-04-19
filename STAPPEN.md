@@ -2175,3 +2175,132 @@ De LLM krijgt een expliciete instructie: gebruik de echte afbeelding voor de her
 - instructie in user prompt (niet system prompt) omdat het campagne-specifieke data is
 
 ---
+
+## Stap 55: Bugfix — website tab niet zichtbaar vanuit history
+**Datum:** 2026-04-19
+**Commit:** [`2fabc7f`](https://github.com/nickvanhooff/eva-multi-agent/commit/2fabc7f)
+
+**Gebruikte prompt:**
+> if the website is generated it is not saved in the frontend, but the file is saved in campaigns/websites — is this a fix for in the frontend?
+
+**Probleem:**
+Na het genereren van een website was de Website-tab zichtbaar zolang de campagne in memory was. Na navigeren naar een andere pagina of serverherstart verdween de tab — de HTML was wel opgeslagen maar het pad werd niet teruggegeven bij het laden van de campagne vanuit de history.
+
+**Root cause:**
+`html_path` werd opgeslagen in twee plekken:
+1. In-memory `jobs[job_id]["result"]` — verdwijnt bij navigatie of herstart
+2. Sidecar-bestand `campaigns/{uuid}.website` — gevonden via job UUID
+
+Bij history-navigatie gebruikt de frontend de bestandsnaam als ID (bijv. `campaign_20260419_123456`), niet de UUID. De sidecar-lookup in `_attach_website()` zocht op `{bestandsnaam}.website` — dat bestand bestond niet.
+
+**Fix:**
+`generate_website_endpoint` in `api.py` schrijft `html_path` nu direct terug in het campagne JSON-rapport op schijf. Zo zit het pad al in de data bij het laden via history, ongeacht het ID-formaat.
+
+```python
+# na genereren — html_path in rapport opslaan
+if report_file and report_file.exists():
+    saved = json.load(open(report_file))
+    saved["html_path"] = html_url
+    json.dump(saved, open(report_file, "w"), indent=2, ensure_ascii=False)
+```
+
+Tevens `_find_report_file()` helper toegevoegd die zowel op UUID als op bestandsnaamstam zoekt — zodat de endpoint ook werkt als de campagne in memory is maar het rapport pas later via timestamp-naam is opgeslagen.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/api.py` | `_find_report_file()` helper; `html_path` terugschrijven in JSON rapport na genereren |
+
+**Zelf bedacht:**
+- oorzaak gevonden door de ID-flow te traceren: UUID in memory vs. bestandsnaam in history — twee verschillende opzoekpaden
+- JSON rapport aanpassen i.p.v. alleen sidecar: robuuster, geen afhankelijkheid van UUID-match
+
+---
+
+## Stap 56: Design research fase toegevoegd aan website generator
+**Datum:** 2026-04-19
+**Commit:** [`2fabc7f`](https://github.com/nickvanhooff/eva-multi-agent/commit/2fabc7f)
+
+**Gebruikte prompt:**
+> Ik wil dat je de website generator aanscherpt zodat hij vóór het genereren van de HTML eerst visueel onderzoek doet naar hoe de website eruit moet zien. [...] als de campagne over PSV gaat, verwacht ik direct een visuele richting met rood en wit.
+
+**Probleem:**
+De website generator koos direct een preset zonder te kijken of de campagne een bekend merk of club bevatte. Een campagne over PSV Eindhoven leverde dezelfde generieke kleuren op als een campagne over kaas.
+
+**Wat is er gedaan:**
+Nieuwe functie `_research_design_direction()` toegevoegd als Phase 1, vóór de HTML-generatie. Volgt het patroon van `researcher.py`: tools direct aanroepen in Python, resultaten als tekst injecteren in de LLM-prompt.
+
+**Flow:**
+
+```
+LLM call 1 — entity identificatie (altijd, snel)
+  ↓ entity_found = true?
+  ↓ ja: duckduckgo_search() + wikipedia_summary() → zoekresultaten
+  ↓      LLM call 2 — design verfijning op basis van zoekresultaten
+  ↓ nee: return "" → preset-selectie ongewijzigd
+design_brief string → injecteren in user_prompt van HTML-generator
+```
+
+**Voorbeeld PSV:**
+- LLM call 1 herkent `entity_name: "PSV Eindhoven"`, `entity_type: "sports_club"`
+- DuckDuckGo + Wikipedia bevestigen rood/wit
+- LLM call 2 retourneert `primary_accent: "#EE2523"`, `preset_base: "BOLD"`
+- HTML krijgt `--accent: #EE2523` in `:root` — geen generiek paars of grijs
+
+**Faalveiligheid:**
+`_research_design_direction()` raised nooit. Elke exception (LLM-fout, search-fout, ongeldige JSON) degradeert graceful naar `return ""` — generator gedraagt zich dan exact zoals voorheen.
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/agents/website_generator.py` | `json` import; `duckduckgo_search`/`wikipedia_summary` import; 2 systeemprompt-constanten; 4 hulpfuncties; `_research_design_direction()` aanroepen in `generate_website()` |
+| `src/skills/website-generation.md` | `## DESIGN BRIEF (when provided)` sectie toegevoegd vóór STEP 1 |
+| `src/tools.py` | Docstring `duckduckgo_search` uitgebreid met brand identity research use case |
+
+**Zelf bedacht:**
+- zelfde patroon als `researcher.py` (tools direct aanroepen, injecteren als tekst) — geen architectuurwijziging nodig
+- tool calls conditioneel: alleen bij `entity_found = true` — geen extra latency voor generieke producten
+- fallback brief op basis van LLM-kennis als searches falen — ook zonder internet een bruikbaar resultaat
+
+---
+
+## Stap 57: Website generator — variatie in layout en preset-kleuren
+**Datum:** 2026-04-19
+**Commit:** [`2fabc7f`](https://github.com/nickvanhooff/eva-multi-agent/commit/2fabc7f)
+
+**Gebruikte prompts:**
+> ik krijg nu wel vaak dezelfde soort sites. is dat normaal?
+> worden nu alleen de voorbeelden ook echt gebruikt of is dit alleen als idee voor de llm? ik wil niet dat elke site dezelfde look heeft en precies dezelfde blokken
+
+**Probleem — twee oorzaken gevonden:**
+
+1. **Preset-kleuren werden letterlijk gekopieerd.** De instructie "Do NOT use the colors verbatim — they are starting points only" werd genegeerd. Bier- en kaascampagnes kregen exact dezelfde hex-codes (`--accent: #5a8a4a` groen) — de standaard ORGANIC preset.
+
+2. **Vaste HTML-structuur.** STEP 5 was één hard template: altijd `nav → 2-kolom hero → 3 kaarten → testimonial → CTA → footer`. De LLM volgde dit letterlijk, dus elke site had dezelfde blokken in dezelfde volgorde.
+
+**Fix 1 — Kleurvariant dwingen:**
+- Preset-hex-codes kopiëren expliciet **verboden** gemaakt
+- Concrete product-specifieke kleurrichtingen toegevoegd als houvast: bier → amber/koper, kaas → warm geel, wijn → bordeauxrood, etc.
+- Preset-tabel uitgebreid met concrete voorbeelden per preset zodat "food" niet automatisch ORGANIC wordt (bier → BOLD, premium kaas → EDITORIAL)
+
+**Fix 2 — Modulaire layout:**
+- STEP 3 hernoemd van "Required CSS (verbatim)" naar "CSS Toolbox" — klassen als bouwstenen, niet als verplicht pakket
+- STEP 5 volledig vervangen door een menu van bouwblokken:
+  - 3 hero-varianten (split, centered, full-bleed accent)
+  - 6 content-secties (feature cards, alternating rows, numbered steps, quote, stats bar, brand story)
+  - 2 CTA-stijlen
+  - Selectiegids per campagnetype
+
+**Aangepaste bestanden:**
+
+| Bestand | Wijziging |
+|---|---|
+| `src/skills/website-generation.md` | STEP 2 kleuren-instructie aangescherpt; STEP 1 preset-tabel uitgebreid; STEP 3 herframed als toolbox; STEP 5 vervangen door modulair blokkenmenu met selectiegids |
+
+**Zelf bedacht:**
+- kleurenlijst per productcategorie als concrete houvast — Llama volgt specifieke voorbeelden beter dan abstracte regels
+- modulariteit via blokkenmenu i.p.v. één template — geeft variatie zonder kwaliteitsverlies, LLM kiest de combinatie op basis van de campagne-inhoud
+
+---

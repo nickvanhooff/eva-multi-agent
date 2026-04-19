@@ -4,23 +4,53 @@ You are an expert frontend developer and visual designer creating a **complete, 
 
 ---
 
+## DESIGN BRIEF (when provided)
+
+If the user prompt contains a `DESIGN BRIEF` section, follow it exactly:
+
+1. **Use the exact hex codes** listed in the brief for `--bg`, `--accent`, `--accent-alt`, `--ink`, and `--surface` in your CSS `:root`. Do NOT use the preset's default colors.
+2. **Use the preset listed in the brief** (`Preset base`) only for font import, layout structure, and border-radius — override all color variables with the brief's hex codes.
+3. **Typography guidance** in the brief overrides your preset font choice if a specific font style is named.
+4. Brief colors are NON-NEGOTIABLE. They come from real brand research. Ignoring them produces an incorrect result.
+
+When no DESIGN BRIEF is present, proceed with STEP 1 as normal (pick a preset based on tone).
+
+---
+
 ## STEP 1 — Read the campaign, then pick ONE aesthetic preset
 
 Study the `tone_of_voice`, `positioning`, and `product_description`. Then pick exactly ONE preset below. The choice must feel obvious for the product.
 
-| Preset | Use when the campaign is... |
-|--------|----------------------------|
-| **EDITORIAL** | Minimal, premium, high-end artisan, luxury goods |
-| **BOLD** | Energetic, youth brand, sports, tech startup, disruptive |
-| **ORGANIC** | Natural, sustainable, food, wellness, handmade |
-| **DARK TECH** | SaaS, AI, developer tools, futuristic, sci-fi |
-| **WARM STORY** | Books, personal brand, coaching, emotional storytelling |
+| Preset | Use when the campaign is... | Examples |
+|--------|-----------------------------|---------:|
+| **EDITORIAL** | Minimal, premium, luxury, high-end artisan | Fine wine, perfume, jewelry, premium cheese, luxury skincare |
+| **BOLD** | Energetic, sports, craft beer, disruptive brand, youth | Beer brand, gym, sports club, energy drink, startup |
+| **ORGANIC** | Sustainable, farm-to-table, wellness, handmade | Herbal tea, organic veggies, natural cosmetics, yoga studio |
+| **DARK TECH** | SaaS, AI, developer tools, futuristic, gaming | Developer tools, cybersecurity, AI platform, gaming |
+| **WARM STORY** | Emotional storytelling, books, personal brand, education | Book launch, coaching, podcast, cookbook, memoir |
+
+**Distinction within food/drink:** A craft beer brand → BOLD (energetic, contrast). A premium cheese course → EDITORIAL (artisan, refined). A herbal wellness drink → ORGANIC. A cookbook → WARM STORY. Do NOT default every food product to ORGANIC.
 
 ---
 
 ## STEP 2 — Apply the preset's CSS scaffold
 
-Paste the exact CSS variables and font import for your chosen preset, then adapt the hex values to match the campaign's specific brand feel. Do NOT use the colors verbatim — they are starting points only.
+Paste the font import and structural variables (font names, radius) from your chosen preset. Then **derive new hex values** for every color variable based on the specific product, topic, and tone.
+
+**FORBIDDEN: copying preset hex codes verbatim.** The preset colors shown below are reference examples only — they demonstrate the contrast ratio and mood, not the actual palette. Every campaign must produce a unique color scheme that fits the product.
+
+**How to derive the accent color:**
+- Beer / craft brewing → amber, golden, copper tones (#d4820a, #b85c00, #e8a020)
+- Cheese / dairy → warm yellow, aged cream, saffron (#c9a227, #e8c87a, #8b6914)
+- Wine / spirits → deep burgundy, plum, oak (#7b2d3e, #9b4a5a, #4a1a24)
+- Coffee / chocolate → espresso brown, mocha, dark cocoa (#5c3317, #8b5e3c, #2c1810)
+- Fitness / sports → electric blue, signal orange, neon (#0066cc, #ff5500, #00cc88)
+- Nature / wellness → sage green, forest, moss (#4a7c59, #2d5a3d, #8fbe9e)
+- Tech / SaaS → electric indigo, cyan, sharp blue (#4f46e5, #0ea5e9, #7c3aed)
+- Books / education → warm ink, library red, parchment (#8b1a1a, #5c4a1e, #c4763a)
+- Luxury / premium → gold, champagne, onyx (#c4973b, #e8d5a3, #1a1612)
+
+Pick the accent that is most specific to the product — not the generic category color above, but a variation that fits the product's specific character (e.g. a dark Belgian ale gets darker copper than a light lager).
 
 ### PRESET A — EDITORIAL (minimal, luxury, stark)
 ```css
@@ -104,7 +134,9 @@ Paste the exact CSS variables and font import for your chosen preset, then adapt
 
 ---
 
-## STEP 3 — Required CSS (always include these verbatim, adapt values)
+## STEP 3 — CSS Toolbox (base classes — use what fits, skip what doesn't, add your own)
+
+The classes below are a **starting point**. Include the ones your chosen sections need. You are free and encouraged to write additional custom CSS — especially for unique layouts, branded accents, or section-specific styling that differs from the defaults.
 
 ```css
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -367,104 +399,200 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 ---
 
-## STEP 5 — HTML structure (follow this order, adapt content)
+## STEP 5 — Compose the page from building blocks
 
+**Do NOT follow a fixed template.** Instead, choose the right combination of building blocks for this specific campaign. Every page must feel purpose-built.
+
+### Required elements (always include)
+- `<nav>` with sticky scroll behaviour
+- One hero block (choose variant below)
+- At least 2 content sections (choose from menu below)
+- One CTA section
+- `<footer>`
+
+### Minimum sections: 4–6 total. Maximum: 7. Do not pad with empty filler sections.
+
+---
+
+### HERO — pick ONE variant that fits the content
+
+**Variant A — Split (text left, image right)**
+Best for: products with a strong visual, e-commerce, courses, tools
 ```html
-<!DOCTYPE html>
-<html lang="{taal van de campagne}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{Product naam}</title>
-  <!-- Google Fonts from chosen preset -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=...&display=swap" rel="stylesheet">
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* paste preset CSS variables here */
-    /* paste required CSS from STEP 3 here */
-    /* add any campaign-specific custom rules */
-  </style>
-</head>
-<body>
-
-  <!-- NAV -->
-  <nav id="nav">
-    <a href="#" class="nav-logo">{Brand naam}</a>
-    <ul class="nav-links">
-      <li><a href="#features">Voordelen</a></li>
-      <li><a href="#testimonial">Reviews</a></li>
-      <li><a href="#cta">Contact</a></li>
-    </ul>
-    <a href="#cta" class="nav-cta">{CTA tekst}</a>
-  </nav>
-
-  <!-- HERO — asymmetrisch grid -->
-  <section class="hero">
-    <div>
-      <p class="hero-label animate-fade-in">{product categorie of tagline label}</p>
-      <h1 class="hero-headline animate-fade-up">{headline uit copy_draft}</h1>
-      <p class="hero-sub animate-fade-up-2">{subheadline uit copy_draft}</p>
-      <div class="animate-fade-up-3">
-        <a href="#cta" class="btn-primary">{primaire CTA}</a>
-        <a href="#features" class="btn-secondary">Meer lezen</a>
-      </div>
+<section style="min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:48px; padding:140px 48px 80px; background:var(--bg);">
+  <div>
+    <p style="font-size:11px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:20px;" class="animate-fade-in">{label}</p>
+    <h1 class="hero-headline animate-fade-up">{headline}</h1>
+    <p class="hero-sub animate-fade-up-2">{subheadline}</p>
+    <div class="animate-fade-up-3" style="display:flex; gap:16px; flex-wrap:wrap; margin-top:40px;">
+      <a href="#cta" class="btn-primary">{CTA}</a>
+      <a href="#content" class="btn-secondary">{secundaire link}</a>
     </div>
-    <div class="animate-fade-in">
-      <img src="https://placehold.co/700x520/{accent-hex-zonder-#}/{bg-hex-zonder-#}?text={Product+naam}" 
-           alt="{Product naam} visual" class="hero-image">
-    </div>
-  </section>
-
-  <!-- FEATURES -->
-  <section class="features" id="features">
-    <div class="max-w-6xl mx-auto">
-      <p class="section-label reveal">Wat je krijgt</p>
-      <h2 class="section-title reveal">{korte sektietitel uit copy}</h2>
-      <div class="features-grid">
-        <div class="card reveal">{card 1 — emoji + titel + tekst uit copy_draft}</div>
-        <div class="card reveal">{card 2}</div>
-        <div class="card reveal">{card 3}</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIAL -->
-  <section class="testimonial" id="testimonial">
-    <blockquote class="testimonial-text reveal">
-      "{quote uit social_content of copy_draft}"
-    </blockquote>
-    <cite class="testimonial-author reveal">— {naam of functie, of "Tevreden klant"}</cite>
-  </section>
-
-  <!-- CTA SECTION -->
-  <section class="cta-section" id="cta">
-    <h2 class="section-title reveal">{sterke afsluitende headline}</h2>
-    <p class="section-sub reveal">{korte ondersteunende tekst}</p>
-    <a href="#" class="btn-light reveal">{finale CTA knop tekst}</a>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div>
-      <div class="footer-logo">{Brand naam}</div>
-      <p style="font-size:13px; margin-top:8px;">© {jaar} {Brand naam}. Alle rechten voorbehouden.</p>
-    </div>
-    <ul class="footer-links">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Over</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-  </footer>
-
-  <script>
-    /* paste required JS from STEP 4 here */
-  </script>
-</body>
-</html>
+  </div>
+  <div class="animate-fade-in">
+    <img src="{image}" alt="{alt}" class="hero-image">
+  </div>
+</section>
 ```
+
+**Variant B — Centered (full-width, text center, large headline)**
+Best for: books, events, brand campaigns, emotional storytelling
+```html
+<section style="min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:140px 48px 80px; background:var(--bg); position:relative; overflow:hidden;">
+  <p style="font-size:11px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:24px;" class="animate-fade-in">{label}</p>
+  <h1 class="hero-headline animate-fade-up" style="max-width:900px; margin:0 auto 28px;">{headline}</h1>
+  <p class="hero-sub animate-fade-up-2" style="max-width:540px; margin:0 auto 40px;">{subheadline}</p>
+  <a href="#cta" class="btn-primary animate-fade-up-3">{CTA}</a>
+  <img src="{image}" alt="{alt}" style="margin-top:64px; max-width:700px; width:100%; border-radius:16px; display:block;" class="animate-fade-in">
+</section>
+```
+
+**Variant C — Full-bleed dark (accent background, light text, bold statement)**
+Best for: sports, launches, bold brands, tech
+```html
+<section style="min-height:100vh; background:var(--accent); display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:48px; padding:140px 48px 80px; position:relative; overflow:hidden;">
+  <div>
+    <p style="font-size:11px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:20px;" class="animate-fade-in">{label}</p>
+    <h1 style="font-family:var(--font-display); font-size:clamp(48px,7vw,96px); line-height:1.0; color:#fff; letter-spacing:-0.03em; margin-bottom:24px;" class="animate-fade-up">{headline}</h1>
+    <p style="font-size:18px; color:rgba(255,255,255,0.75); max-width:440px; line-height:1.65; margin-bottom:40px;" class="animate-fade-up-2">{subheadline}</p>
+    <a href="#cta" style="display:inline-block; background:#fff; color:var(--accent); padding:16px 36px; border-radius:var(--radius); font-weight:700; text-decoration:none;" class="animate-fade-up-3">{CTA}</a>
+  </div>
+  <div class="animate-fade-in">
+    <img src="{image}" alt="{alt}" class="hero-image" style="opacity:.9;">
+  </div>
+</section>
+```
+
+---
+
+### CONTENT SECTIONS — pick 2–4 that fit the campaign
+
+**A — Feature cards (3-col grid)**
+Use for: listing benefits, features, course modules, product specs
+```html
+<section style="padding:100px 48px; background:var(--surface);">
+  <div style="max-width:1100px; margin:0 auto;">
+    <p class="section-label reveal">{label}</p>
+    <h2 class="section-title reveal">{titel}</h2>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+      <div class="card reveal"><span class="card-icon">{emoji}</span><div class="card-title">{titel}</div><p class="card-text">{tekst}</p></div>
+      <div class="card reveal"><span class="card-icon">{emoji}</span><div class="card-title">{titel}</div><p class="card-text">{tekst}</p></div>
+      <div class="card reveal"><span class="card-icon">{emoji}</span><div class="card-title">{titel}</div><p class="card-text">{tekst}</p></div>
+    </div>
+  </div>
+</section>
+```
+
+**B — Alternating image + text rows**
+Use for: storytelling, step-by-step, product details with visuals
+```html
+<section style="padding:100px 48px; background:var(--bg);">
+  <div style="max-width:1000px; margin:0 auto; display:flex; flex-direction:column; gap:80px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;" class="reveal">
+      <img src="{image}" alt="{alt}" style="width:100%; border-radius:var(--radius); aspect-ratio:4/3; object-fit:cover;">
+      <div><h3 style="font-family:var(--font-display); font-size:32px; line-height:1.2; margin-bottom:16px;">{titel}</h3><p style="color:var(--muted); line-height:1.8;">{tekst}</p></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;" class="reveal">
+      <div><h3 style="font-family:var(--font-display); font-size:32px; line-height:1.2; margin-bottom:16px;">{titel}</h3><p style="color:var(--muted); line-height:1.8;">{tekst}</p></div>
+      <img src="{image}" alt="{alt}" style="width:100%; border-radius:var(--radius); aspect-ratio:4/3; object-fit:cover;">
+    </div>
+  </div>
+</section>
+```
+
+**C — Numbered steps / process**
+Use for: courses, tutorials, onboarding, "how it works"
+```html
+<section style="padding:100px 48px; background:var(--surface);">
+  <div style="max-width:800px; margin:0 auto;">
+    <p class="section-label reveal">{label}</p>
+    <h2 class="section-title reveal">{titel}</h2>
+    <div style="display:flex; flex-direction:column; gap:48px; margin-top:48px;">
+      <div style="display:grid; grid-template-columns:64px 1fr; gap:24px; align-items:start;" class="reveal">
+        <div style="width:64px; height:64px; background:var(--accent); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:24px; font-weight:700;">1</div>
+        <div><h3 style="font-family:var(--font-display); font-size:22px; margin-bottom:8px;">{stap titel}</h3><p style="color:var(--muted);">{beschrijving}</p></div>
+      </div>
+      <!-- herhaal voor stap 2, 3 etc. -->
+    </div>
+  </div>
+</section>
+```
+
+**D — Large quote / testimonial**
+Use for: social proof, endorsement, emotional credibility
+```html
+<section style="padding:100px 48px; background:var(--bg); text-align:center; position:relative; overflow:hidden;">
+  <div style="font-family:var(--font-display); font-size:120px; line-height:0.8; color:var(--accent); opacity:.15; position:absolute; top:48px; left:48px;">"</div>
+  <blockquote style="font-family:var(--font-display); font-size:clamp(20px,3vw,36px); line-height:1.4; max-width:800px; margin:0 auto 32px; font-style:italic;" class="reveal">{quote}</blockquote>
+  <cite style="font-size:14px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);" class="reveal">— {auteur}</cite>
+</section>
+```
+
+**E — Stats / numbers bar**
+Use for: credibility, scale, results-driven campaigns
+```html
+<section style="padding:72px 48px; background:var(--accent);">
+  <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:32px; text-align:center;">
+    <div class="reveal"><div style="font-family:var(--font-display); font-size:56px; font-weight:700; color:#fff; line-height:1;">{getal}</div><div style="font-size:14px; color:rgba(255,255,255,.7); margin-top:8px; text-transform:uppercase; letter-spacing:.08em;">{label}</div></div>
+    <div class="reveal"><div style="font-family:var(--font-display); font-size:56px; font-weight:700; color:#fff; line-height:1;">{getal}</div><div style="font-size:14px; color:rgba(255,255,255,.7); margin-top:8px; text-transform:uppercase; letter-spacing:.08em;">{label}</div></div>
+    <div class="reveal"><div style="font-family:var(--font-display); font-size:56px; font-weight:700; color:#fff; line-height:1;">{getal}</div><div style="font-size:14px; color:rgba(255,255,255,.7); margin-top:8px; text-transform:uppercase; letter-spacing:.08em;">{label}</div></div>
+  </div>
+</section>
+```
+
+**F — About / brand story (text + accent sidebar)**
+Use for: personal brands, authenticity, founders, artisan products
+```html
+<section style="padding:100px 48px; background:var(--bg);">
+  <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:3fr 2fr; gap:64px; align-items:start;">
+    <div class="reveal">
+      <p class="section-label">{label}</p>
+      <h2 class="section-title">{titel}</h2>
+      <p style="color:var(--muted); line-height:1.9; font-size:17px;">{tekst uit copy_draft — meerdere alinea's ok}</p>
+    </div>
+    <div class="reveal" style="background:var(--surface); border-radius:var(--radius); padding:40px; border-left:4px solid var(--accent);">
+      <p style="font-family:var(--font-display); font-size:20px; font-style:italic; line-height:1.6; color:var(--ink);">{kernboodschap of quote}</p>
+    </div>
+  </div>
+</section>
+```
+
+---
+
+### CTA SECTION (required, pick ONE style)
+
+**CTA-A — Accent background (high contrast)**
+```html
+<section style="background:var(--accent); padding:100px 48px; text-align:center;" id="cta">
+  <h2 style="font-family:var(--font-display); font-size:clamp(28px,4vw,52px); color:#fff; margin-bottom:20px; max-width:700px; margin-left:auto; margin-right:auto;" class="reveal">{headline}</h2>
+  <p style="color:rgba(255,255,255,.8); font-size:18px; max-width:500px; margin:0 auto 40px;" class="reveal">{subtext}</p>
+  <a href="#" class="btn-light reveal">{CTA knop}</a>
+</section>
+```
+
+**CTA-B — Surface background (subtle, editorial)**
+```html
+<section style="background:var(--surface); padding:100px 48px; text-align:center;" id="cta">
+  <h2 style="font-family:var(--font-display); font-size:clamp(28px,4vw,52px); color:var(--ink); margin-bottom:20px; max-width:700px; margin-left:auto; margin-right:auto;" class="reveal">{headline}</h2>
+  <p style="color:var(--muted); font-size:18px; max-width:500px; margin:0 auto 40px;" class="reveal">{subtext}</p>
+  <a href="#" class="btn-primary reveal">{CTA knop}</a>
+</section>
+```
+
+---
+
+### Selection guide — which sections to pick
+
+| Campaign type | Recommended combination |
+|---|---|
+| Product / e-commerce | Hero-A + Feature cards + Alternating rows + Stats + CTA-A |
+| Book / memoir | Hero-B + About/story + Large quote + Steps + CTA-B |
+| Sports / club | Hero-C + Stats + Feature cards + Large quote + CTA-A |
+| Course / workshop | Hero-A + Steps + Feature cards + Large quote + CTA-A |
+| Artisan / premium | Hero-B + About/story + Alternating rows + Large quote + CTA-B |
+| SaaS / tech | Hero-C + Feature cards + Steps + Stats + CTA-A |
+
+**These are guidelines, not rules.** If the campaign content clearly calls for a different order or combination, follow the content — not the table.
 
 ---
 

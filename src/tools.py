@@ -4,7 +4,12 @@ from __future__ import annotations
 
 
 def duckduckgo_search(query: str, max_results: int = 5) -> str:
-    """Search DuckDuckGo and return a formatted snippet of results."""
+    """Search DuckDuckGo and return formatted snippets for up to max_results results.
+
+    Use for brand identity research: query for official colors, visual identity,
+    style guides, and design conventions of known organizations, sports clubs,
+    companies, and public figures.
+    """
     try:
         from ddgs import DDGS
 

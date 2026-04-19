@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verlicht uw leven met Beyond Table Lamp</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --surface: #ffffff;
+      --ink: #333333;
+      --muted: #666666;
+      --accent: #6600cc;
+      --accent-alt: #ccccff;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-body: 'Space Grotesk', system-ui, sans-serif;
+      --radius: 6px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* --- Animations --- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .animate-fade-up   { animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) both; }
+    .animate-fade-up-2 { animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) 0.15s both; }
+    .animate-fade-up-3 { animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) 0.3s both; }
+    .animate-fade-in   { animation: fadeIn 1s ease both; }
+    /* Scroll-triggered reveal (JS adds this class) */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.22,1,.36,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    /* --- Nav --- */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    #nav.scrolled {
+      background: var(--bg);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+    /* --- Hero --- */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 48px;
+      padding: 140px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 6vw, 88px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 440px;
+      line-height: 1.65;
+      margin-bottom: 40px;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 16px 36px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+    /* --- Features --- */
+    .features {
+      padding: 100px 48px;
+      background: var(--surface);
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 56px;
+      max-width: 560px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      border: 1px solid rgba(0,0,0,0.07);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+    .card-icon { font-size: 32px; margin-bottom: 20px; display: block; }
+    .card-title { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+    .card-text { font-size: 15px; color: var(--muted); line-height: 1.65; }
+    /* --- Testimonial --- */
+    .testimonial {
+      padding: 100px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .testimonial::before {
+      content: '\201C';
+      font-family: var(--font-display);
+      font-size: 160px;
+      line-height: 0.8;
+      color: var(--accent);
+      opacity: 0.18;
+      position: absolute;
+      top: 60px;
+      left: 48px;
+    }
+    .testimonial-text {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 3vw, 36px);
+      line-height: 1.4;
+      max-width: 800px;
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+    .testimonial-author { font-size: 14px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    /* --- CTA Section --- */
+    .cta-section {
+      background: var(--accent);
+      padding: 100px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .cta-section .section-title { color: #fff; margin-bottom: 20px; max-width: 700px; }
+    .cta-section .section-sub { color: rgba(255,255,255,0.8); font-size: 18px; max-width: 500px; margin-bottom: 40px; }
+    .btn-light {
+      display: inline-block;
+      background: #fff;
+      color: var(--accent);
+      padding: 16px 40px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-light:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body>
+  <nav id="nav">
+    <a href="#" class="nav-logo">Philips Hue</a>
+    <ul class="nav-links">
+      <li><a href="#">Producten</a></li>
+      <li><a href="#">Over ons</a></li>
+      <li><a href="#" class="nav-cta">Bestel nu</a></li>
+    </ul>
+  </nav>
+  <section class="hero">
+    <div>
+      <p class="hero-label animate-fade-in">Slimme verlichting</p>
+      <h1 class="hero-headline animate-fade-up">Verlicht uw leven met Beyond Table Lamp</h1>
+      <p class="hero-sub animate-fade-up-2">Slimme verlichting voor een comfortabele en energiezuinige thuis</p>
+      <a href="#cta" class="btn-primary animate-fade-up-3">Bestel nu</a>
+    </div>
+    <img src="../images/campaign_20260419_141729.png" alt="Beyond Table Lamp" class="animate-fade-in" style="width: 100%; border-radius: var(--radius); aspect-ratio: 4/3; object-fit: cover;">
+  </section>
+  <section class="features">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <p class="section-label reveal">Slimme verlichting</p>
+      <h2 class="section-title reveal">Beyond Table Lamp</h2>
+      <div class="features-grid">
+        <div class="card reveal">
+          <span class="card-icon">&#x1F4A1;</span>
+          <div class="card-title">Energiezuinig</div>
+          <p class="card-text">Beyond Table Lamp is ontworpen om uw energierekening te verlagen</p>
+        </div>
+        <div class="card reveal">
+          <span class="card-icon">&#x1F50B;</span>
+          <div class="card-title">Slimme technologie</div>
+          <p class="card-text">Beyond Table Lamp heeft een unieke slimme technologie die uw leven kan verlichten</p>
+        </div>
+        <div class="card reveal">
+          <span class="card-icon">&#x1F48E;</span>
+          <div class="card-title">Design</div>
+          <p class="card-text">Beyond Table Lamp heeft een uniek ontwerp dat uw thuis kan transformeren</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="testimonial">
+    <blockquote class="testimonial-text reveal">"Beyond Table Lamp heeft mijn leven verlicht! Het is zo gemakkelijk om te gebruiken en het ontwerp is prachtig!"</blockquote>
+    <cite class="testimonial-author reveal">— Tevreden klant</cite>
+  </section>
+  <section class="cta-section" id="cta">
+    <h2 class="section-title reveal">Bestel nu en ontvang 10% korting op uw eerste aankoop!</h2>
+    <p class="section-sub reveal">Beyond Table Lamp is de perfecte keuze voor iedereen die op zoek is naar een slimme en energiezuinige verlichtingsoplossing</p>
+    <a href="#" class="btn-light reveal">Bestel nu</a>
+  </section>
+  <script>
+    // Sticky nav on scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Scroll-triggered reveal for .reveal elements
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

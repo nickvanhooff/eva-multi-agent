@@ -305,21 +305,26 @@ async def generate_website_endpoint(job_id: str):
     """Generate a Tailwind HTML landing page from an existing campaign result."""
     # Retrieve campaign data — check in-memory jobs first, then saved report file
     campaign_data = None
+    report_file = None
+
+    def _find_report_file(jid: str) -> Path | None:
+        """Locate the campaign JSON report for a given job id or filename stem."""
+        candidate = CAMPAIGNS_DIR / f"{jid}.json"
+        if candidate.exists():
+            return candidate
+        matches = sorted(CAMPAIGNS_DIR.glob(f"*{jid}*.json"))
+        matches = [m for m in matches if "_events" not in m.name]
+        return matches[0] if matches else None
 
     if job_id in jobs and jobs[job_id].get("result"):
         campaign_data = jobs[job_id]["result"]
+        report_file = _find_report_file(job_id)
     else:
         CAMPAIGNS_DIR.mkdir(exist_ok=True)
-        report_file = CAMPAIGNS_DIR / f"{job_id}.json"
-        if not report_file.exists():
-            matches = sorted(CAMPAIGNS_DIR.glob(f"*{job_id}*.json"))
-            matches = [m for m in matches if "_events" not in m.name]
-            if matches:
-                report_file = matches[0]
-        if report_file.exists():
-            import json as _json
+        report_file = _find_report_file(job_id)
+        if report_file:
             with open(report_file, encoding="utf-8") as f:
-                campaign_data = _json.load(f)
+                campaign_data = json.load(f)
 
     if not campaign_data:
         raise HTTPException(status_code=404, detail="Campaign result not found")
@@ -335,9 +340,13 @@ async def generate_website_endpoint(job_id: str):
     # 1. Update in-memory result
     if job_id in jobs and jobs[job_id].get("result") is not None:
         jobs[job_id]["result"]["html_path"] = html_url
-    # 2. Write sidecar file so it survives server restarts
-    sidecar = CAMPAIGNS_DIR / f"{job_id}.website"
-    sidecar.write_text(html_url, encoding="utf-8")
+    # 2. Write html_path into the campaign JSON report on disk so history view picks it up
+    if report_file and report_file.exists():
+        with open(report_file, encoding="utf-8") as f:
+            saved = json.load(f)
+        saved["html_path"] = html_url
+        with open(report_file, "w", encoding="utf-8") as f:
+            json.dump(saved, f, indent=2, ensure_ascii=False)
 
     return {"html_path": html_url}
 

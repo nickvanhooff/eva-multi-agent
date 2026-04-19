@@ -74,5 +74,6 @@
   "social_versions_count": 3,
   "iterations": 3,
   "approved_by_cm": true,
-  "image_path": "campaigns/images/campaign_20260414_124227.png"
+  "image_path": "campaigns/images/campaign_20260414_124227.png",
+  "html_path": "/static/websites/campaign_20260419_133809.html"
 }

@@ -1,0 +1,241 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-05-19T17:05:13.141291",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:13.143394",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Merk: [naam]\nProductlijn: [omschrijving]\nStijl / doelgroep: [type klant]\nPrijs: [segment]\nKernboodschap: [duurzaam / exclusief / casual]\n\nEerste passage uit de PDF:\ngaan we ons in 2024 richten op het documenteren en vast-\nleggen van processen en procedures. Zo krijgen we meer grip \nop de kwaliteit en onze standaarden. En krijgen klanten altijd \nde kwaliteit die ze verwachten. Ook maken we een start met \nde ontwikkeling van een Materialenbibliotheek. Daarin willen \nwe - per p",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:13.384198",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"kwaliteit en materialenbeleid\"}",
+      "length": 64
+    }
+  },
+  {
+    "node": "__system__",
+    "type": "awaiting_input",
+    "message": "De PDF gaat over 'kwaliteit en materialenbeleid', maar de productomschrijving zegt 'Merk: [naam]\nProductlijn: [omschrijving]\nStijl / doelgroep: [type klant]\nPrijs: [segment]\nKernboodschap: [duurzaam / exclusief / casual]'. Welke omschrijving wil je gebruiken voor de campagne?",
+    "timestamp": "2026-05-19T17:05:13.390558",
+    "data": {
+      "type": "mismatch",
+      "question": "De PDF gaat over 'kwaliteit en materialenbeleid', maar de productomschrijving zegt 'Merk: [naam]\nProductlijn: [omschrijving]\nStijl / doelgroep: [type klant]\nPrijs: [segment]\nKernboodschap: [duurzaam / exclusief / casual]'. Welke omschrijving wil je gebruiken voor de campagne?",
+      "original": "Merk: [naam]\nProductlijn: [omschrijving]\nStijl / doelgroep: [type klant]\nPrijs: [segment]\nKernboodschap: [duurzaam / exclusief / casual]",
+      "suggestion": "kwaliteit en materialenbeleid"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:22.856459",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Merk: [naam]\nProductlijn: [omschrijving]\nStijl / doelgroep: [type klant]\nPrijs: [segment]\nKernboodschap: [duurzaam / exclusief / casual]\n\nEerste passage uit de PDF:\ngaan we ons in 2024 richten op het documenteren en vast-\nleggen van processen en procedures. Zo krijgen we meer grip \nop de kwaliteit en onze standaarden. En krijgen klanten altijd \nde kwaliteit die ze verwachten. Ook maken we een start met \nde ontwikkeling van een Materialenbibliotheek. Daarin willen \nwe - per p",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:23.257968",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"kwaliteit en materialen\"}",
+      "length": 58
+    }
+  },
+  {
+    "node": "mismatch_check",
+    "type": "node_done",
+    "message": "✓ mismatch_check completed",
+    "timestamp": "2026-05-19T17:05:23.260454",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:26.610421",
+    "data": {
+      "system_prompt": "\nJe bent een marktonderzoeker voor een reclamebureau.\nJe taak is om een productomschrijving te analyseren en twee dingen op te leveren:\n\n1. MARKTONDERZOEK: Een beknopte analyse van de markt, concurrenten, en kansen.\n2. DOELGROEP: Een gedetailleerde beschrijving van de ideale doelgroep (demografie, psychografie, pijnpunten, behoeften).\n\nSchrijf in het Nederlands. Wees specifiek en concreet.",
+      "user_prompt": "Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.\n\nPDF-documentatie (primaire bron):\n[Passage 1] (pagina 53)\ngaan we ons in 2024 richten op het documenteren en vast-\nleggen van processen en procedures. Zo krijgen we meer grip \nop de kwaliteit en onze standaarden. En krijgen klanten altijd \nde kwaliteit die ze verwachten. Ook maken we een start met \nde ontwikkeling v",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:28.062711",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nDe markt waarin Zeeman opereert, is de detailhandel in textiel en kleding. Uit de PDF-documentatie blijkt dat Zeeman in 2024 haar aandacht zal richten op het documenteren en vastleggen van processen en procedures om de kwaliteit en standaarden te waarborgen [Bron: 1]. Dit geeft aan dat de markt vraagt om transparantie en kwaliteit.\n\nEen belangrijke trend in de markt is de groeiende aandacht voor duurzaamheid en milieubewustzijn. Zeeman heeft in 2023 een gecertificeerde leverancier geworden voor GOTS, OCS, GRS en RCS, en zal in 2024 de logo's van deze keurmerken op haar producten tonen [Bron: 2]. Dit geeft aan dat de markt vraagt om duurzame en milieuvriendelijke producten.\n\nDe concurrentie in de markt lijkt hevig te zijn, maar Zeeman onderscheidt zich door haar focus op ",
+      "length": 2446
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-05-19T17:05:28.063686",
+    "data": {
+      "target_audience": "De ideale doelgroep voor Zeeman zijn consumenten die waarde hechten aan kwaliteit, duurzaamheid en transparantie. Hieronder volgt een gedetailleerde beschrijving van de doelgroep:\n\n* **Demografie:** Volwassenen van 25-55 jaar, met een midden tot hoog inkomen, die geïnteresseerd zijn in duurzaamheid en kwaliteit.\n* **Psychografie:** Consumenten die waarde hechten aan transparantie en duurzaamheid, en die bereid zijn om iets meer te betalen voor producten die aan deze criteria voldoen. Ze zijn ook geïnteresseerd in de herkomst van de producten en de arbeidsomstandigheden waarin ze worden geproduceerd.\n* **Pijnpunten:** Consumenten die zich zorgen maken over de impact van hun consumptie op het milieu en de samenleving, en die op zoek zijn naar producten die duurzaam en verantwoord zijn.\n* **Behoeften:** Consumenten die op zoek zijn naar producten van hoge kwaliteit, die duurzaam zijn en die transparant zijn over de herkomst en de productieprocessen.\n\nZeeman kan deze doelgroep bereiken door haar focus op kwaliteit, duurzaamheid en transparantie te communiceren, en door producten aan te bieden die aan deze criteria voldoen. De ontwikkeling van het Digitaal Product Paspoort en de Materialenbibliotheek zijn voorbeelden van initiatieven die Zeeman kan gebruiken om de doelgroep te bereiken en te informeren over de kwaliteit en duurzaamheid van haar producten.",
+      "market_research": "De markt waarin Zeeman opereert, is de detailhandel in textiel en kleding. Uit de PDF-documentatie blijkt dat Zeeman in 2024 haar aandacht zal richten op het documenteren en vastleggen van processen en procedures om de kwaliteit en standaarden te waarborgen [Bron: 1]. Dit geeft aan dat de markt vraagt om transparantie en kwaliteit.\n\nEen belangrijke trend in de markt is de groeiende aandacht voor duurzaamheid en milieubewustzijn. Zeeman heeft in 2023 een gecertificeerde leverancier geworden voor GOTS, OCS, GRS en RCS, en zal in 2024 de logo's van deze keurmerken op haar producten tonen [Bron: 2]. Dit geeft aan dat de markt vraagt om duurzame en milieuvriendelijke producten.\n\nDe concurrentie in de markt lijkt hevig te zijn, maar Zeeman onderscheidt zich door haar focus op kwaliteit, duurzaamheid en transparantie. De ontwikkeling van een Materialenbibliotheek en het Digitaal Product Paspoort (DPP) zijn voorbeelden van initiatieven die Zeeman neemt om de kwaliteit en duurzaamheid van haar producten te waarborgen [Bron: 1 en 3]."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:05:28.064421",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: kwaliteit en materialenbeleid\n\nMARKTONDERZOEK: De markt waarin Zeeman opereert, is de detailhandel in textiel en kleding. Uit de PDF-documentatie blijkt dat Zeeman in 2024 haar aandacht zal richten op het documenteren en vastleggen van processen en procedures om de kwaliteit en standaarden te waarborgen [Bron: 1]. Dit geeft aan dat de markt vraagt om transparantie en kwaliteit.\n\nEen belangrijke trend in de markt is d",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:05:29.510686",
+    "data": {
+      "preview": "## STRATEGIE\n\n### Marketingstrategie voor Zeeman\n\nOp basis van het marktonderzoek en de doelgroep is de marketingstrategie voor Zeeman als volgt:\n\n**Positionering:** Zeeman is de leider in de detailhandel in textiel en kleding die kwaliteit, duurzaamheid en transparantie garandeert.\n\n**Kernboodschap:** Zeeman biedt duurzame en kwalitatieve producten die transparant zijn over de herkomst en de productieprocessen.\n\n**Berichtenhiërarchie:**\n\n* Kernboodschap: Zeeman biedt duurzame en kwalitatieve producten.\n* Ondersteunende claims: Onze producten zijn gemaakt van hoogwaardige materialen, zijn duurzaam geproduceerd en zijn transparant over de herkomst.\n* Bewijs: Onze Materialenbibliotheek en Digitaal Product Paspoort bieden u inzicht in de kwaliteit en duurzaamheid van onze producten.\n\n**Kanaal",
+      "length": 2818
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-05-19T17:05:29.511933",
+    "data": {
+      "strategy": "### Marketingstrategie voor Zeeman\n\nOp basis van het marktonderzoek en de doelgroep is de marketingstrategie voor Zeeman als volgt:\n\n**Positionering:** Zeeman is de leider in de detailhandel in textiel en kleding die kwaliteit, duurzaamheid en transparantie garandeert.\n\n**Kernboodschap:** Zeeman biedt duurzame en kwalitatieve producten die transparant zijn over de herkomst en de productieprocessen.\n\n**Berichtenhiërarchie:**\n\n* Kernboodschap: Zeeman biedt duurzame en kwalitatieve producten.\n* Ondersteunende claims: Onze producten zijn gemaakt van hoogwaardige materialen, zijn duurzaam geproduceerd en zijn transparant over de herkomst.\n* Bewijs: Onze Materialenbibliotheek en Digitaal Product Paspoort bieden u inzicht in de kwaliteit en duurzaamheid van onze producten.\n\n**Kanaalstrategie:** Zeeman zal gebruik maken van organische en betaalde kanalen om de doelgroep te bereiken, waaronder social media, influencer marketing en online advertenties. De kanaalstrategie zal worden gericht op het creëren van een sterke online aanwezigheid en het bereiken van een breed publiek.\n\n**Contentmix:** De contentmix zal worden gericht op het bieden van waardevolle informatie over kwaliteit, duurzaamheid en transparantie. De content zal worden opgedeeld in drie categorieën: educatief, inspirerend en promotioneel.",
+      "positioning": "### Positie van Zeeman in de markt\n\nZeeman onderscheidt zich van de concurrentie door haar focus op kwaliteit, duurzaamheid en transparantie. De ontwikkeling van het Digitaal Product Paspoort en de Materialenbibliotheek zijn voorbeelden van initiatieven die Zeeman neemt om de kwaliteit en duurzaamheid van haar producten te waarborgen.\n\n**Schaarste/urgentie:** Zeeman garandeert dat haar producten duurzaam en milieuvriendelijk zijn, wat een schaarse eigenschap is in de markt.\n\n**Autoriteit:** Zeeman is gecertificeerd door GOTS, OCS, GRS en RCS, wat aantoont dat ze een autoriteit is op het gebied van duurzaamheid en milieubewustzijn.",
+      "tone_of_voice": "### Tonaliteit en schrijfstijl voor Zeeman\n\nDe tone of voice voor Zeeman zal zijn:\n\n* **Transparant:** Zeeman is eerlijk en transparant over de kwaliteit en duurzaamheid van haar producten.\n* **Duurzaam:** Zeeman is geëngageerd in het creëren van duurzame producten en proces.\n* **Kwaliteitsgericht:** Zeeman is gericht op het bieden van hoge kwaliteit producten.\n* **Informatief:** Zeeman is bereid om informatie te delen over de kwaliteit en duurzaamheid van haar producten.\n\nDe schrijfstijl zal zijn:\n\n* **Formeel:** Zeeman zal formeel en professioneel communiceren.\n* **Informeel:** Zeeman zal informeel communiceren met de doelgroep wanneer nodig.\n\nDe toon zal zijn:\n\n* **Vriendelijk:** Zeeman zal vriendelijk en behulpzaam zijn.\n* **Authentiek:** Zeeman zal authentiek en eerlijk zijn in haar communicatie."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-05-19T17:05:29.515102",
+    "data": {
+      "system_prompt": "# Copywriting\n\nKies het juiste framework per teksttype:\n\n**PAS (Problem-Agitate-Solution):** Benoem het probleem → vergroot het gevoel → presenteer de oplossing. Sterk voor pijnpunt-gedreven producten.\n**FAB (Features-Advantages-Benefits):** Eigenschap → wat dat betekent → wat de klant eraan heeft. Vertaal altijd features naar benefits.\n**Headline-formules:** \"Hoe [gewenst resultaat] zonder [pijn]\" | \"[Getal] manieren om [doel] te bereiken\" | \"Eindelijk: [belofte]\"\n\nRegels:\n- Schrijf voor één pe",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: kwaliteit en materialenbeleid\n\nDOELGROEP: De ideale doelgroep voor Zeeman zijn consumenten die waarde hechten aan kwaliteit, duurzaamheid en transparantie. Hieronder volgt een gedetailleerde beschrijving van de doelgroep:\n\n* **Demografie:** Volwassenen van 25-55 jaar, met een midden tot hoog inkomen, die geïnteresseerd zijn in duurzaamheid en kwaliteit.\n* **Psychografie:** Consumenten die waarde hechten aan transparantie en duurzaamhe",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-05-19T17:05:30.957468",
+    "data": {
+      "preview": "Hier zijn de marketingteksten voor het product \"kwaliteit en materialenbeleid\" van Zeeman:\n\n1. **Headline:** \"Kwaliteit die duurt, voor een betere toekomst\"\n\n2. **Subheadline:** \"Ontdek de duurzame en kwalitatieve producten van Zeeman\"\n\n3. **Bodytekst:**\nAls consument wil je weten dat de producten die je koopt, niet alleen van hoge kwaliteit zijn, maar ook duurzaam en verantwoord worden geproduceerd. Bij Zeeman zijn we ervan overtuigd dat kwaliteit en duurzaamheid hand in hand gaan. Onze producten worden gemaakt van hoogwaardige materialen en worden geproduceerd met oog voor de toekomst. Onze Materialenbibliotheek en Digitaal Product Paspoort bieden je inzicht in de kwaliteit en duurzaamheid van onze producten.\n\nOnze focus op kwaliteit, duurzaamheid en transparantie is meer dan alleen een ",
+      "length": 1521
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-05-19T17:05:30.958515",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten voor het product \"kwaliteit en materialenbeleid\" van Zeeman:\n\n1. **Headline:** \"Kwaliteit die duurt, voor een betere toekomst\"\n\n2. **Subheadline:** \"Ontdek de duurzame en kwalitatieve producten van Zeeman\"\n\n3. **Bodytekst:**\nAls consument wil je weten dat de producten die je koopt, niet alleen van hoge kwaliteit zijn, maar ook duurzaam en verantwoord worden geproduceerd. Bij Zeeman zijn we ervan overtuigd dat kwaliteit en duurzaamheid hand in hand gaan. Onze producten worden gemaakt van hoogwaardige materialen en worden geproduceerd met oog voor de toekomst. Onze Materialenbibliotheek en Digitaal Product Paspoort bieden je inzicht in de kwaliteit en duurzaamheid van onze producten.\n\nOnze focus op kwaliteit, duurzaamheid en transparantie is meer dan alleen een slogan. Het is een manier van denken en werken die door ons hele bedrijf heen loopt. We zijn ervan overtuigd dat onze producten niet alleen een positieve invloed hebben op jouw leven, maar ook op de wereld om ons heen. Door te kiezen voor Zeeman, kies je voor kwaliteit, duurzaamheid en transparantie.\n\nBij Zeeman geloven we dat iedereen het recht heeft om te weten waar zijn producten vandaan komen en hoe ze worden gemaakt. Daarom delen we graag informatie over onze productieprocessen en materialen. We zijn trots op onze producten en onze manier van werken, en we hopen dat jij dat ook bent.\n\n4. **Call-to-action:** \"Ontdek onze duurzame producten en leer meer over onze kwaliteit en materialenbeleid op onze website\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:05:30.961364",
+    "data": {
+      "system_prompt": "Je bent een social media specialist voor een reclamebureau.\nJe taak is om platformspecifieke social media content te maken op basis van de strategie en marketingteksten.\n\nAls je feedback hebt ontvangen van de Campaign Manager, verwerk die feedback in een verbeterde versie.\n\nSchrijf in het Nederlands. Pas je stijl aan per platform.",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: kwaliteit en materialenbeleid\n\nDOELGROEP: De ideale doelgroep voor Zeeman zijn consumenten die waarde hechten aan kwaliteit, duurzaamheid en transparantie. Hieronder volgt een gedetailleerde beschrijving van de doelgroep:\n\n* **Demografie:** Volwassenen van 25-55 jaar, met een midden tot hoog inkomen, die geïnteresseerd zijn in duurzaamheid en kwaliteit.\n* **Psychografie:** Consumenten die waarde hechten aan transparantie en duurzaamh",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:05:31.724206",
+    "data": {
+      "preview": "Hier zijn de verbeterde social media content voor het product \"kwaliteit en materialenbeleid\" van Zeeman:\n\n1. **Instagram:**\n\n* **Caption:** \"Kwaliteit die duurt, voor een betere toekomst Onze producten zijn gemaakt van hoogwaardige materialen en worden geproduceerd met oog voor de toekomst. Ontdek onze duurzame producten en leer meer over onze kwaliteit en materialenbeleid op onze website (link) #duurzaamheid #kwaliteit #transparantie\"\n* **Afbeelding:** Een foto van een Zeeman-product met een heldere en natuurlijke achtergrond, om de kwaliteit en duurzaamheid van het product te benadrukken.\n\n2. **LinkedIn:**\n\n* **Titel:** \"De toekomst van kwaliteit en duurzaamheid\"\n* **Tekst:** \"Bij Zeeman geloven we dat kwaliteit en duurzaamheid hand in hand gaan. Onze producten worden gemaakt van hoogwa",
+      "length": 1876
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-05-19T17:05:31.725421",
+    "data": {
+      "social_content": "Hier zijn de verbeterde social media content voor het product \"kwaliteit en materialenbeleid\" van Zeeman:\n\n1. **Instagram:**\n\n* **Caption:** \"Kwaliteit die duurt, voor een betere toekomst Onze producten zijn gemaakt van hoogwaardige materialen en worden geproduceerd met oog voor de toekomst. Ontdek onze duurzame producten en leer meer over onze kwaliteit en materialenbeleid op onze website (link) #duurzaamheid #kwaliteit #transparantie\"\n* **Afbeelding:** Een foto van een Zeeman-product met een heldere en natuurlijke achtergrond, om de kwaliteit en duurzaamheid van het product te benadrukken.\n\n2. **LinkedIn:**\n\n* **Titel:** \"De toekomst van kwaliteit en duurzaamheid\"\n* **Tekst:** \"Bij Zeeman geloven we dat kwaliteit en duurzaamheid hand in hand gaan. Onze producten worden gemaakt van hoogwaardige materialen en worden geproduceerd met oog voor de toekomst. Onze Materialenbibliotheek en Digitaal Product Paspoort bieden je inzicht in de kwaliteit en duurzaamheid van onze producten. Ontdek hoe wij je helpen om een betere toekomst te bouwen.\"\n* **Call-to-action:** \"Lees meer over onze kwaliteit en materialenbeleid op onze website (link)\"\n\n3. **X/Twitter:**\n\n* **Tweet:** \"Kwaliteit die duurt, voor een betere toekomst Onze producten zijn gemaakt van hoogwaardige materialen en worden geproduceerd met oog voor de toekomst. #duurzaamheid #kwaliteit #transparantie\"\n* **Link:** Een link naar de website van Zeeman met meer informatie over de kwaliteit en duurzaamheid van de producten.\n\nIk heb de content aangepast om hem beter te laten passen bij elk platform. Op Instagram gebruik ik een kort en krachtig bericht met een foto om de aandacht te trekken. Op LinkedIn gebruik ik een professionele post met meer informatie over de kwaliteit en duurzaamheid van de producten. Op X/Twitter gebruik ik een kort en krachtig bericht met een link naar de website van Zeeman."
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:31.728470",
+    "data": {
+      "system_prompt": "# Launch Strategy\n\nBeoordeel een campagne op deze criteria:\n\n**Strategische aansluiting:** Weerspiegelt de campagne de positionering en kernboodschap van de strateeg?\n**Doelgroepfit:** Spreekt de toon, het taalgebruik en de inhoud de gedefinieerde doelgroep aan?\n**Consistentie:** Is de tone of voice consistent over alle uitingen (copy, social, CTA)?\n**Overtuigingskracht:** Is er een duidelijk voordeel voor de klant? Is de CTA helder?\n**Volledigheid:** Zijn alle kanalen (copy + social) voorzien v",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: kwaliteit en materialenbeleid\n\nDOELGROEP: De ideale doelgroep voor Zeeman zijn consumenten die waarde hechten aan kwaliteit, duurzaamheid en transparantie. Hieronder volgt een gedetailleerde beschrijving van de doelgroep:\n\n* **Demografie:** Volwassenen van 25-55 jaar, met een midden tot hoog inkomen, die geïnteresseerd zijn in duurzaamheid en kwaliteit.\n* **Psychografie:** Consumenten die waarde hechten aan transparantie en duurzaamheid, en die ",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:05:32.790813",
+    "data": {
+      "preview": "BESLISSING: GOEDGEKEURD\nFASE: final\nFEEDBACK: \n\nDe marketingcampagne voor het product \"kwaliteit en materialenbeleid\" van Zeeman is goed uitgevoerd en sluit aan bij de strategie en doelgroep. De tone of voice is consistent over alle uitingen en de overtuigingskracht is goed. De campagne is volledig en biedt waardevolle informatie over kwaliteit, duurzaamheid en transparantie.\n\nSpecifieke punten die goed zijn uitgevoerd:\n\n* De positionering en kernboodschap van Zeeman zijn duidelijk terug te zien in de campagne.\n* De doelgroep wordt goed aangesproken met een toon en taalgebruik die passen bij hun interesses en behoeften.\n* De consistentie in tone of voice over alle uitingen (copy, social, CTA) is goed.\n* De overtuigingskracht van de campagne is goed, met een duidelijk voordeel voor de klant",
+      "length": 1204
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-05-19T17:05:32.793819",
+    "data": {
+      "cm_feedback": "De marketingcampagne voor het product \"kwaliteit en materialenbeleid\" van Zeeman is goed uitgevoerd en sluit aan bij de strategie en doelgroep. De tone of voice is consistent over alle uitingen en de overtuigingskracht is goed. De campagne is volledig en biedt waardevolle informatie over kwaliteit, duurzaamheid en transparantie.\n\nSpecifieke punten die goed zijn uitgevoerd:\n\n* De positionering en kernboodschap van Zeeman zijn duidelijk terug te zien in de campagne.\n* De doelgroep wordt goed aangesproken met een toon en taalgebruik die passen bij hun interesses en behoeften.\n* De consistentie in tone of voice over alle uitingen (copy, social, CTA) is goed.\n* De overtuigingskracht van de campagne is goed, met een duidelijk voordeel voor de klant en een heldere CTA.\n* De campagne is volledig en biedt waardevolle informatie over kwaliteit, duurzaamheid en transparantie.\n\nDe social media content is ook goed aangepast aan elk platform, met een duidelijke en krachtige boodschap en een heldere call-to-action. De gebruikte afbeeldingen en hashtags zijn ook relevant en aantrekkelijk.\n\nAl met al is de campagne goed uitgevoerd en klaar voor lancering.",
+      "approved": true,
+      "phase": "final"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-05-19T17:06:15.464598",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260519_170615.png"
+    }
+  }
+]

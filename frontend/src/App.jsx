@@ -5,6 +5,7 @@ import NewCampaign from './pages/NewCampaign'
 import CampaignLive from './pages/CampaignLive'
 import CampaignResults from './pages/CampaignResults'
 import CampaignHistory from './pages/CampaignHistory'
+import ConfigPage from './pages/ConfigPage'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/campaigns/:id/live" element={<CampaignLive />} />
             <Route path="/campaigns/:id" element={<CampaignResults />} />
             <Route path="/history" element={<CampaignHistory />} />
+            <Route path="/config" element={<ConfigPage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>

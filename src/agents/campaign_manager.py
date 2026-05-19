@@ -3,6 +3,7 @@
 import re
 
 from src.llm import call_llm, get_agent_config
+from src.runtime_config import get_max_iterations
 from src.skills.skills_config import get_skills
 from src.state import CampaignState
 
@@ -23,9 +24,6 @@ FEEDBACK: [jouw feedback hier]
 Wees streng maar constructief. Geef specifieke, actionable feedback."""
 
 
-MAX_ITERATIONS = 3
-
-
 def campaign_manager_node(state: CampaignState) -> dict:
     """Evaluate campaign quality and decide on approval or revision.
 
@@ -33,6 +31,7 @@ def campaign_manager_node(state: CampaignState) -> dict:
     Writes: cm_feedback, phase, approved, final_campaign
     """
     iteration = state.get("iteration_count", 0)
+    max_iterations = get_max_iterations()
 
     campaign_type = state.get("campaign_type", "product")
     skill_content = get_skills(campaign_type, "campaign_manager")
@@ -60,7 +59,7 @@ MARKETINGTEKST:
 SOCIAL MEDIA CONTENT:
 {state.get("social_content", "Niet beschikbaar")}
 
-ITERATIE: {iteration} van {MAX_ITERATIONS}
+ITERATIE: {iteration} van {max_iterations}
 
 Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
 
@@ -102,7 +101,7 @@ Geef je beoordeling met BESLISSING, FASE en FEEDBACK."""
     }
 
     # If approved or max iterations reached, create final campaign
-    if approved or iteration >= MAX_ITERATIONS:
+    if approved or iteration >= max_iterations:
         result["approved"] = True
         result["final_campaign"] = {
             "product": state["product_description"],
@@ -130,7 +129,7 @@ def cm_router(state: CampaignState) -> str:
     if state.get("approved", False):
         print("[ROUTER] -> END (approved)")
         return "finalize"
-    if state.get("iteration_count", 0) >= MAX_ITERATIONS:
+    if state.get("iteration_count", 0) >= get_max_iterations():
         print("[ROUTER] -> END (max iterations reached)")
         return "finalize"
 

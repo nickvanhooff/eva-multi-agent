@@ -85,3 +85,32 @@ export function websiteUrl(htmlPath) {
   if (!htmlPath) return null
   return `${BASE}${htmlPath}`
 }
+
+export async function getConfig() {
+  const res = await fetch(`${BASE}/config`)
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}
+
+export async function saveConfig(body) {
+  const res = await fetch(`${BASE}/config`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    let detail = await res.text()
+    try {
+      const j = JSON.parse(detail)
+      detail = j.detail || detail
+    } catch { /* keep raw */ }
+    throw new Error(detail)
+  }
+  return res.json()
+}
+
+export async function resetConfig() {
+  const res = await fetch(`${BASE}/config/reset`, { method: 'POST' })
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}

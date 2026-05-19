@@ -1,0 +1,241 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-05-19T17:18:37.199798",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:37.201681",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nEerste passage uit de PDF:\ngaan we ons in 2024 richten op het documenteren en vast-\nleggen van processen en procedures. Zo krijgen we meer grip \nop de kwaliteit en onze standaarden",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:37.633005",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"kwaliteit en materialenbibliotheek ASML\"}",
+      "length": 74
+    }
+  },
+  {
+    "node": "__system__",
+    "type": "awaiting_input",
+    "message": "De PDF gaat over 'kwaliteit en materialenbibliotheek ASML', maar de productomschrijving zegt 'Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op'. Welke omschrijving wil je gebruiken voor de campagne?",
+    "timestamp": "2026-05-19T17:18:37.635424",
+    "data": {
+      "type": "mismatch",
+      "question": "De PDF gaat over 'kwaliteit en materialenbibliotheek ASML', maar de productomschrijving zegt 'Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op'. Welke omschrijving wil je gebruiken voor de campagne?",
+      "original": "Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op",
+      "suggestion": "kwaliteit en materialenbibliotheek ASML"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:49.343014",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nEerste passage uit de PDF:\ngaan we ons in 2024 richten op het documenteren en vast-\nleggen van processen en procedures. Zo krijgen we meer grip \nop de kwaliteit en onze standaarden",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:49.815408",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"kwaliteit en processen ASML\"}",
+      "length": 62
+    }
+  },
+  {
+    "node": "mismatch_check",
+    "type": "node_done",
+    "message": "✓ mismatch_check completed",
+    "timestamp": "2026-05-19T17:18:49.817258",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:53.840133",
+    "data": {
+      "system_prompt": "\nJe bent een marktonderzoeker voor een reclamebureau.\nJe taak is om een productomschrijving te analyseren en twee dingen op te leveren:\n\n1. MARKTONDERZOEK: Een beknopte analyse van de markt, concurrenten, en kansen.\n2. DOELGROEP: Een gedetailleerde beschrijving van de ideale doelgroep (demografie, psychografie, pijnpunten, behoeften).\n\nSchrijf in het Nederlands. Wees specifiek en concreet.",
+      "user_prompt": "Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.\n\nPDF-documentatie (primaire bron):\n[Passage 1] (pagina 53)\ngaan we ons in 2024 richten op het documenteren en vast-\nleggen van processen en procedures. Zo krijgen we meer grip \nop de kwaliteit en onze standaarden. En krijgen klanten altijd \nde kwaliteit die ze verwachten. Ook maken we een start met \nde ontwikkeling v",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:55.425237",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nDe markt waarin Zeeman opereert, lijkt sterk gericht te zijn op duurzaamheid en milieuvriendelijkheid. Het bedrijf heeft in 2023 verschillende certificaten behaald, zoals GOTS, OCS, GRS en RCS, om de kwaliteit en duurzaamheid van haar producten te waarborgen [Bron: 2]. Daarnaast werkt Zeeman aan de ontwikkeling van een Materialenbibliotheek, waarin gegevens over gebruikte materialen en grondstoffen worden vastgelegd, om meer inzicht te krijgen in de kwaliteit van haar producten [Bron: 1].\n\nDe Europese Unie heeft bepaald dat elk product dat binnen een specifieke risico-productcategorie op de Europese markt komt, in 2026 een Digitaal Product Paspoort (DPP) moet hebben [Bron: 3]. Dit is een belangrijke stap in het verduurzamen van de Europese economie. Zeeman is in 2023 beg",
+      "length": 2726
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-05-19T17:18:55.426633",
+    "data": {
+      "target_audience": "De ideale doelgroep voor Zeeman lijkt te bestaan uit consumenten die waarde hechten aan duurzaamheid en milieuvriendelijkheid. Deze consumenten zijn waarschijnlijk:\n\n* Demografisch: 25-55 jaar oud, met een midden tot hoog inkomen\n* Psychografisch: waarde hechten aan duurzaamheid, milieuvriendelijkheid en sociale verantwoordelijkheid\n* Pijnpunten: zoeken naar producten die duurzaam en milieuvriendelijk zijn, maar hebben moeite om de juiste producten te vinden\n* Behoeften: willen weten waar hun producten vandaan komen, willen inzicht hebben in de productieprocessen en willen bijdragen aan een duurzamere economie\n\nDeze doelgroep is geïnteresseerd in producten die gemaakt zijn van duurzame materialen en die een minimale impact hebben op het milieu. Zeeman kan deze doelgroep bereiken door haar producten te labelen met certificaten zoals GOTS en OCS, en door informatie te verstrekken over de productieprocessen en materialen die worden gebruikt [Bron: 2].\n\nDaarnaast kan Zeeman ook communiceren over haar inspanningen om de keten transparanter te maken, bijvoorbeeld door het gebruik van Open Supply Hub [Bron: 6]. Dit kan helpen om het vertrouwen van de consumenten te winnen en hen te overtuigen van de duurzaamheid van Zeemans producten.",
+      "market_research": "De markt waarin Zeeman opereert, lijkt sterk gericht te zijn op duurzaamheid en milieuvriendelijkheid. Het bedrijf heeft in 2023 verschillende certificaten behaald, zoals GOTS, OCS, GRS en RCS, om de kwaliteit en duurzaamheid van haar producten te waarborgen [Bron: 2]. Daarnaast werkt Zeeman aan de ontwikkeling van een Materialenbibliotheek, waarin gegevens over gebruikte materialen en grondstoffen worden vastgelegd, om meer inzicht te krijgen in de kwaliteit van haar producten [Bron: 1].\n\nDe Europese Unie heeft bepaald dat elk product dat binnen een specifieke risico-productcategorie op de Europese markt komt, in 2026 een Digitaal Product Paspoort (DPP) moet hebben [Bron: 3]. Dit is een belangrijke stap in het verduurzamen van de Europese economie. Zeeman is in 2023 begonnen met de voorbereiding van een platform waarop de informatie over alle producten straks verzameld en getoond kan worden [Bron: 3].\n\nDe concurrentie lijkt te bestaan uit andere bedrijven die ook actief zijn in de textielindustrie en streven naar duurzaamheid. Zeeman werkt samen met verschillende partners, zoals Spinning Jenny, Oxious en Nou Jij, om de productie van duurzame producten in Nederland te stimuleren [Bron: 4].\n\nKansen voor Zeeman lijken te liggen in de ontwikkeling van duurzame producten en de implementatie van het Digitaal Product Paspoort. Het bedrijf kan hiermee haar positie op de markt versterken en bijdragen aan een duurzamere economie."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:18:55.427610",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nMARKTONDERZOEK: De markt waarin Zeeman opereert, lijkt sterk gericht te zijn op duurzaamheid en milieuvriendelijkheid. He",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:18:56.661466",
+    "data": {
+      "preview": "## STRATEGIE\nDe marketingstrategie voor ASML is gericht op het vergroten van de visibiliteit en het vertrouwen van de doelgroep in de duurzaamheid en kwaliteit van ASML's producten. De strategie omvat de volgende onderdelen:\n\n* **Positionering**: ASML positioneert zich als de wereldwijde specialist in duurzame halfgeleiderproducten, met een focus op kwaliteit, innovatie en transparantie.\n* **Berichtenhiërarchie**: De kernboodschap is \"ASML: de duurzame keuze voor de toekomst van de halfgeleiderindustrie\". Ondersteunende claims zijn:\n + \"Duurzame producten, gemaakt met de meest moderne technologie\"\n + \"Transparantie in al onze productieprocessen\"\n + \"Samenwerking met partners voor een duurzamere economie\"\n* **Kanaalstrategie**: De doelgroep wordt bereikt via social media, contentmarketing e",
+      "length": 2743
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-05-19T17:18:56.662742",
+    "data": {
+      "strategy": "De marketingstrategie voor ASML is gericht op het vergroten van de visibiliteit en het vertrouwen van de doelgroep in de duurzaamheid en kwaliteit van ASML's producten. De strategie omvat de volgende onderdelen:\n\n* **Positionering**: ASML positioneert zich als de wereldwijde specialist in duurzame halfgeleiderproducten, met een focus op kwaliteit, innovatie en transparantie.\n* **Berichtenhiërarchie**: De kernboodschap is \"ASML: de duurzame keuze voor de toekomst van de halfgeleiderindustrie\". Ondersteunende claims zijn:\n + \"Duurzame producten, gemaakt met de meest moderne technologie\"\n + \"Transparantie in al onze productieprocessen\"\n + \"Samenwerking met partners voor een duurzamere economie\"\n* **Kanaalstrategie**: De doelgroep wordt bereikt via social media, contentmarketing en PR. ASML zal actief zijn op platforms als LinkedIn, Twitter en Facebook, en zal content publiceren over duurzaamheid, innovatie en productieprocessen.\n* **Contentmix**: De contentmix is gericht op educatie en inspiratie, met een focus op duurzaamheid en kwaliteit. 60% van de content is educatief, 30% inspirerend en 10% promotioneel.\n* **AIDA-model**: Elke campagne doorloopt de volgende stappen:\n + **Attention**: ASML trekt aandacht met unieke en interessante content over duurzaamheid en innovatie.\n + **Interest**: De doelgroep wordt geïnteresseerd in de producten en diensten van ASML door de transparantie en kwaliteit ervan.\n + **Desire**: De doelgroep wil graag bijdragen aan een duurzamere economie en kiest voor ASML als duurzame keuze.\n + **Action**: De doelgroep neemt actie door ASML's producten en diensten te kopen of te gebruiken.",
+      "positioning": "ASML positioneert zich als de duurzame keuze voor de toekomst van de halfgeleiderindustrie. De kernwaarde van ASML is transparantie, en het bedrijf streeft ernaar om de keten transparanter te maken door het gebruik van open source technologie en data.\n\nASML is de wereldwijde specialist in duurzame halfgeleiderproducten, met een focus op kwaliteit, innovatie en transparantie. Het bedrijf werkt samen met partners om de productie van duurzame producten in Nederland te stimuleren en bijdraagt aan een duurzamere economie.",
+      "tone_of_voice": "De tone of voice van ASML is professioneel, transparant en inspirerend. ASML communiceert op een zakelijke manier, maar met een warm en persoonlijk toon.\n\n* **Tekst**: De tekst is helder, duidelijk en eenvoudig te begrijpen.\n* **Taal**: De taal is zakelijk, maar met een warm en persoonlijk toon.\n* **Stijl**: De stijl is professioneel en transparant, met een focus op duurzaamheid en kwaliteit.\n* **Tonen**: ASML gebruikt een positief en inspirerend toon, met een focus op de toekomst en de duurzaamheid van de halfgeleiderindustrie."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-05-19T17:18:56.663910",
+    "data": {
+      "system_prompt": "# Copywriting\n\nKies het juiste framework per teksttype:\n\n**PAS (Problem-Agitate-Solution):** Benoem het probleem → vergroot het gevoel → presenteer de oplossing. Sterk voor pijnpunt-gedreven producten.\n**FAB (Features-Advantages-Benefits):** Eigenschap → wat dat betekent → wat de klant eraan heeft. Vertaal altijd features naar benefits.\n**Headline-formules:** \"Hoe [gewenst resultaat] zonder [pijn]\" | \"[Getal] manieren om [doel] te bereiken\" | \"Eindelijk: [belofte]\"\n\nRegels:\n- Schrijf voor één pe",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nDOELGROEP: De ideale doelgroep voor Zeeman lijkt te bestaan uit consumenten die waarde hechten aan duurzaamheid en milieuvriendelijkheid. D",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-05-19T17:18:58.062802",
+    "data": {
+      "preview": "Hier zijn de opgevraagde teksten:\n\n1. **Headline**: \"Innovatie voor een duurzame toekomst\"\n2. **Subheadline**: \"ASML: wereldwijd leider in duurzame halfgeleiderproducten\"\n3. **Bodytekst**:\nAls wereldwijde leider in de halfgeleiderindustrie, begrijpen we de belangrijkheid van duurzaamheid en kwaliteit. Onze machines en diensten zijn ontworpen om de meest moderne technologie te bieden, terwijl we ook de impact op het milieu minimaliseren. Onze 24/7 ondersteuning door duizenden Customer Support-engineers wereldwijd zorgt ervoor dat onze klanten altijd kunnen rekenen op een snelle en efficiënte oplossing.\n\nOnze producten zijn gemaakt met de meest moderne technologie en zijn ontworpen om de hoogste kwaliteit te bieden. We zijn transparant in al onze productieprocessen en werken samen met partne",
+      "length": 1484
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-05-19T17:18:58.063723",
+    "data": {
+      "copy_draft": "Hier zijn de opgevraagde teksten:\n\n1. **Headline**: \"Innovatie voor een duurzame toekomst\"\n2. **Subheadline**: \"ASML: wereldwijd leider in duurzame halfgeleiderproducten\"\n3. **Bodytekst**:\nAls wereldwijde leider in de halfgeleiderindustrie, begrijpen we de belangrijkheid van duurzaamheid en kwaliteit. Onze machines en diensten zijn ontworpen om de meest moderne technologie te bieden, terwijl we ook de impact op het milieu minimaliseren. Onze 24/7 ondersteuning door duizenden Customer Support-engineers wereldwijd zorgt ervoor dat onze klanten altijd kunnen rekenen op een snelle en efficiënte oplossing.\n\nOnze producten zijn gemaakt met de meest moderne technologie en zijn ontworpen om de hoogste kwaliteit te bieden. We zijn transparant in al onze productieprocessen en werken samen met partners om een duurzamere economie te creëren. Onze klanten kunnen rekenen op een professionele en inspirerende aanpak, waardoor ze de toekomst van de halfgeleiderindustrie kunnen vormgeven.\n\nBij ASML geloven we dat innovatie en duurzaamheid hand in hand gaan. We zijn toegewijd om de meest moderne en duurzame halfgeleiderproducten te bieden, terwijl we ook de behoeften van onze klanten en het milieu respecteren. Kom meer te weten over onze producten en diensten en hoe we samen een duurzamere toekomst kunnen creëren.\n4. **Call-to-action**: \"Ontdek hoe ASML u kan helpen bij het creëren van een duurzamere toekomst. Neem contact met ons op of bezoek onze website voor meer informatie.\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:18:58.064553",
+    "data": {
+      "system_prompt": "Je bent een social media specialist voor een reclamebureau.\nJe taak is om platformspecifieke social media content te maken op basis van de strategie en marketingteksten.\n\nAls je feedback hebt ontvangen van de Campaign Manager, verwerk die feedback in een verbeterde versie.\n\nSchrijf in het Nederlands. Pas je stijl aan per platform.",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nDOELGROEP: De ideale doelgroep voor Zeeman lijkt te bestaan uit consumenten die waarde hechten aan duurzaamheid en milieuvriendelijkheid. ",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:18:58.824447",
+    "data": {
+      "preview": "**1. Instagram**\n\nCaption:\n\"Innovatie voor een duurzame toekomst\nASML: wereldwijd leider in duurzame halfgeleiderproducten\nWij geloven dat innovatie en duurzaamheid hand in hand gaan. Onze machines en diensten zijn ontworpen om de meest moderne technologie te bieden, terwijl we ook de impact op het milieu minimaliseren.\n#ASML #Duurzaamheid #Halfgeleiderindustrie #Innovatie\"\n\nHashtags:\n#ASML #Duurzaamheid #Halfgeleiderindustrie #Innovatie #Sustainability #Technology #Future\n\n**2. LinkedIn**\n\nTitel: \"Duurzamheid en innovatie: de toekomst van de halfgeleiderindustrie\"\n\nTekst:\n\"Ons bedrijf, ASML, is wereldwijd leider in de halfgeleiderindustrie. Wij geloven dat innovatie en duurzaamheid hand in hand gaan en werken hard om de meest moderne technologie te bieden, terwijl we ook de impact op het ",
+      "length": 1436
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-05-19T17:18:58.825410",
+    "data": {
+      "social_content": "**1. Instagram**\n\nCaption:\n\"Innovatie voor een duurzame toekomst\nASML: wereldwijd leider in duurzame halfgeleiderproducten\nWij geloven dat innovatie en duurzaamheid hand in hand gaan. Onze machines en diensten zijn ontworpen om de meest moderne technologie te bieden, terwijl we ook de impact op het milieu minimaliseren.\n#ASML #Duurzaamheid #Halfgeleiderindustrie #Innovatie\"\n\nHashtags:\n#ASML #Duurzaamheid #Halfgeleiderindustrie #Innovatie #Sustainability #Technology #Future\n\n**2. LinkedIn**\n\nTitel: \"Duurzamheid en innovatie: de toekomst van de halfgeleiderindustrie\"\n\nTekst:\n\"Ons bedrijf, ASML, is wereldwijd leider in de halfgeleiderindustrie. Wij geloven dat innovatie en duurzaamheid hand in hand gaan en werken hard om de meest moderne technologie te bieden, terwijl we ook de impact op het milieu minimaliseren.\nOnze machines en diensten zijn ontworpen om de hoogste kwaliteit te bieden en zijn gemaakt met de meest moderne technologie. We zijn transparant in al onze productieprocessen en werken samen met partners om een duurzamere economie te creëren.\nOntdek hoe ASML u kan helpen bij het creëren van een duurzamere toekomst. Neem contact met ons op of bezoek onze website voor meer informatie.\"\n\n**3. X/Twitter**\n\n\"Innovatie voor een duurzame toekomst @ASML levert wereldwijd duurzame halfgeleiderproducten. We geloven dat innovatie en duurzaamheid hand in hand gaan! #ASML #Duurzaamheid #Halfgeleiderindustrie #Innovatie\""
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:18:58.826397",
+    "data": {
+      "system_prompt": "# Launch Strategy\n\nBeoordeel een campagne op deze criteria:\n\n**Strategische aansluiting:** Weerspiegelt de campagne de positionering en kernboodschap van de strateeg?\n**Doelgroepfit:** Spreekt de toon, het taalgebruik en de inhoud de gedefinieerde doelgroep aan?\n**Consistentie:** Is de tone of voice consistent over alle uitingen (copy, social, CTA)?\n**Overtuigingskracht:** Is er een duidelijk voordeel voor de klant? Is de CTA helder?\n**Volledigheid:** Zijn alle kanalen (copy + social) voorzien v",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nDOELGROEP: De ideale doelgroep voor Zeeman lijkt te bestaan uit consumenten die waarde hechten aan duurzaamheid en milieuvriendelijkheid. Deze consume",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:19:00.001744",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK:\n\n**Strategische aansluiting:** De campagne weerspiegelt de positionering en kernboodschap van ASML, maar de focus op \"duurzaamheid\" en \"kwaliteit\" wordt niet voldoende gekoppeld aan de specifieke pijnpunten en behoeften van de doelgroep.\n\n**Doelgroepfit:** De toon, het taalgebruik en de inhoud van de campagne lijken te zakelijk en te technisch voor de gedefinieerde doelgroep. De doelgroep zoekt naar producten die duurzaam en milieuvriendelijk zijn, maar de campagne gaat meer over de technologie en productieprocessen achter de producten.\n\n**Consistentie:** De tone of voice is consistent over alle uitingen, maar kan meer warmte en persoonlijkheid gebruiken om de doelgroep aan te spreken.\n\n**Overtuigingskracht:** De campagne heeft een duidelij",
+      "length": 1685
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-05-19T17:19:00.004613",
+    "data": {
+      "cm_feedback": "**Strategische aansluiting:** De campagne weerspiegelt de positionering en kernboodschap van ASML, maar de focus op \"duurzaamheid\" en \"kwaliteit\" wordt niet voldoende gekoppeld aan de specifieke pijnpunten en behoeften van de doelgroep.\n\n**Doelgroepfit:** De toon, het taalgebruik en de inhoud van de campagne lijken te zakelijk en te technisch voor de gedefinieerde doelgroep. De doelgroep zoekt naar producten die duurzaam en milieuvriendelijk zijn, maar de campagne gaat meer over de technologie en productieprocessen achter de producten.\n\n**Consistentie:** De tone of voice is consistent over alle uitingen, maar kan meer warmte en persoonlijkheid gebruiken om de doelgroep aan te spreken.\n\n**Overtuigingskracht:** De campagne heeft een duidelijk voordeel voor de klant (duurzaamheid en kwaliteit), maar de call-to-action is niet concreet genoeg. De klant wordt niet duidelijk gemaakt wat hij kan doen om bij te dragen aan een duurzamere toekomst.\n\n**Volledigheid:** De campagne is niet volledig, er ontbreken concrete voorbeelden en cases die aantonen hoe ASML's producten en diensten bijdragen aan een duurzamere economie.\n\nSpecifieke aanbevelingen:\n\n* Maak de campagne meer concreet en specifiek, met voorbeelden en cases die aantonen hoe ASML's producten en diensten bijdragen aan een duurzamere economie.\n* Gebruik een meer warm en persoonlijk toon om de doelgroep aan te spreken.\n* Maak de call-to-action concreter en duidelijker, zodat de klant weet wat hij kan doen om bij te dragen aan een duurzamere toekomst.\n* Koppel de focus op \"duurzaamheid\" en \"kwaliteit\" aan de specifieke pijnpunten en behoeften van de doelgroep.",
+      "approved": true,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-05-19T17:19:40.932520",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260519_171940.png"
+    }
+  }
+]

@@ -4,6 +4,7 @@ const nav = [
   { to: '/', label: 'Dashboard', icon: '⬛' },
   { to: '/campaigns/new', label: 'New Campaign', icon: '✦' },
   { to: '/history', label: 'History', icon: '◷' },
+  { to: '/config', label: 'Config', icon: '⚙' },
 ]
 
 export default function Sidebar() {

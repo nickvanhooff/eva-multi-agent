@@ -52,14 +52,14 @@ export default function CampaignHistory() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface2)' }}>
-              {['Date', 'Product', 'Type', 'Iterations', 'Status', 'Actions'].map(h => (
+              {['Date', 'Product', 'Type', 'Iterations', 'Status', 'Website', 'Actions'].map(h => (
                 <th key={h} style={{ textAlign: 'left', padding: '12px 16px', fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
-              <tr><td colSpan={6} style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>No campaigns found</td></tr>
+              <tr><td colSpan={7} style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>No campaigns found</td></tr>
             ) : filtered.map((c, i) => (
               <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '12px 16px', color: 'var(--text-muted)', fontSize: 13, whiteSpace: 'nowrap' }}>
@@ -78,6 +78,9 @@ export default function CampaignHistory() {
                   <span style={{ color: c.approved_by_cm ? 'var(--green)' : 'var(--text-muted)', fontSize: 13 }}>
                     {c.approved_by_cm ? '● Approved' : '○ Pending'}
                   </span>
+                </td>
+                <td style={{ padding: '12px 16px', fontSize: 13, color: c.html_path ? 'var(--green)' : 'var(--text-muted)' }}>
+                  {c.html_path ? '● Yes' : '—'}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <button

@@ -1,0 +1,241 @@
+[
+  {
+    "node": "pdf_ingestion",
+    "type": "node_done",
+    "message": "✓ pdf_ingestion completed",
+    "timestamp": "2026-05-19T17:37:02.431342",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:02.432043",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nEerste passage uit de PDF:\nBrainport-style Rijksmuseum \nin Eindhoven; bringing world-\nclass art to the region and \nstrengthening Brainport as a \ncultural destination and a \ngreat p",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:02.899348",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"ASML investeert in Eindhoven en samenwerking met TU/e\"}",
+      "length": 88
+    }
+  },
+  {
+    "node": "__system__",
+    "type": "awaiting_input",
+    "message": "De PDF gaat over 'ASML investeert in Eindhoven en samenwerking met TU/e', maar de productomschrijving zegt 'Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op'. Welke omschrijving wil je gebruiken voor de campagne?",
+    "timestamp": "2026-05-19T17:37:02.904329",
+    "data": {
+      "type": "mismatch",
+      "question": "De PDF gaat over 'ASML investeert in Eindhoven en samenwerking met TU/e', maar de productomschrijving zegt 'Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op'. Welke omschrijving wil je gebruiken voor de campagne?",
+      "original": "Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op",
+      "suggestion": "ASML investeert in Eindhoven en samenwerking met TU/e"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:42.172065",
+    "data": {
+      "system_prompt": "Je controleert of een productomschrijving overeenkomt met de inhoud van een PDF. Antwoord uitsluitend met geldig JSON, geen uitleg: {\"match\": true/false, \"pdf_subject\": \"korte omschrijving van het PDF-onderwerp\"}",
+      "user_prompt": "Productomschrijving: Bedrijf: ASML\nDienst: wereldwijd de belangrijkste leverancier van machines voor de halfgeleiderindustrie (computerchips)\nDoelklant: computerchips\nProbleem dat het oplost: een 24/7 proces, uitgevoerd door duizenden Customer Support-engineers in Veldhoven en wereldwijd\nResultaat voor klant: zoek op\n\nEerste passage uit de PDF:\nBrainport-style Rijksmuseum \nin Eindhoven; bringing world-\nclass art to the region and \nstrengthening Brainport as a \ncultural destination and a \ngreat p",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:42.309374",
+    "data": {
+      "preview": "{\"match\": false, \"pdf_subject\": \"ASML investeert in Eindhoven en samenwerking met TU/e\"}",
+      "length": 88
+    }
+  },
+  {
+    "node": "mismatch_check",
+    "type": "node_done",
+    "message": "✓ mismatch_check completed",
+    "timestamp": "2026-05-19T17:37:42.310866",
+    "data": {}
+  },
+  {
+    "node": "researcher",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:44.556400",
+    "data": {
+      "system_prompt": "\nJe bent een marktonderzoeker voor een reclamebureau.\nJe taak is om een productomschrijving te analyseren en twee dingen op te leveren:\n\n1. MARKTONDERZOEK: Een beknopte analyse van de markt, concurrenten, en kansen.\n2. DOELGROEP: Een gedetailleerde beschrijving van de ideale doelgroep (demografie, psychografie, pijnpunten, behoeften).\n\nSchrijf in het Nederlands. Wees specifiek en concreet.",
+      "user_prompt": "Je hebt de volgende PDF-documentatie ontvangen over het product. Dit is de gezaghebbende bron: de campagne gaat over wat er in de PDF staat, niet over de productomschrijving alleen.\n\nPDF-documentatie (primaire bron):\n[Passage 1] (pagina 20)\nBrainport-style Rijksmuseum \nin Eindhoven; bringing world-\nclass art to the region and \nstrengthening Brainport as a \ncultural destination and a \ngreat place to live and work.\nMobility\nAffordable housing\nCulture\nEducation\nCollaboration with TU/e\nASML invests ",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:46.080228",
+    "data": {
+      "preview": "## MARKTONDERZOEK\n\nUit de PDF-documentatie blijkt dat ASML investeert in de Brainport-regio in Eindhoven, met als doel om de regio te versterken als culturele bestemming en aantrekkelijke woon- en werkplek. [Bron: 1]\n\nDe investeringen zijn gericht op verschillende gebieden, waaronder:\n\n* Mobiliteit: ASML investeert in openbare infrastructuurmaatregelen, zoals fietsroutes, hoogwaardige openbaarvervoersfaciliteiten en een nieuwe ondergrondse busstation bij het Centraal Station Eindhoven. [Bron: 3]\n* Wonen: ASML draagt bij aan het Beethoven-huisvestingsprogramma voor betaalbare woningen in de 21 MRE-gemeenten, waardoor de Brainport-regio een aantrekkelijke plek wordt om te wonen. [Bron: 3]\n* Cultuur: ASML werkt samen met het Rijksmuseum en de gemeente Eindhoven om een nieuwe, Brainport-style ",
+      "length": 2575
+    }
+  },
+  {
+    "node": "researcher",
+    "type": "node_done",
+    "message": "✓ researcher completed",
+    "timestamp": "2026-05-19T17:37:46.081037",
+    "data": {
+      "target_audience": "Op basis van de PDF-documentatie en de productomschrijving kan de ideale doelgroep als volgt worden beschreven:\n\n* **Demografie:**\n + Leeftijd: 25-55 jaar\n + Woonplaats: Eindhoven en omgeving\n + Onderwijs: Universitair opgeleid (bijv. TU/e)\n + Beroep: Professionals, studenten, onderzoekers\n* **Psychografie:**\n + Waarden: innovatie, cultuur, onderwijs, duurzaamheid\n + Interesse: Kunst, technologie, wetenschap, onderwijs\n + Doelen: Een aantrekkelijke woon- en werkplek, toegang tot hoogwaardige cultuur en onderwijs\n* **Pijnpunten:**\n + Gebrek aan betaalbare woningen in de regio\n + Onvoldoende toegang tot hoogwaardige cultuur en onderwijs\n + Beperkte mogelijkheden voor innovatie en samenwerking\n* **Behoeften:**\n + Een aantrekkelijke woon- en werkplek met hoogwaardige voorzieningen\n + Toegang tot betaalbare woningen\n + Mogelijkheden voor innovatie en samenwerking\n + Een sterke culturele en onderwijskundige infrastructuur\n\nDeze doelgroep lijkt zich te richten op professionals, studenten en onderzoekers die geïnteresseerd zijn in kunst, technologie, wetenschap en onderwijs, en die op zoek zijn naar een aantrekkelijke woon- en werkplek met hoogwaardige voorzieningen.",
+      "market_research": "Uit de PDF-documentatie blijkt dat ASML investeert in de Brainport-regio in Eindhoven, met als doel om de regio te versterken als culturele bestemming en aantrekkelijke woon- en werkplek. [Bron: 1]\n\nDe investeringen zijn gericht op verschillende gebieden, waaronder:\n\n* Mobiliteit: ASML investeert in openbare infrastructuurmaatregelen, zoals fietsroutes, hoogwaardige openbaarvervoersfaciliteiten en een nieuwe ondergrondse busstation bij het Centraal Station Eindhoven. [Bron: 3]\n* Wonen: ASML draagt bij aan het Beethoven-huisvestingsprogramma voor betaalbare woningen in de 21 MRE-gemeenten, waardoor de Brainport-regio een aantrekkelijke plek wordt om te wonen. [Bron: 3]\n* Cultuur: ASML werkt samen met het Rijksmuseum en de gemeente Eindhoven om een nieuwe, Brainport-style Rijksmuseum in Eindhoven te bouwen, waarmee wereldklasse kunst naar de regio wordt gebracht. [Bron: 1 en 3]\n* Onderwijs: ASML investeert in een samenwerking met de Technische Universiteit Eindhoven (TU/e) om een cleanroom te bouwen en promovendi en academisch onderzoek te ondersteunen. [Bron: 1]\n\nUit het nieuws blijkt dat ASML in totaal €80 miljoen investeert in de samenwerking met TU/e. [Bron: zoekresultaten]\n\nDe markt lijkt zich te richten op de ontwikkeling van de Brainport-regio als aantrekkelijke woon- en werkplek, met een sterke focus op cultuur, onderwijs en innovatie."
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:37:46.081731",
+    "data": {
+      "system_prompt": "# Content Strategy\n\nGebruik dit framework bij het opstellen van een marketingstrategie:\n\n**Positionering:** Kies één duidelijke positie. Niet \"de beste\" maar \"de enige die X doet voor Y\".\n**Berichtenhiërarchie:** Kernboodschap (1 zin) → ondersteunende claims (3 max) → bewijs.\n**Kanaalstrategie:** Welk kanaal past bij de doelgroep? Organisch vs. betaald? Kort vs. long-form?\n**Contentmix:** Educatief (waarde geven) / Inspirerend (emotie) / Promotioneel (conversie) — streef naar 60/30/10.\n\nLever ee",
+      "user_prompt": "Ontwikkel een marketingstrategie op basis van de volgende informatie:\n\nPRODUCT: ASML investeert in Eindhoven en samenwerking met TU/e\n\nMARKTONDERZOEK: Uit de PDF-documentatie blijkt dat ASML investeert in de Brainport-regio in Eindhoven, met als doel om de regio te versterken als culturele bestemming en aantrekkelijke woon- en werkplek. [Bron: 1]\n\nDe investeringen zijn gericht op verschillende gebieden, waaronder:\n\n* Mobiliteit: ASML investeert in openbare infrastructuurmaatregelen, zoals fietsr",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:37:47.726964",
+    "data": {
+      "preview": "## STRATEGIE\n\nOp basis van de informatie over het product en de doelgroep kan de volgende marketingstrategie worden ontwikkeld:\n\n**Titel:** \"Brainport: De Toekomst van Innovatie\"\n\n**Doelstelling:** Het positioneren van ASML als pionier in de ontwikkeling van de Brainport-regio als aantrekkelijke woon- en werkplek, met een sterke focus op cultuur, onderwijs en innovatie.\n\n**Positionering:** \"ASML: De driving force achter de Brainport-regio. Bij ons wordt de toekomst gemaakt.\"\n\n**Kernboodschap:** \"Deze regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren.\"\n\n**Berichtenhiërarchie:**\n\n* Kernboodschap: \"Deze regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren.\"\n* Ondersteunende claims:\n + \"Met",
+      "length": 2989
+    }
+  },
+  {
+    "node": "strateeg",
+    "type": "node_done",
+    "message": "✓ strateeg completed",
+    "timestamp": "2026-05-19T17:37:47.729458",
+    "data": {
+      "strategy": "Op basis van de informatie over het product en de doelgroep kan de volgende marketingstrategie worden ontwikkeld:\n\n**Titel:** \"Brainport: De Toekomst van Innovatie\"\n\n**Doelstelling:** Het positioneren van ASML als pionier in de ontwikkeling van de Brainport-regio als aantrekkelijke woon- en werkplek, met een sterke focus op cultuur, onderwijs en innovatie.\n\n**Positionering:** \"ASML: De driving force achter de Brainport-regio. Bij ons wordt de toekomst gemaakt.\"\n\n**Kernboodschap:** \"Deze regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren.\"\n\n**Berichtenhiërarchie:**\n\n* Kernboodschap: \"Deze regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren.\"\n* Ondersteunende claims:\n + \"Met onze investeringen in mobiliteit, wonen, cultuur en onderwijs maken we deze regio aantrekkelijker voor professionals, studenten en onderzoekers.\"\n + \"Onze samenwerking met de TU/e zorgt voor hoogwaardig onderzoek en innovatie in de regio.\"\n + \"Met onze focus op cultuur en onderwijs brengen we wereldklasse kunst en wetenschap naar de regio.\"\n* Bewijs: \"Onze investeringen zijn gericht op verschillende gebieden, waaronder mobiliteit, wonen, cultuur en onderwijs.\"\n\n**Kanaalstrategie:** We zullen ons richten op online marketing, met een focus op sociale media en content marketing. We zullen ook campagnes uitvoeren op lokale mediakanalen, zoals lokale kranten en radio- en TV-uitzendingen.\n\n**Contentmix:** We zullen een mix van educatief, inspirerend en promotioneel content produceren, om onze doelgroep te inspireren en te informeren over de mogelijkheden van de Brainport-regio.",
+      "positioning": "ASML positioneert zich als de driving force achter de Brainport-regio, waar professionals, studenten en onderzoekers samenwerken om de toekomst te creëren. Onze focus op cultuur, onderwijs en innovatie maakt de regio aantrekkelijker voor iedereen die wil innoveren en creëren.\n\n**Key Differentiators:**\n\n* Onze investeringen in mobiliteit, wonen, cultuur en onderwijs maken de regio aantrekkelijker voor professionals, studenten en onderzoekers.\n* Onze samenwerking met de TU/e zorgt voor hoogwaardig onderzoek en innovatie in de regio.\n* Onze focus op cultuur en onderwijs brengen we wereldklasse kunst en wetenschap naar de regio.",
+      "tone_of_voice": "Onze toon is inspirerend en informerend, met een focus op de mogelijkheden van de Brainport-regio. We zijn eerlijk en transparant over onze investeringen en initiatieven, en we streven naar een toekomst waarin de regio aantrekkelijker wordt voor iedereen die wil innoveren en creëren.\n\n**Key Woorden:**\n\n* Innovatie\n* Cultuur\n* Onderwijs\n* Samenwerking\n* Creativiteit\n* Toekomst\n\n**Imagery:** We zullen gebruik maken van beelden en footage die de mogelijkheden van de Brainport-regio tonen, zoals beelden van innovatieve projecten, cultuur- en onderwijsinitiatieven en samenwerkingen tussen professionals, studenten en onderzoekers."
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.3-70b-versatile",
+    "timestamp": "2026-05-19T17:37:47.730188",
+    "data": {
+      "system_prompt": "# Copywriting\n\nKies het juiste framework per teksttype:\n\n**PAS (Problem-Agitate-Solution):** Benoem het probleem → vergroot het gevoel → presenteer de oplossing. Sterk voor pijnpunt-gedreven producten.\n**FAB (Features-Advantages-Benefits):** Eigenschap → wat dat betekent → wat de klant eraan heeft. Vertaal altijd features naar benefits.\n**Headline-formules:** \"Hoe [gewenst resultaat] zonder [pijn]\" | \"[Getal] manieren om [doel] te bereiken\" | \"Eindelijk: [belofte]\"\n\nRegels:\n- Schrijf voor één pe",
+      "user_prompt": "Schrijf marketingteksten voor het volgende product.\n\nPRODUCT: ASML investeert in Eindhoven en samenwerking met TU/e\n\nDOELGROEP: Op basis van de PDF-documentatie en de productomschrijving kan de ideale doelgroep als volgt worden beschreven:\n\n* **Demografie:**\n + Leeftijd: 25-55 jaar\n + Woonplaats: Eindhoven en omgeving\n + Onderwijs: Universitair opgeleid (bijv. TU/e)\n + Beroep: Professionals, studenten, onderzoekers\n* **Psychografie:**\n + Waarden: innovatie, cultuur, onderwijs, duurzaamheid\n + In",
+      "model": "llama-3.3-70b-versatile",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "llm_response",
+    "message": "← Response from llama-3.3-70b-versatile",
+    "timestamp": "2026-05-19T17:37:49.058318",
+    "data": {
+      "preview": "Hier zijn de marketingteksten voor het product:\n\n**1. Headline:** \"Innovatie in Hartje Brainport\"\n\n**2. Subheadline:** \"Ontdek de toekomst van technologie en cultuur in Eindhoven\"\n\n**3. Bodytekst:**\n\nDe Brainport-regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren. Met onze investeringen in mobiliteit, wonen, cultuur en onderwijs maken we deze regio aantrekkelijker voor professionals, studenten en onderzoekers. Onze samenwerking met de TU/e zorgt voor hoogwaardig onderzoek en innovatie in de regio.\n\nOnze focus op cultuur en onderwijs brengt wereldklasse kunst en wetenschap naar de regio. We geloven dat de combinatie van technologie, cultuur en onderwijs de sleutel is tot een aantrekkelijke en innovatieve regio. Met onze initiatieven en in",
+      "length": 1383
+    }
+  },
+  {
+    "node": "copywriter",
+    "type": "node_done",
+    "message": "✓ copywriter completed",
+    "timestamp": "2026-05-19T17:37:49.059152",
+    "data": {
+      "copy_draft": "Hier zijn de marketingteksten voor het product:\n\n**1. Headline:** \"Innovatie in Hartje Brainport\"\n\n**2. Subheadline:** \"Ontdek de toekomst van technologie en cultuur in Eindhoven\"\n\n**3. Bodytekst:**\n\nDe Brainport-regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren. Met onze investeringen in mobiliteit, wonen, cultuur en onderwijs maken we deze regio aantrekkelijker voor professionals, studenten en onderzoekers. Onze samenwerking met de TU/e zorgt voor hoogwaardig onderzoek en innovatie in de regio.\n\nOnze focus op cultuur en onderwijs brengt wereldklasse kunst en wetenschap naar de regio. We geloven dat de combinatie van technologie, cultuur en onderwijs de sleutel is tot een aantrekkelijke en innovatieve regio. Met onze initiatieven en investeringen willen we een toekomst creëren waarin de regio aantrekkelijker wordt voor iedereen die wil innoveren en creëren.\n\nIn de Brainport-regio kom je niet alleen om te werken, maar ook om te leren, te ontdekken en te genieten van de cultuur en de natuur. We nodigen je uit om deel te nemen aan onze community en om samen met ons de toekomst van innovatie te vormen.\n\n**4. Call-to-action:** \"Ontdek nu hoe je deel kunt nemen aan de toekomst van innovatie in Brainport en meld je aan voor onze nieuwsbrief om op de hoogte te blijven van de laatste ontwikkelingen en initiatieven!\""
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_call",
+    "message": "→ Calling llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:37:49.059971",
+    "data": {
+      "system_prompt": "Je bent een social media specialist voor een reclamebureau.\nJe taak is om platformspecifieke social media content te maken op basis van de strategie en marketingteksten.\n\nAls je feedback hebt ontvangen van de Campaign Manager, verwerk die feedback in een verbeterde versie.\n\nSchrijf in het Nederlands. Pas je stijl aan per platform.",
+      "user_prompt": "Maak social media content voor het volgende product.\n\nPRODUCT: ASML investeert in Eindhoven en samenwerking met TU/e\n\nDOELGROEP: Op basis van de PDF-documentatie en de productomschrijving kan de ideale doelgroep als volgt worden beschreven:\n\n* **Demografie:**\n + Leeftijd: 25-55 jaar\n + Woonplaats: Eindhoven en omgeving\n + Onderwijs: Universitair opgeleid (bijv. TU/e)\n + Beroep: Professionals, studenten, onderzoekers\n* **Psychografie:**\n + Waarden: innovatie, cultuur, onderwijs, duurzaamheid\n + I",
+      "model": "llama-3.1-8b-instant",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "llm_response",
+    "message": "← Response from llama-3.1-8b-instant",
+    "timestamp": "2026-05-19T17:37:49.863323",
+    "data": {
+      "preview": "Hieronder volgen de social media content-items op basis van de strategie en marketingteksten:\n\n**1. Instagram:**\n\n* Caption: \"Innovatie in hartje Brainport! De Brainport-regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren. Met onze investeringen in mobiliteit, wonen, cultuur en onderwijs maken we deze regio aantrekkelijker voor professionals, studenten en onderzoekers. #Brainport #Innovatie #Wonen #Werken #Cultuur #Onderwijs\"\n* Afbeelding: Een foto van een modern gebouw in de Brainport-regio, met mensen die werken of leren.\n\n**2. LinkedIn:**\n\n* Professionele post: \"De toekomst van innovatie is nu! Ons bedrijf, ASML, investeert in de Brainport-regio om deze aantrekkelijker te maken voor professionals, studenten en onderzoekers. Onze samenw",
+      "length": 1675
+    }
+  },
+  {
+    "node": "social_specialist",
+    "type": "node_done",
+    "message": "✓ social_specialist completed",
+    "timestamp": "2026-05-19T17:37:49.864150",
+    "data": {
+      "social_content": "Hieronder volgen de social media content-items op basis van de strategie en marketingteksten:\n\n**1. Instagram:**\n\n* Caption: \"Innovatie in hartje Brainport! De Brainport-regio is niet alleen een plek om te wonen en te werken, maar ook een plek om te innoveren en te creëren. Met onze investeringen in mobiliteit, wonen, cultuur en onderwijs maken we deze regio aantrekkelijker voor professionals, studenten en onderzoekers. #Brainport #Innovatie #Wonen #Werken #Cultuur #Onderwijs\"\n* Afbeelding: Een foto van een modern gebouw in de Brainport-regio, met mensen die werken of leren.\n\n**2. LinkedIn:**\n\n* Professionele post: \"De toekomst van innovatie is nu! Ons bedrijf, ASML, investeert in de Brainport-regio om deze aantrekkelijker te maken voor professionals, studenten en onderzoekers. Onze samenwerking met de TU/e zorgt voor hoogwaardig onderzoek en innovatie in de regio. We geloven dat de combinatie van technologie, cultuur en onderwijs de sleutel is tot een aantrekkelijke en innovatieve regio. Lees meer over onze initiatieven en investeringen en ontdek hoe je deel kunt nemen aan de toekomst van innovatie in Brainport!\"\n* Meer informatie: Een link naar de marketingtekst of een speciaal gemaakte pagina met meer informatie over de investeringen en initiatieven.\n\n**3. X/Twitter:**\n\n* Tweet: \"Brainport: de toekomst van innovatie is nu! Ons bedrijf investeert in de regio om deze aantrekkelijker te maken voor professionals, studenten en onderzoekers. #Brainport #Innovatie #Wonen #Werken #Cultuur #Onderwijs\"\n* Korte beschrijving: Een korte beschrijving van de tweet, zoals \"Innovatie in hartje Brainport\" of \"De toekomst van technologie en cultuur in Eindhoven\"."
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_call",
+    "message": "→ Calling meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:49.864816",
+    "data": {
+      "system_prompt": "# Launch Strategy\n\nBeoordeel een campagne op deze criteria:\n\n**Strategische aansluiting:** Weerspiegelt de campagne de positionering en kernboodschap van de strateeg?\n**Doelgroepfit:** Spreekt de toon, het taalgebruik en de inhoud de gedefinieerde doelgroep aan?\n**Consistentie:** Is de tone of voice consistent over alle uitingen (copy, social, CTA)?\n**Overtuigingskracht:** Is er een duidelijk voordeel voor de klant? Is de CTA helder?\n**Volledigheid:** Zijn alle kanalen (copy + social) voorzien v",
+      "user_prompt": "Beoordeel de volgende marketingcampagne:\n\nPRODUCT: ASML investeert in Eindhoven en samenwerking met TU/e\n\nDOELGROEP: Op basis van de PDF-documentatie en de productomschrijving kan de ideale doelgroep als volgt worden beschreven:\n\n* **Demografie:**\n + Leeftijd: 25-55 jaar\n + Woonplaats: Eindhoven en omgeving\n + Onderwijs: Universitair opgeleid (bijv. TU/e)\n + Beroep: Professionals, studenten, onderzoekers\n* **Psychografie:**\n + Waarden: innovatie, cultuur, onderwijs, duurzaamheid\n + Interesse: Ku",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "provider": "groq"
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "llm_response",
+    "message": "← Response from meta-llama/llama-4-scout-17b-16e-instruct",
+    "timestamp": "2026-05-19T17:37:51.048133",
+    "data": {
+      "preview": "BESLISSING: AFGEWEZEN\nFASE: copy_review\nFEEDBACK:\n\nDe marketingcampagne laat een goede start zien, maar er zijn enkele verbeterpunten om de doelgroep beter aan te spreken en de boodschap consistenter over te brengen.\n\n**Strategische aansluiting:** De campagne sluit aan bij de strategie en positionering van ASML als driving force achter de Brainport-regio. Echter, de kernboodschap en ondersteunende claims moeten consistenter worden doorvertolkt in de marketingteksten en social media content.\n\n**Doelgroepfit:** De toon en het taalgebruik in de marketingteksten en social media content zijn over het algemeen goed, maar kunnen soms wat formeel en zakelijk overkomen. De doelgroep bestaat uit professionals, studenten en onderzoekers, dus een wat meer informele toon kan helpen om hen beter aan te ",
+      "length": 1948
+    }
+  },
+  {
+    "node": "campaign_manager",
+    "type": "node_done",
+    "message": "✓ campaign_manager completed",
+    "timestamp": "2026-05-19T17:37:51.049757",
+    "data": {
+      "cm_feedback": "De marketingcampagne laat een goede start zien, maar er zijn enkele verbeterpunten om de doelgroep beter aan te spreken en de boodschap consistenter over te brengen.\n\n**Strategische aansluiting:** De campagne sluit aan bij de strategie en positionering van ASML als driving force achter de Brainport-regio. Echter, de kernboodschap en ondersteunende claims moeten consistenter worden doorvertolkt in de marketingteksten en social media content.\n\n**Doelgroepfit:** De toon en het taalgebruik in de marketingteksten en social media content zijn over het algemeen goed, maar kunnen soms wat formeel en zakelijk overkomen. De doelgroep bestaat uit professionals, studenten en onderzoekers, dus een wat meer informele toon kan helpen om hen beter aan te spreken.\n\n**Consistentie:** De tone of voice is over het algemeen consistent, maar er zijn enkele verschillen in de formulering van de kernboodschap en ondersteunende claims tussen de marketingteksten en social media content.\n\n**Overtuigingskracht:** De marketingteksten en social media content moeten een duidelijker voordeel voor de klant bieden. Wat betekent het voor de doelgroep dat ASML investeert in de Brainport-regio? Hoe kunnen zij hiervan profiteren?\n\n**Volledigheid:** De campagne is nog niet volledig. Er ontbreken nog enkele kanalen, zoals lokale mediakanalen, en de contentmix kan nog worden uitgebreid met meer educatieve en inspirerende content.\n\nSpecifieke actionable feedback:\n\n* Herzie de marketingteksten en social media content om een consistenter tone of voice te hanteren en een duidelijker voordeel voor de klant te bieden.\n* Gebruik een wat meer informele toon om de doelgroep beter aan te spreken.\n* Voeg meer kanalen toe aan de campagne, zoals lokale mediakanalen, om de boodschap breder uit te dragen.\n* Breid de contentmix uit met meer educatieve en inspirerende content om de doelgroep te inspireren en te informeren.",
+      "approved": true,
+      "phase": "copy_review"
+    }
+  },
+  {
+    "node": "image_generator",
+    "type": "node_done",
+    "message": "✓ image_generator completed",
+    "timestamp": "2026-05-19T17:39:24.717316",
+    "data": {
+      "image_path": "campaigns/images/campaign_20260519_173923.png"
+    }
+  }
+]

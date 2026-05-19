@@ -15,36 +15,15 @@ from langchain.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
-# Per-agent LLM config — change model/provider/temperature here, not in agent files
-#
-# Best split (use when OpenRouter is available):
-#   researcher        → groq       llama-3.1-8b-instant               (500k tokens/day, fast)
-#   strateeg          → groq       llama-3.1-8b-instant               (500k tokens/day, fast)
-#   copywriter        → openrouter meta-llama/llama-3.3-70b-instruct:free  (70B quality for creative writing)
-#   social_specialist → openrouter meta-llama/llama-3.3-70b-instruct:free  (70B quality for platform content)
-#   campaign_manager  → groq       llama-3.3-70b-versatile            (100k tokens/day, deterministic)
-#
-# Current: all on Groq — OpenRouter free tier (50 req/day global) is exhausted
-AGENT_LLM_CONFIG: dict[str, dict] = {
-    "researcher":          {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.4},
-    "strateeg":            {"provider": "groq", "model": "llama-3.1-8b-instant",    "temperature": 0.5},
-    "copywriter":          {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.9},
-    "social_specialist":   {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.8},
-    "campaign_manager":    {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.3},
-    "website_generator":   {"provider": "groq", "model": "llama-3.3-70b-versatile", "temperature": 0.7},
-}
+# Defaults for code/docs; live values come from runtime_config (API / data/runtime_config.json)
+from src.runtime_config import DEFAULT_AGENT_LLM_CONFIG as AGENT_LLM_CONFIG
 
 
 def get_agent_config(agent_name: str) -> dict:
-    """Return LLM config (provider, model, temperature, agent_name) for the given agent.
+    """Return LLM config (provider, model, temperature, agent_name) for the given agent."""
+    from src.runtime_config import get_agent_llm_config
 
-    Falls back to openrouter defaults if agent_name is not found.
-    """
-    base = AGENT_LLM_CONFIG.get(
-        agent_name,
-        {"provider": "openrouter", "model": "nvidia/nemotron-3-nano-30b-a3b:free", "temperature": 0.7},
-    )
-    return {**base, "agent_name": agent_name}
+    return get_agent_llm_config(agent_name)
 
 
 PROVIDER_DEFAULTS = {

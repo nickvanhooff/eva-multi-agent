@@ -215,12 +215,13 @@ def _strip_fences(text: str) -> str:
     return text.strip()
 
 
-def generate_website(campaign_data: dict) -> dict:
+def generate_website(campaign_data: dict, output_stem: str | None = None) -> dict:
     """Generate a Tailwind HTML landing page from campaign content.
 
     Args:
         campaign_data: Dict with keys: copy_draft, social_content, target_audience,
                        tone_of_voice, positioning, product_description, campaign_type.
+        output_stem: Optional filename stem (e.g. campaign_20260519_170615) — matches report JSON.
 
     Returns:
         {"html_content": str, "html_path": str}
@@ -288,8 +289,11 @@ SOCIAL CONTENT (use quotes from this for testimonials):
     output_dir = Path("campaigns/websites")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"campaign_{timestamp}.html"
+    if output_stem:
+        filename = f"{output_stem}.html"
+    else:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"campaign_{timestamp}.html"
     html_path = str(output_dir / filename)
 
     with open(html_path, "w", encoding="utf-8") as f:

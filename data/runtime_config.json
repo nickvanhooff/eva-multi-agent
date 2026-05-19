@@ -1,0 +1,35 @@
+{
+  "max_iterations": 1,
+  "agents": {
+    "researcher": {
+      "provider": "groq",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "temperature": 0.4
+    },
+    "strateeg": {
+      "provider": "groq",
+      "model": "llama-3.1-8b-instant",
+      "temperature": 0.5
+    },
+    "copywriter": {
+      "provider": "groq",
+      "model": "llama-3.3-70b-versatile",
+      "temperature": 0.9
+    },
+    "social_specialist": {
+      "provider": "groq",
+      "model": "llama-3.1-8b-instant",
+      "temperature": 0.8
+    },
+    "campaign_manager": {
+      "provider": "groq",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "temperature": 0.3
+    },
+    "website_generator": {
+      "provider": "groq",
+      "model": "llama-3.3-70b-versatile",
+      "temperature": 0.7
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import re
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -19,6 +20,7 @@ from src.event_bus import jobs, set_job, push
 from src.graph import build_graph
 from src.main import save_campaign_report
 from src.state import CampaignState
+from src.runtime_config import apply_config, get_public_config, reset_to_defaults
 from src.tracing import setup_tracing
 
 app = FastAPI(title="Eva API", version="1.0.0")
@@ -35,6 +37,12 @@ app.add_middleware(
 
 DATA_DIR = Path("data")
 CAMPAIGNS_DIR = Path("campaigns")
+WEBSITES_DIR = CAMPAIGNS_DIR / "websites"
+# Max seconds between campaign JSON timestamp and website HTML for auto-linking legacy files
+WEBSITE_MATCH_WINDOW_SEC = 7200
+
+
+_CAMPAIGN_STEM_RE = re.compile(r"^campaign_(\d{8})_(\d{6})$")
 
 # Fields to extract for node_done events
 _NODE_FIELDS = {
@@ -60,11 +68,127 @@ class ResumeRequest(BaseModel):
     answer: str
 
 
+class AgentLLMConfig(BaseModel):
+    provider: str
+    model: str
+    temperature: float = 0.7
+
+
+class ConfigUpdate(BaseModel):
+    max_iterations: Optional[int] = None
+    agents: Optional[dict[str, AgentLLMConfig]] = None
+
+
 # --- Helpers ---
 
 def _extract_event_data(node: str, state: dict) -> dict:
     fields = _NODE_FIELDS.get(node, [])
     return {k: state.get(k) for k in fields if state.get(k) is not None}
+
+
+def _find_report_file(job_id: str) -> Path | None:
+    """Locate the campaign JSON report for a UUID, filename stem, or partial id."""
+    if job_id in jobs and jobs[job_id].get("report_file"):
+        path = Path(jobs[job_id]["report_file"])
+        if path.exists():
+            return path
+
+    candidate = CAMPAIGNS_DIR / f"{job_id}.json"
+    if candidate.exists():
+        return candidate
+
+    matches = sorted(CAMPAIGNS_DIR.glob(f"*{job_id}*.json"))
+    matches = [m for m in matches if "_events" not in m.name]
+    return matches[0] if matches else None
+
+
+def _parse_campaign_stem_ts(stem: str) -> datetime | None:
+    match = _CAMPAIGN_STEM_RE.match(stem)
+    if not match:
+        return None
+    try:
+        return datetime.strptime(match.group(1) + match.group(2), "%Y%m%d%H%M%S")
+    except ValueError:
+        return None
+
+
+def _html_to_static_url(html_file: Path) -> str:
+    rel = html_file.as_posix().replace("campaigns/", "", 1)
+    return f"/static/{rel}"
+
+
+def _discover_website_url(campaign_stem: str) -> str | None:
+    """Find a generated website HTML file for a campaign report stem (incl. legacy orphans)."""
+    if not campaign_stem or not WEBSITES_DIR.exists():
+        return None
+
+    exact = WEBSITES_DIR / f"{campaign_stem}.html"
+    if exact.exists():
+        return _html_to_static_url(exact)
+
+    target_ts = _parse_campaign_stem_ts(campaign_stem)
+    if not target_ts:
+        return None
+
+    day_prefix = campaign_stem.rsplit("_", 1)[0]
+    best_file: Path | None = None
+    best_delta: float | None = None
+
+    for html_file in WEBSITES_DIR.glob(f"{day_prefix}_*.html"):
+        html_ts = _parse_campaign_stem_ts(html_file.stem)
+        if not html_ts:
+            continue
+        delta = abs((html_ts - target_ts).total_seconds())
+        if delta > WEBSITE_MATCH_WINDOW_SEC:
+            continue
+        if best_delta is None or delta < best_delta:
+            best_delta = delta
+            best_file = html_file
+
+    return _html_to_static_url(best_file) if best_file else None
+
+
+def _attach_website_to_result(
+    result: dict | None,
+    job_id: str,
+    report_file: Path | None = None,
+    persist: bool = False,
+) -> dict | None:
+    """Ensure result has html_path when a website file exists on disk."""
+    if not result:
+        return result
+
+    report_file = report_file or _find_report_file(job_id)
+    campaign_stem = report_file.stem if report_file else (
+        job_id if job_id.startswith("campaign_") else None
+    )
+
+    html_url = result.get("html_path")
+    if html_url and not html_url.startswith("/static/"):
+        html_url = f"/static/{html_url.lstrip('/')}"
+
+    if not html_url:
+        sidecar = CAMPAIGNS_DIR / f"{job_id}.website"
+        if sidecar.exists():
+            html_url = sidecar.read_text(encoding="utf-8").strip()
+
+    if not html_url and campaign_stem:
+        html_url = _discover_website_url(campaign_stem)
+
+    if html_url:
+        result["html_path"] = html_url
+        if persist and report_file and report_file.exists():
+            try:
+                with open(report_file, encoding="utf-8") as f:
+                    saved = json.load(f)
+                if saved.get("html_path") != html_url:
+                    saved["html_path"] = html_url
+                    with open(report_file, "w", encoding="utf-8") as f:
+                        json.dump(saved, f, indent=2, ensure_ascii=False)
+            except Exception:
+                pass
+
+    return result
 
 
 # --- Background task ---
@@ -78,6 +202,7 @@ def _finish_campaign(job_id: str, final_state: dict, product_description: str):
         json.dump(jobs[job_id]["events"], f, indent=2, ensure_ascii=False)
 
     jobs[job_id]["status"] = "done"
+    jobs[job_id]["report_file"] = report_path
     jobs[job_id]["result"] = {
         "target_audience": final_state.get("target_audience", ""),
         "strategy": final_state.get("strategy", ""),
@@ -89,6 +214,8 @@ def _finish_campaign(job_id: str, final_state: dict, product_description: str):
         "approved_by_cm": final_state.get("approved", False),
         "image_path": final_state.get("image_path"),
         "pdf_sources": final_state.get("pdf_sources", []),
+        "product_description": product_description,
+        "campaign_type": final_state.get("campaign_type", "product"),
     }
     push("__system__", "node_done", "Campaign completed", {})
 
@@ -170,6 +297,28 @@ def _stream_campaign_resume(job_id: str, answer: str):
 
 # --- Endpoints ---
 
+@app.get("/config")
+async def get_config():
+    """Runtime LLM settings per agent (no API keys)."""
+    return get_public_config()
+
+
+@app.put("/config")
+async def update_config(body: ConfigUpdate):
+    """Update runtime LLM settings; persisted to data/runtime_config.json."""
+    payload = body.model_dump(exclude_none=True)
+    try:
+        return apply_config(payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@app.post("/config/reset")
+async def reset_config():
+    """Restore default agent models and max_iterations."""
+    return reset_to_defaults()
+
+
 @app.post("/campaigns", status_code=202)
 async def start_campaign(request: CampaignRequest, background_tasks: BackgroundTasks):
     """Start a campaign run asynchronously. Returns a job_id to poll or stream."""
@@ -230,35 +379,23 @@ async def get_campaign_events(job_id: str):
 @app.get("/campaigns/{job_id}")
 async def get_campaign_status(job_id: str):
     """Poll status and final result — checks in-memory jobs first, then saved files."""
-    def _attach_website(result: dict) -> dict:
-        """Add html_path from sidecar file if a website was generated for this job."""
-        if result and not result.get("html_path"):
-            sidecar = CAMPAIGNS_DIR / f"{job_id}.website"
-            if sidecar.exists():
-                result["html_path"] = sidecar.read_text(encoding="utf-8").strip()
-        return result
+    report_file = _find_report_file(job_id)
 
     if job_id in jobs:
+        result = _attach_website_to_result(
+            jobs[job_id]["result"], job_id, report_file, persist=True
+        )
         return {
             "status": jobs[job_id]["status"],
-            "result": _attach_website(jobs[job_id]["result"]),
+            "result": result,
             "error": jobs[job_id]["error"],
         }
 
-    # Fall back to saved report file
-    CAMPAIGNS_DIR.mkdir(exist_ok=True)
-    report_file = CAMPAIGNS_DIR / f"{job_id}.json"
-    if not report_file.exists():
-        matches = sorted(CAMPAIGNS_DIR.glob(f"*{job_id}*.json"))
-        # Exclude events files
-        matches = [m for m in matches if "_events" not in m.name]
-        if matches:
-            report_file = matches[0]
-
-    if report_file.exists():
+    if report_file and report_file.exists():
         with open(report_file, encoding="utf-8") as f:
             data = json.load(f)
-        return {"status": "done", "result": _attach_website(data), "error": None}
+        data = _attach_website_to_result(data, job_id, report_file, persist=True)
+        return {"status": "done", "result": data, "error": None}
 
     raise HTTPException(status_code=404, detail="Campaign not found")
 
@@ -275,6 +412,7 @@ async def list_campaigns():
             with open(f, encoding="utf-8") as fh:
                 data = json.load(fh)
                 data["filename"] = f.name
+                data = _attach_website_to_result(data, f.stem, f, persist=False) or data
                 reports.append(data)
         except Exception:
             pass
@@ -303,50 +441,37 @@ async def upload_pdf(file: UploadFile):
 @app.post("/campaigns/{job_id}/generate-website")
 async def generate_website_endpoint(job_id: str):
     """Generate a Tailwind HTML landing page from an existing campaign result."""
-    # Retrieve campaign data — check in-memory jobs first, then saved report file
+    report_file = _find_report_file(job_id)
     campaign_data = None
-    report_file = None
-
-    def _find_report_file(jid: str) -> Path | None:
-        """Locate the campaign JSON report for a given job id or filename stem."""
-        candidate = CAMPAIGNS_DIR / f"{jid}.json"
-        if candidate.exists():
-            return candidate
-        matches = sorted(CAMPAIGNS_DIR.glob(f"*{jid}*.json"))
-        matches = [m for m in matches if "_events" not in m.name]
-        return matches[0] if matches else None
 
     if job_id in jobs and jobs[job_id].get("result"):
-        campaign_data = jobs[job_id]["result"]
-        report_file = _find_report_file(job_id)
-    else:
-        CAMPAIGNS_DIR.mkdir(exist_ok=True)
-        report_file = _find_report_file(job_id)
-        if report_file:
-            with open(report_file, encoding="utf-8") as f:
-                campaign_data = json.load(f)
+        campaign_data = dict(jobs[job_id]["result"])
+
+    if report_file and report_file.exists():
+        with open(report_file, encoding="utf-8") as f:
+            from_disk = json.load(f)
+        campaign_data = {**from_disk, **(campaign_data or {})}
 
     if not campaign_data:
         raise HTTPException(status_code=404, detail="Campaign result not found")
 
-    result = await asyncio.to_thread(generate_website, campaign_data)
+    output_stem = report_file.stem if report_file else None
+    result = await asyncio.to_thread(generate_website, campaign_data, output_stem=output_stem)
 
-    # Convert stored path to a servable URL (strip "campaigns/" prefix, same as imageUrl)
     raw_path = result["html_path"].replace("\\", "/")
-    relative = raw_path.replace("campaigns/", "", 1)
-    html_url = f"/static/{relative}"
+    html_url = _html_to_static_url(Path(raw_path))
 
-    # Persist html_path so it survives navigation and page reloads:
-    # 1. Update in-memory result
     if job_id in jobs and jobs[job_id].get("result") is not None:
         jobs[job_id]["result"]["html_path"] = html_url
-    # 2. Write html_path into the campaign JSON report on disk so history view picks it up
+
     if report_file and report_file.exists():
         with open(report_file, encoding="utf-8") as f:
             saved = json.load(f)
         saved["html_path"] = html_url
         with open(report_file, "w", encoding="utf-8") as f:
             json.dump(saved, f, indent=2, ensure_ascii=False)
+        sidecar = CAMPAIGNS_DIR / f"{report_file.stem}.website"
+        sidecar.write_text(html_url, encoding="utf-8")
 
     return {"html_path": html_url}
 

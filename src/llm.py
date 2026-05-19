@@ -15,6 +15,9 @@ from langchain.messages import HumanMessage, SystemMessage
 
 load_dotenv()
 
+# Groq model with 500K TPD — used when primary model hits rate limits (429)
+GROQ_RATE_LIMIT_FALLBACK_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+
 # Defaults for code/docs; live values come from runtime_config (API / data/runtime_config.json)
 from src.runtime_config import DEFAULT_AGENT_LLM_CONFIG as AGENT_LLM_CONFIG
 
@@ -82,6 +85,44 @@ def _get_llm(provider: str = None, model: str = None) -> ChatOpenAI:
     )
 
 
+def _is_rate_limit_error(exc: BaseException) -> bool:
+    """True for HTTP 429 / rate-limit errors from OpenAI-compatible APIs."""
+    visited: set[int] = set()
+    current: BaseException | None = exc
+    status_codes: set[int] = set()
+
+    while current is not None:
+        oid = id(current)
+        if oid in visited:
+            break
+        visited.add(oid)
+        code = getattr(current, "status_code", None)
+        if isinstance(code, int):
+            status_codes.add(code)
+        if type(current).__name__ == "RateLimitError":
+            return True
+        current = current.__cause__ or current.__context__
+
+    if 429 in status_codes:
+        return True
+
+    message = str(exc).lower()
+    return any(
+        token in message
+        for token in ("429", "rate limit", "rate_limit", "too many requests", "tokens per day")
+    )
+
+
+def _invoke_messages(
+    provider: str | None,
+    model: str | None,
+    temperature: float,
+    messages: list,
+):
+    llm = _get_llm(provider, model).with_config({"temperature": temperature})
+    return llm.invoke(messages)
+
+
 def call_llm(
     system_prompt: str,
     user_prompt: str,
@@ -113,27 +154,59 @@ def call_llm(
         provider or os.getenv("LLM_PROVIDER", "ollama"), {}
     ).get("model", "unknown")
 
-    push(agent_name, "llm_call", f"→ Calling {resolved_model}", {
-        "system_prompt": system_prompt[:500],
-        "user_prompt": user_prompt[:500],
-        "model": resolved_model,
-        "provider": provider,
-    })
-
-    llm = _get_llm(provider, model)
-    llm = llm.with_config({"temperature": temperature})
-
     messages = [
         SystemMessage(content=system_prompt),
         HumanMessage(content=user_prompt),
     ]
 
-    response = llm.invoke(messages)
+    def _log_call(target_model: str, target_provider: str | None, note: str = ""):
+        prefix = f"→ Calling {target_model}"
+        if note:
+            prefix = f"→ {note}: {target_model}"
+        push(agent_name, "llm_call", prefix, {
+            "system_prompt": system_prompt[:500],
+            "user_prompt": user_prompt[:500],
+            "model": target_model,
+            "provider": target_provider,
+        })
+
+    _log_call(resolved_model, provider)
+
+    model_used = resolved_model
+    provider_used = provider
+
+    try:
+        response = _invoke_messages(provider, model, temperature, messages)
+    except Exception as exc:
+        if (
+            _is_rate_limit_error(exc)
+            and resolved_model != GROQ_RATE_LIMIT_FALLBACK_MODEL
+        ):
+            print(
+                f"[LLM] Rate limit on {resolved_model} ({provider}) — "
+                f"fallback to groq/{GROQ_RATE_LIMIT_FALLBACK_MODEL}"
+            )
+            _log_call(
+                GROQ_RATE_LIMIT_FALLBACK_MODEL,
+                "groq",
+                "Fallback after rate limit",
+            )
+            model_used = GROQ_RATE_LIMIT_FALLBACK_MODEL
+            provider_used = "groq"
+            response = _invoke_messages(
+                "groq", GROQ_RATE_LIMIT_FALLBACK_MODEL, temperature, messages
+            )
+        else:
+            raise
+
     content = response.content or ""
 
-    push(agent_name, "llm_response", f"← Response from {resolved_model}", {
+    push(agent_name, "llm_response", f"← Response from {model_used}", {
         "preview": content[:800],
         "length": len(content),
+        "model": model_used,
+        "provider": provider_used,
+        "fallback": model_used != resolved_model,
     })
 
     return content

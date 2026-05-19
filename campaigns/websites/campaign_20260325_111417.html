@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Cup Go - Koffie zonder compromis</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f7f7;
+            --surface: #ffffff;
+            --ink: #1a1612;
+            --muted: #666;
+            --accent: #34C759;
+            --accent-alt: #2ecc71;
+            --font-display: 'Inter', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --radius: 6px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: 17px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hero-headline {
+            font-family: var(--font-display);
+            font-size: clamp(42px, 6vw, 88px);
+            line-height: 1.05;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+            margin-bottom: 24px;
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--muted);
+            max-width: 440px;
+            line-height: 1.65;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 16px 36px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            letter-spacing: 0.01em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+    </style>
+</head>
+<body>
+    <nav id="nav" class="flex justify-between items-center py-4 px-8 fixed top-0 left-0 right-0 bg-white shadow-sm">
+        <a href="#" class="text-lg font-bold">Eco-Cup Go</a>
+        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Bestel nu</button>
+    </nav>
+
+    <section class="pt-24 pb-12 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="hero-headline">Koffie zonder compromis</h1>
+            <p class="hero-sub">De eerste herbruikbare koffiebeker gemaakt van gerecycled oceaanplastic</p>
+            <img src="https://placehold.co/800x600/#34C759/#ffffff?text=Product+Image" alt="Product Image" class="mx-auto my-8 w-full max-w-3xl">
+            <p class="text-lg">Als milieubewuste professional wil je graag een positieve impact hebben op de wereld om je heen. Maar soms kunnen kleine keuzes groot verschil maken. De Eco-Cup Go is hier om je te helpen.</p>
+            <button class="btn-primary mt-8">Bestel nu en ontvang 10% korting!</button>
+        </div>
+    </section>
+
+    <section class="py-12 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8">Waarom kiezen voor Eco-Cup Go?</h2>
+            <div class="flex flex-wrap justify-center -mx-4">
+                <div class="w-full md:w-1/3 px-4 mb-8 md:mb-0">
+                    <h3 class="text-lg font-bold mb-4">Gemaakt van gerecycled oceaanplastic</h3>
+                    <p class="text-gray-600">Onze beker is gemaakt van gerecycled oceaanplastic, waardoor we helpen om plastic afval te verminderen.</p>
+                </div>
+                <div class="w-full md:w-1/3 px-4 mb-8 md:mb-0">
+                    <h3 class="text-lg font-bold mb-4">Houdt dranken 4 uur warm</h3>
+                    <p class="text-gray-600">De Eco-Cup Go houdt je dranken 4 uur warm, perfect voor onderweg.</p>
+                </div>
+                <div class="w-full md:w-1/3 px-4 mb-8 md:mb-0">
+                    <h3 class="text-lg font-bold mb-4">Opvouwbaar en draagbaar</h3>
+                    <p class="text-gray-600">De beker is opvouwbaar en past gemakkelijk in je jaszak, waardoor je hem overal mee naartoe kan nemen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8">Bestel nu en doe mee aan de strijd tegen plastic afval!</h2>
+            <button class="btn-primary">Bestel nu en ontvang 10% korting!</button>
+        </div>
+    </section>
+
+    <footer class="py-4 px-8 bg-gray-200 text-gray-600">
+        <div class="container mx-auto text-center">
+            &copy; 2023 Eco-Cup Go. Alle rechten voorbehouden.
+        </div>
+    </footer>
+
+    <script>
+        // Sticky nav on scroll
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 40);
+        });
+    </script>
+</body>
+</html>

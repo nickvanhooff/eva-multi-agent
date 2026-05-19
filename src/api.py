@@ -38,11 +38,11 @@ app.add_middleware(
 DATA_DIR = Path("data")
 CAMPAIGNS_DIR = Path("campaigns")
 WEBSITES_DIR = CAMPAIGNS_DIR / "websites"
-# Max seconds between campaign JSON timestamp and website HTML for auto-linking legacy files
-WEBSITE_MATCH_WINDOW_SEC = 7200
 
 
 _CAMPAIGN_STEM_RE = re.compile(r"^campaign_(\d{8})_(\d{6})$")
+# Max gap between campaign JSON time and website HTML time for legacy orphan linking
+WEBSITE_ORPHAN_MATCH_SEC = 3600
 
 # Fields to extract for node_done events
 _NODE_FIELDS = {
@@ -117,35 +117,175 @@ def _html_to_static_url(html_file: Path) -> str:
     return f"/static/{rel}"
 
 
-def _discover_website_url(campaign_stem: str) -> str | None:
-    """Find a generated website HTML file for a campaign report stem (incl. legacy orphans)."""
+def _website_stem_from_url(html_url: str) -> str | None:
+    """Extract campaign stem from /static/websites/campaign_YYYYMMDD_HHMMSS.html."""
+    if not html_url:
+        return None
+    name = html_url.rstrip("/").split("/")[-1]
+    if not name.endswith(".html"):
+        return None
+    stem = name[: -len(".html")]
+    return stem if _CAMPAIGN_STEM_RE.match(stem) else None
+
+
+def _campaign_day_prefix(stem: str) -> str | None:
+    match = _CAMPAIGN_STEM_RE.match(stem)
+    return f"campaign_{match.group(1)}" if match else None
+
+
+def _same_campaign_day(stem_a: str, stem_b: str) -> bool:
+    day_a = _campaign_day_prefix(stem_a)
+    day_b = _campaign_day_prefix(stem_b)
+    return bool(day_a and day_b and day_a == day_b)
+
+
+def _website_belongs_to_campaign(html_url: str, campaign_stem: str) -> bool:
+    """HTML filename stem matches the campaign report stem."""
+    return _website_stem_from_url(html_url) == campaign_stem
+
+
+def _url_to_html_file(html_url: str) -> Path | None:
+    stem = _website_stem_from_url(html_url)
+    if not stem:
+        return None
+    path = WEBSITES_DIR / f"{stem}.html"
+    return path if path.is_file() else None
+
+
+def _campaign_image_basename(result: dict) -> str | None:
+    image_path = result.get("image_path") or ""
+    if not image_path:
+        return None
+    return Path(image_path.replace("\\", "/")).name
+
+
+def _html_references_image(html_file: Path, image_basename: str) -> bool:
+    if not image_basename or not html_file.is_file():
+        return False
+    try:
+        return image_basename in html_file.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return False
+
+
+def _pick_best_html_match(campaign_stem: str, matches: list[Path]) -> Path:
+    exact = WEBSITES_DIR / f"{campaign_stem}.html"
+    if exact in matches:
+        return exact
+    target_ts = _parse_campaign_stem_ts(campaign_stem)
+    if target_ts and len(matches) > 1:
+        def delta(path: Path) -> float:
+            html_ts = _parse_campaign_stem_ts(path.stem)
+            return abs((html_ts - target_ts).total_seconds()) if html_ts else float("inf")
+
+        return min(matches, key=delta)
+    return matches[0]
+
+
+def _discover_website_by_image(campaign_stem: str, result: dict) -> str | None:
+    """Match legacy HTML files that embed this campaign's hero image."""
+    image_name = _campaign_image_basename(result)
+    if not image_name or not WEBSITES_DIR.exists():
+        return None
+    matches = [
+        path
+        for path in WEBSITES_DIR.glob("campaign_*.html")
+        if _same_campaign_day(campaign_stem, path.stem)
+        and _html_references_image(path, image_name)
+    ]
+    if not matches:
+        return None
+    return _html_to_static_url(_pick_best_html_match(campaign_stem, matches))
+
+
+def _website_matches_campaign(html_url: str, campaign_stem: str, result: dict) -> bool:
+    """Exact filename match, or HTML references this campaign's image."""
+    if _website_belongs_to_campaign(html_url, campaign_stem):
+        return True
+    html_file = _url_to_html_file(html_url)
+    image_name = _campaign_image_basename(result)
+    return bool(html_file and image_name and _html_references_image(html_file, image_name))
+
+
+def _discover_website_url(campaign_stem: str, result: dict) -> str | None:
+    """Exact stem file, else HTML that references the campaign image."""
     if not campaign_stem or not WEBSITES_DIR.exists():
         return None
 
     exact = WEBSITES_DIR / f"{campaign_stem}.html"
     if exact.exists():
         return _html_to_static_url(exact)
+    return _discover_website_by_image(campaign_stem, result)
 
-    target_ts = _parse_campaign_stem_ts(campaign_stem)
-    if not target_ts:
-        return None
 
-    day_prefix = campaign_stem.rsplit("_", 1)[0]
-    best_file: Path | None = None
-    best_delta: float | None = None
+def _compute_website_map(campaigns: list[tuple[str, dict]]) -> dict[str, str]:
+    """Assign each website HTML to at most one campaign (exact → image → timestamp)."""
+    if not WEBSITES_DIR.exists():
+        return {}
 
-    for html_file in WEBSITES_DIR.glob(f"{day_prefix}_*.html"):
-        html_ts = _parse_campaign_stem_ts(html_file.stem)
-        if not html_ts:
+    mapping: dict[str, str] = {}
+    used_html: set[str] = set()
+
+    for stem, data in campaigns:
+        exact = WEBSITES_DIR / f"{stem}.html"
+        if exact.is_file():
+            mapping[stem] = _html_to_static_url(exact)
+            used_html.add(stem)
+
+    for stem, data in campaigns:
+        if stem in mapping:
             continue
-        delta = abs((html_ts - target_ts).total_seconds())
-        if delta > WEBSITE_MATCH_WINDOW_SEC:
+        url = _discover_website_by_image(stem, data)
+        if not url:
             continue
-        if best_delta is None or delta < best_delta:
-            best_delta = delta
-            best_file = html_file
+        html_stem = _website_stem_from_url(url)
+        if html_stem and html_stem not in used_html:
+            mapping[stem] = url
+            used_html.add(html_stem)
 
-    return _html_to_static_url(best_file) if best_file else None
+    pairs: list[tuple[float, str, Path]] = []
+    for stem, _data in campaigns:
+        if stem in mapping:
+            continue
+        target_ts = _parse_campaign_stem_ts(stem)
+        if not target_ts:
+            continue
+        for html_file in WEBSITES_DIR.glob("campaign_*.html"):
+            if html_file.stem in used_html:
+                continue
+            if not _same_campaign_day(stem, html_file.stem):
+                continue
+            html_ts = _parse_campaign_stem_ts(html_file.stem)
+            if not html_ts:
+                continue
+            delta = abs((html_ts - target_ts).total_seconds())
+            if delta <= WEBSITE_ORPHAN_MATCH_SEC:
+                pairs.append((delta, stem, html_file))
+
+    pairs.sort(key=lambda item: item[0])
+    for _delta, stem, html_file in pairs:
+        if stem in mapping or html_file.stem in used_html:
+            continue
+        mapping[stem] = _html_to_static_url(html_file)
+        used_html.add(html_file.stem)
+
+    return mapping
+
+
+def _load_campaign_reports() -> list[tuple[str, dict, Path]]:
+    CAMPAIGNS_DIR.mkdir(exist_ok=True)
+    loaded: list[tuple[str, dict, Path]] = []
+    for report_file in sorted(CAMPAIGNS_DIR.glob("*.json"), reverse=True):
+        if "_events" in report_file.name:
+            continue
+        try:
+            with open(report_file, encoding="utf-8") as fh:
+                data = json.load(fh)
+            data["filename"] = report_file.name
+            loaded.append((report_file.stem, data, report_file))
+        except Exception:
+            pass
+    return loaded
 
 
 def _attach_website_to_result(
@@ -153,6 +293,7 @@ def _attach_website_to_result(
     job_id: str,
     report_file: Path | None = None,
     persist: bool = False,
+    website_map: dict[str, str] | None = None,
 ) -> dict | None:
     """Ensure result has html_path when a website file exists on disk."""
     if not result:
@@ -167,26 +308,45 @@ def _attach_website_to_result(
     if html_url and not html_url.startswith("/static/"):
         html_url = f"/static/{html_url.lstrip('/')}"
 
-    if not html_url:
-        sidecar = CAMPAIGNS_DIR / f"{job_id}.website"
-        if sidecar.exists():
-            html_url = sidecar.read_text(encoding="utf-8").strip()
+    if html_url and campaign_stem and not _website_matches_campaign(
+        html_url, campaign_stem, result
+    ):
+        html_url = None
+
+    if not html_url and campaign_stem and website_map:
+        html_url = website_map.get(campaign_stem)
 
     if not html_url and campaign_stem:
-        html_url = _discover_website_url(campaign_stem)
+        sidecar = CAMPAIGNS_DIR / f"{campaign_stem}.website"
+        if sidecar.exists():
+            candidate = sidecar.read_text(encoding="utf-8").strip()
+            if candidate and _website_matches_campaign(candidate, campaign_stem, result):
+                html_url = candidate
+
+    if not html_url and campaign_stem:
+        html_url = _discover_website_url(campaign_stem, result)
 
     if html_url:
         result["html_path"] = html_url
-        if persist and report_file and report_file.exists():
-            try:
-                with open(report_file, encoding="utf-8") as f:
-                    saved = json.load(f)
+    elif "html_path" in result:
+        del result["html_path"]
+
+    if persist and report_file and report_file.exists():
+        try:
+            with open(report_file, encoding="utf-8") as f:
+                saved = json.load(f)
+            changed = False
+            if html_url:
                 if saved.get("html_path") != html_url:
                     saved["html_path"] = html_url
-                    with open(report_file, "w", encoding="utf-8") as f:
-                        json.dump(saved, f, indent=2, ensure_ascii=False)
-            except Exception:
-                pass
+                    changed = True
+            elif saved.pop("html_path", None) is not None:
+                changed = True
+            if changed:
+                with open(report_file, "w", encoding="utf-8") as f:
+                    json.dump(saved, f, indent=2, ensure_ascii=False)
+        except Exception:
+            pass
 
     return result
 
@@ -380,10 +540,16 @@ async def get_campaign_events(job_id: str):
 async def get_campaign_status(job_id: str):
     """Poll status and final result — checks in-memory jobs first, then saved files."""
     report_file = _find_report_file(job_id)
+    loaded = _load_campaign_reports()
+    website_map = _compute_website_map([(stem, data) for stem, data, _ in loaded])
 
     if job_id in jobs:
         result = _attach_website_to_result(
-            jobs[job_id]["result"], job_id, report_file, persist=True
+            jobs[job_id]["result"],
+            job_id,
+            report_file,
+            persist=True,
+            website_map=website_map,
         )
         return {
             "status": jobs[job_id]["status"],
@@ -394,7 +560,9 @@ async def get_campaign_status(job_id: str):
     if report_file and report_file.exists():
         with open(report_file, encoding="utf-8") as f:
             data = json.load(f)
-        data = _attach_website_to_result(data, job_id, report_file, persist=True)
+        data = _attach_website_to_result(
+            data, job_id, report_file, persist=True, website_map=website_map
+        )
         return {"status": "done", "result": data, "error": None}
 
     raise HTTPException(status_code=404, detail="Campaign not found")
@@ -403,19 +571,14 @@ async def get_campaign_status(job_id: str):
 @app.get("/campaigns")
 async def list_campaigns():
     """List all saved campaign reports (excludes events files)."""
-    CAMPAIGNS_DIR.mkdir(exist_ok=True)
+    loaded = _load_campaign_reports()
+    website_map = _compute_website_map([(stem, data) for stem, data, _ in loaded])
     reports = []
-    for f in sorted(CAMPAIGNS_DIR.glob("*.json"), reverse=True):
-        if "_events" in f.name:
-            continue
-        try:
-            with open(f, encoding="utf-8") as fh:
-                data = json.load(fh)
-                data["filename"] = f.name
-                data = _attach_website_to_result(data, f.stem, f, persist=False) or data
-                reports.append(data)
-        except Exception:
-            pass
+    for stem, data, report_file in loaded:
+        data = _attach_website_to_result(
+            data, stem, report_file, persist=False, website_map=website_map
+        ) or data
+        reports.append(data)
     return reports
 
 
@@ -455,11 +618,27 @@ async def generate_website_endpoint(job_id: str):
     if not campaign_data:
         raise HTTPException(status_code=404, detail="Campaign result not found")
 
-    output_stem = report_file.stem if report_file else None
-    result = await asyncio.to_thread(generate_website, campaign_data, output_stem=output_stem)
+    if not report_file:
+        raise HTTPException(
+            status_code=400,
+            detail="Campaign report not found on disk; run the campaign first.",
+        )
 
-    raw_path = result["html_path"].replace("\\", "/")
-    html_url = _html_to_static_url(Path(raw_path))
+    output_stem = report_file.stem
+    result = await asyncio.to_thread(
+        generate_website, campaign_data, output_stem=output_stem
+    )
+
+    raw_path = Path(result["html_path"].replace("\\", "/"))
+    canonical = WEBSITES_DIR / f"{output_stem}.html"
+    if raw_path.resolve() != canonical.resolve() and raw_path.is_file():
+        canonical.parent.mkdir(parents=True, exist_ok=True)
+        if canonical.is_file():
+            canonical.unlink()
+        raw_path.rename(canonical)
+        raw_path = canonical
+
+    html_url = _html_to_static_url(raw_path)
 
     if job_id in jobs and jobs[job_id].get("result") is not None:
         jobs[job_id]["result"]["html_path"] = html_url

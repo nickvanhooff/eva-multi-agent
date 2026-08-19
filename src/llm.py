@@ -8,6 +8,11 @@ Per-agent provider override via env vars:
   SOCIAL_LLM_PROVIDER, CM_LLM_PROVIDER
 """
 
+# Expected environment variables (loaded via .env or deployment secrets):
+#   OLLAMA_API_KEY – API key for the local Ollama server (if authentication is enabled).
+#   OPENROUTER_API_KEY – API key for OpenRouter.
+#   LLM_API_KEY – Generic API key for Groq (or fallback for providers without a specific env var).
+
 import os
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -32,7 +37,8 @@ def get_agent_config(agent_name: str) -> dict:
 PROVIDER_DEFAULTS = {
     "ollama": {
         "base_url": "http://localhost:11434/v1",
-        "api_key": "ollama",
+        # Use an environment variable for the Ollama API key instead of a hard‑coded value.
+        "api_key_env": "OLLAMA_API_KEY",
         "model": "llama3.2",
     },
     "openrouter": {
@@ -69,10 +75,8 @@ def _get_llm(provider: str = None, model: str = None) -> ChatOpenAI:
     else:
         resolved_model = defaults["model"]
 
-    # Resolve API key
-    if provider == "ollama":
-        api_key = "ollama"
-    elif "api_key_env" in defaults:
+    # Resolve API key – prefer the env var defined in defaults, fallback to generic LLM_API_KEY.
+    if "api_key_env" in defaults:
         api_key = os.getenv(defaults["api_key_env"], "no-key")
     else:
         api_key = os.getenv("LLM_API_KEY", "no-key")

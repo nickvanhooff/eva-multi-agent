@@ -32,7 +32,8 @@ def get_agent_config(agent_name: str) -> dict:
 PROVIDER_DEFAULTS = {
     "ollama": {
         "base_url": "http://localhost:11434/v1",
-        "api_key": "ollama",
+        # Load Ollama API key from OLLAMA_API_KEY env var (or any name you prefer)
+        "api_key_env": "OLLAMA_API_KEY",
         "model": "llama3.2",
     },
     "openrouter": {
@@ -69,11 +70,11 @@ def _get_llm(provider: str = None, model: str = None) -> ChatOpenAI:
     else:
         resolved_model = defaults["model"]
 
-    # Resolve API key
-    if provider == "ollama":
-        api_key = "ollama"
-    elif "api_key_env" in defaults:
-        api_key = os.getenv(defaults["api_key_env"], "no-key")
+    # Resolve API key from the environment variable defined in defaults.
+    # If the provider does not specify an env var, fall back to the generic LLM_API_KEY.
+    api_key_env = defaults.get("api_key_env")
+    if api_key_env:
+        api_key = os.getenv(api_key_env, "no-key")
     else:
         api_key = os.getenv("LLM_API_KEY", "no-key")
 

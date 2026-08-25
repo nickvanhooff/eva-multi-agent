@@ -303,39 +303,15 @@ export default function ConfigPage() {
               type="submit"
               disabled={saving || !dirty}
               style={{
-                background: 'var(--primary)',
-                color: '#fff',
+                background: 'var(--surface2)', // dark background as requested
+                color: 'var(--text)', // ensure readable text on dark background
                 border: 'none',
                 borderRadius: 8,
-                padding: '10px 20px',
-                fontWeight: 600,
+                padding: '10px 16px',
                 cursor: saving || !dirty ? 'not-allowed' : 'pointer',
                 opacity: saving || !dirty ? 0.6 : 1,
               }}
             >
               {saving ? 'Saving…' : 'Save configuration'}
             </button>
-            <button
-              type="button"
-              onClick={handleRevert}
-              disabled={saving || !dirty}
-              style={{
-                background: 'transparent',
-                color: 'var(--text-muted)',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
-                padding: '10px 16px',
-                cursor: saving || !dirty ? 'not-allowed' : 'pointer',
-                opacity: saving || !dirty ? 0.5 : 1,
-              }}
-            >
-              Revert to saved
-            </button>
-            {message && <span style={{ color: 'var(--green)', fontSize: 13 }}>{message}</span>}
-            {error && <span style={{ color: 'var(--red)', fontSize: 13 }}>{error}</span>}
-          </div>
-        </form>
-      )}
-    </div>
-  )
-}
+            <

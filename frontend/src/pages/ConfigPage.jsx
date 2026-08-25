@@ -303,12 +303,11 @@ export default function ConfigPage() {
               type="submit"
               disabled={saving || !dirty}
               style={{
-                background: 'var(--primary)',
-                color: '#fff',
-                border: 'none',
+                background: 'var(--surface)', // added darker background
+                color: 'var(--text)',
+                border: '1px solid var(--border)',
                 borderRadius: 8,
-                padding: '10px 20px',
-                fontWeight: 600,
+                padding: '10px 16px',
                 cursor: saving || !dirty ? 'not-allowed' : 'pointer',
                 opacity: saving || !dirty ? 0.6 : 1,
               }}
@@ -320,7 +319,7 @@ export default function ConfigPage() {
               onClick={handleRevert}
               disabled={saving || !dirty}
               style={{
-                background: 'transparent',
+                background: 'var(--surface)', // changed from transparent to darker background
                 color: 'var(--text-muted)',
                 border: '1px solid var(--border)',
                 borderRadius: 8,

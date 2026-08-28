@@ -17,7 +17,7 @@ export default function CampaignResults() {
   const [tab, setTab] = useState('strategy')
   const [loading, setLoading] = useState(true)
   const [expandedIdx, setExpandedIdx] = useState(null)
-  const [generatingWebsite, setGeneratingWebsite] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [generatedWebsiteUrl, setGeneratedWebsiteUrl] = useState(null)
   const [websiteError, setWebsiteError] = useState(null)
 
@@ -43,7 +43,7 @@ export default function CampaignResults() {
     <div style={{ padding: 32 }}>\n      <p style={{ color: 'var(--red)' }}>Campaign not found</p>\n      <button onClick={() => navigate('/')} style={{ marginTop: 12, background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer' }}>← Back</button>\n    </div>\n  )
 
   async function handleGenerateWebsite() {
-    setGeneratingWebsite(true)
+    setIsGenerating(true)
     setWebsiteError(null)
     try {
       const res = await generateWebsite(decodeURIComponent(id))
@@ -52,7 +52,7 @@ export default function CampaignResults() {
     } catch (e) {
       setWebsiteError(e.message)
     } finally {
-      setGeneratingWebsite(false)
+      setIsGenerating(false)
     }
   }
 

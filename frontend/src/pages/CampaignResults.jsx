@@ -183,14 +183,14 @@ export default function CampaignResults() {
   if (generatedWebsiteUrl) tabs.push('website')
 
   return (
-    <div style={{ padding: 32 }}>
+    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <button onClick={() => navigate(-1)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: 16 }}>← Back</button>
 
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">
           {(data.product_description || '').slice(0, 60)}{(data.product_description || '').length > 60 ? '...' : ''}
         </h1>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="flex gap-2.5 items-center flex-wrap">
           <span style={{ background: 'rgba(99,102,241,0.15)', color: 'var(--primary)', borderRadius: 6, padding: '2px 10px', fontSize: 12, fontWeight: 600, textTransform: 'uppercase' }}>
             {data.campaign_type || 'product'}
           </span>
@@ -203,7 +203,7 @@ export default function CampaignResults() {
           <button
             onClick={handleGenerateWebsite}
             disabled={generatingWebsite}
-            className={`ml-auto flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${generatingWebsite ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
+            className={`ml-auto flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-lg py-2 px-4 rounded-lg shadow-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${generatingWebsite ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
             aria-label="Generate website for this campaign"
           >
             {generatingWebsite ? 'Generating...' : '⚡ Generate Website'}

@@ -203,15 +203,8 @@ export default function CampaignResults() {
           <button
             onClick={handleGenerateWebsite}
             disabled={generatingWebsite}
-            style={{
-              marginLeft: 'auto',
-              background: generatingWebsite ? 'var(--surface2)' : 'var(--primary)',
-              color: generatingWebsite ? 'var(--text-muted)' : '#fff',
-              border: 'none', borderRadius: 8,
-              padding: '6px 16px', fontSize: 13, fontWeight: 600,
-              cursor: generatingWebsite ? 'not-allowed' : 'pointer',
-              display: 'flex', alignItems: 'center', gap: 6,
-            }}
+            className={`ml-auto flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 ${generatingWebsite ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
+            aria-label="Generate website for this campaign"
           >
             {generatingWebsite ? 'Generating...' : '⚡ Generate Website'}
           </button>

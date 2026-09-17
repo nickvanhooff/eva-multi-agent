@@ -215,7 +215,46 @@ export default function CampaignLive() {
             <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{logs.length} events</span>
           </div>
           <div ref={logRef} style={{ height: 320, overflowY: 'auto' }}>
-            {logs.length === 0 && <p style={{ color: 'var(--text-muted)', fontSize: 12 }}>Waiting for agents...</p>}
+            {logs.length === 0 && (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                paddingTop: 20,
+              }}>
+                {/* Spinner */}
+                <div style={{
+                  border: '2px solid var(--border)',
+                  borderTop: '2px solid var(--primary)',
+                  borderRadius: '50%',
+                  width: 24,
+                  height: 24,
+                  animation: 'spin 1s linear infinite',
+                  marginBottom: 12,
+                }} />
+                {/* Heading */}
+                <p style={{
+                  color: 'var(--text-muted)',
+                  fontSize: 16,
+                  fontWeight: 600,
+                  margin: 0,
+                }}>
+                  Waiting for agents...
+                </p>
+                {/* Subtitle */}
+                <p style={{
+                  color: 'var(--text-muted)',
+                  fontSize: 12,
+                  opacity: 0.7,
+                  marginTop: 4,
+                }}>
+                  De eerste events verschijnen hier zodra de pipeline start.
+                </p>
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+              </div>
+            )}
             {logs.map((log, i) => (
               <LogEntry
                 key={i}
